@@ -1,27 +1,35 @@
-/* ========== 移动端 CSS 变量 ========== */
+/* ========== 暗黑模式 CSS 变量 ========== */
 :root {
   /* 主题色 */
-  --color-primary: #1989fa;
-  --color-primary-light: #e8f4ff;
-  --color-success: #07c160;
-  --color-warning: #ff976a;
-  --color-danger: #ee0a24;
+  --color-primary: #4dabf7;
+  --color-primary-light: rgba(77, 171, 247, 0.15);
+  --color-primary-dark: #339af0;
+  --color-success: #51cf66;
+  --color-warning: #ffd43b;
+  --color-danger: #ff6b6b;
   --color-info: #909399;
 
-  /* 背景色 */
-  --color-bg: #f7f8fa;
-  --color-bg-white: #ffffff;
-  --color-bg-card: #ffffff;
+  /* 背景色 - OLED 暗黑 */
+  --color-bg: #0a0a0a;
+  --color-bg-white: #141414;
+  --color-bg-card: #1a1a1a;
+  --color-bg-elevated: #1f1f1f;
+  --color-bg-input: #1a1a1a;
 
   /* 文字色 */
-  --color-text-primary: #323233;
-  --color-text-regular: #646566;
-  --color-text-secondary: #969799;
-  --color-text-placeholder: #c8c9cc;
+  --color-text-primary: #e8e8e8;
+  --color-text-regular: #b0b0b0;
+  --color-text-secondary: #888888;
+  --color-text-placeholder: #555555;
 
   /* 边框色 */
-  --color-border: #ebedf0;
-  --color-border-light: #f0f0f0;
+  --color-border: #2a2a2a;
+  --color-border-light: #222222;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
 
   /* 间距 */
   --spacing-xs: 4px;
@@ -31,9 +39,9 @@
   --spacing-xl: 24px;
 
   /* 圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
 
   /* 字体 */
   --font-size-xs: 10px;
@@ -116,12 +124,25 @@ textarea {
   font: inherit;
   color: inherit;
   -webkit-appearance: none;
+  background: transparent;
 }
 
 /* 图片默认块级 */
 img {
   display: block;
   max-width: 100%;
+}
+
+/* 滚动条暗黑风格 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 2px;
 }
 
 /* 单行文本溢出省略 */

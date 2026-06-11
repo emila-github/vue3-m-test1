@@ -17,5 +17,6 @@ import TabBar from './components/TabBar.vue'
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--color-bg);
 }
 </style>
