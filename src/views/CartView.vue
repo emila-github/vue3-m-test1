@@ -13,7 +13,7 @@ interface CartItem {
 }
 
 const cartList = ref<CartItem[]>([
-  { id: 1, title: '商品名称示例 1 - 高品质精选好物', price: 99.9, count: 1, selected: true },
+  { id: 1, title: '商品名称示例 1 - PICC品质精选好物', price: 99.9, count: 1, selected: true },
   { id: 2, title: '商品名称示例 2 - 限时优惠', price: 199.0, count: 2, selected: true },
   { id: 3, title: '商品名称示例 3', price: 59.5, count: 1, selected: false },
 ])
@@ -64,7 +64,7 @@ function removeItem(id: number) {
 <template>
   <div class="page-container">
     <!-- 顶部导航 -->
-    <div class="nav-bar hairline-border">
+    <div class="nav-bar">
       <h2 class="nav-bar__title">购物车</h2>
       <span class="nav-bar__action" @click="editMode = !editMode">
         {{ editMode ? '完成' : '编辑' }}
@@ -89,7 +89,7 @@ function removeItem(id: number) {
           <div
             v-for="item in cartList"
             :key="item.id"
-            class="cart-item hairline-border"
+            class="cart-item"
           >
             <div
               class="cart-item__check"
@@ -104,7 +104,7 @@ function removeItem(id: number) {
               </svg>
             </div>
             <div class="cart-item__img">
-              <svg class="cart-item__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="36" height="36">
+              <svg class="cart-item__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="32" height="32">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
                 <line x1="12" y1="22.08" x2="12" y2="12"/>
@@ -161,15 +161,16 @@ function removeItem(id: number) {
   align-items: center;
   justify-content: center;
   height: 44px;
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   padding: 0 16px;
   flex-shrink: 0;
   position: relative;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .nav-bar__title {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
 }
 
@@ -210,7 +211,7 @@ function removeItem(id: number) {
 }
 
 .cart-list {
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   margin-top: 8px;
 }
 
@@ -219,13 +220,18 @@ function removeItem(id: number) {
   align-items: center;
   padding: 12px 16px;
   gap: 12px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.cart-item:last-child {
+  border-bottom: none;
 }
 
 .cart-item__check {
   cursor: pointer;
   flex-shrink: 0;
   color: var(--color-text-placeholder);
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .cart-item__check--active {
@@ -233,19 +239,19 @@ function removeItem(id: number) {
 }
 
 .cart-item__img {
-  width: 80px;
-  height: 80px;
-  background: var(--color-bg);
+  width: 76px;
+  height: 76px;
+  background: var(--color-bg-input);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid var(--color-border-light);
 }
 
 .cart-item__img-placeholder {
   opacity: 0.15;
+  color: var(--color-text-placeholder);
 }
 
 .cart-item__info {
@@ -269,7 +275,7 @@ function removeItem(id: number) {
 .cart-item__price {
   font-size: var(--font-size-lg);
   font-weight: 700;
-  color: var(--color-danger);
+  color: var(--color-primary);
 }
 
 .cart-item__counter {
@@ -287,13 +293,13 @@ function removeItem(id: number) {
   font-size: 16px;
   cursor: pointer;
   user-select: none;
-  background: var(--color-bg);
+  background: var(--color-bg-white);
   color: var(--color-text-regular);
-  transition: all 0.2s ease;
+  transition: background 0.15s ease;
 }
 
 .counter__btn:active {
-  background: var(--color-bg-elevated);
+  background: var(--color-bg-input);
 }
 
 .counter__btn:first-child {
@@ -317,7 +323,7 @@ function removeItem(id: number) {
   border-bottom: 1px solid var(--color-border);
   font-size: var(--font-size-sm);
   color: var(--color-text-primary);
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
 }
 
 .settle-bar {
@@ -326,14 +332,13 @@ function removeItem(id: number) {
   left: 0;
   right: 0;
   height: 50px;
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
   z-index: 10;
-  backdrop-filter: blur(20px);
 }
 
 .settle-bar__left {
@@ -345,7 +350,7 @@ function removeItem(id: number) {
 
 .settle-bar__check {
   color: var(--color-text-placeholder);
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .settle-bar__check--active {
@@ -371,7 +376,7 @@ function removeItem(id: number) {
 .settle-bar__price {
   font-size: var(--font-size-xl);
   font-weight: 700;
-  color: var(--color-danger);
+  color: var(--color-primary);
 }
 
 .settle-bar__btn {
@@ -381,11 +386,10 @@ function removeItem(id: number) {
   border-radius: 22px;
   font-size: var(--font-size-md);
   font-weight: 600;
-  transition: opacity 0.2s ease;
 }
 
 .settle-bar__btn:active {
-  opacity: 0.8;
+  background: var(--color-primary-dark);
 }
 
 .settle-bar__btn--danger {

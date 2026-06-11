@@ -1,35 +1,40 @@
-/* ========== 暗黑模式 CSS 变量 ========== */
+/* ========== PICC 品牌扁平化 CSS 变量 ========== */
 :root {
-  /* 主题色 */
-  --color-primary: #4dabf7;
-  --color-primary-light: rgba(77, 171, 247, 0.15);
-  --color-primary-dark: #339af0;
-  --color-success: #51cf66;
-  --color-warning: #ffd43b;
-  --color-danger: #ff6b6b;
-  --color-info: #909399;
+  /* PICC 品牌色 */
+  --color-primary: #DA251D;
+  --color-primary-light: #FFF0EF;
+  --color-primary-dark: #B71C1C;
+  --color-gold: #C5A05A;
+  --color-gold-light: #FBF5E8;
+  --color-success: #52C41A;
+  --color-success-light: #F0FBE8;
+  --color-warning: #FAAD14;
+  --color-warning-light: #FFF8E8;
+  --color-danger: #FF4D4F;
+  --color-danger-light: #FFF0F0;
+  --color-info: #8C8C8C;
 
-  /* 背景色 - OLED 暗黑 */
-  --color-bg: #0a0a0a;
-  --color-bg-white: #141414;
-  --color-bg-card: #1a1a1a;
-  --color-bg-elevated: #1f1f1f;
-  --color-bg-input: #1a1a1a;
+  /* 扁平化背景色 */
+  --color-bg: #F5F5F5;
+  --color-bg-white: #FFFFFF;
+  --color-bg-card: #FFFFFF;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-input: #F0F0F0;
 
-  /* 文字色 */
-  --color-text-primary: #e8e8e8;
-  --color-text-regular: #b0b0b0;
-  --color-text-secondary: #888888;
-  --color-text-placeholder: #555555;
+  /* 扁平化文字色 */
+  --color-text-primary: #1A1A1A;
+  --color-text-regular: #595959;
+  --color-text-secondary: #8C8C8C;
+  --color-text-placeholder: #BFBFBF;
 
-  /* 边框色 */
-  --color-border: #2a2a2a;
-  --color-border-light: #222222;
+  /* 扁平化边框 */
+  --color-border: #E8E8E8;
+  --color-border-light: #F0F0F0;
 
-  /* 阴影 */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  /* 扁平化 - 无阴影 */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 
   /* 间距 */
   --spacing-xs: 4px;
@@ -38,10 +43,10 @@
   --spacing-lg: 16px;
   --spacing-xl: 24px;
 
-  /* 圆角 */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* 圆角 - 扁平化大圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
   /* 字体 */
   --font-size-xs: 10px;
@@ -49,6 +54,7 @@
   --font-size-md: 14px;
   --font-size-lg: 16px;
   --font-size-xl: 18px;
+  --font-size-xxl: 22px;
 
   /* 底部安全区域 */
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -93,20 +99,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 清除列表默认样式 */
 ul,
 ol {
   list-style: none;
 }
 
-/* 清除链接默认样式 */
 a {
   color: var(--color-primary);
   text-decoration: none;
   -webkit-touch-callout: none;
 }
 
-/* 清除按钮默认样式 */
 button {
   border: none;
   outline: none;
@@ -116,7 +119,6 @@ button {
   cursor: pointer;
 }
 
-/* 清除 input 默认样式 */
 input,
 textarea {
   border: none;
@@ -127,22 +129,14 @@ textarea {
   background: transparent;
 }
 
-/* 图片默认块级 */
 img {
   display: block;
   max-width: 100%;
 }
 
-/* 滚动条暗黑风格 */
+/* 滚动条 */
 ::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 2px;
+  width: 0;
 }
 
 /* 单行文本溢出省略 */

@@ -17,7 +17,7 @@ function goBack() {
 <template>
   <div class="page-container">
     <!-- 顶部导航 -->
-    <div class="nav-bar hairline-border">
+    <div class="nav-bar">
       <span class="nav-bar__back" @click="goBack">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
           <path d="m15 18-6-6 6-6"/>
@@ -56,7 +56,7 @@ function goBack() {
       <div class="detail-info">
         <div class="detail-info__header">
           <h1 class="detail-info__title">商品名称 - 商品 ID: {{ route.params.id }}</h1>
-          <div class="detail-info__badge">自营</div>
+          <div class="detail-info__badge">PICC自营</div>
         </div>
         <div class="detail-info__price-row">
           <span class="detail-info__symbol">¥</span>
@@ -65,7 +65,7 @@ function goBack() {
           <span class="detail-info__discount">5折</span>
         </div>
         <p class="detail-info__desc">
-          这是一段商品描述文案，用于展示商品的基本信息和卖点。品质保证，值得信赖。
+          PICC品质保障，专业优选好物。这是一段商品描述文案，用于展示商品的基本信息和卖点。
         </p>
       </div>
 
@@ -130,10 +130,11 @@ function goBack() {
   align-items: center;
   justify-content: center;
   height: 44px;
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   padding: 0 16px;
   flex-shrink: 0;
   position: relative;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .nav-bar__back {
@@ -147,7 +148,7 @@ function goBack() {
 
 .nav-bar__title {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
 }
 
@@ -163,8 +164,8 @@ function goBack() {
 /* 商品图片 */
 .detail-img {
   width: 100%;
-  height: 320px;
-  background: var(--color-bg-card);
+  height: 300px;
+  background: var(--color-bg-input);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +174,7 @@ function goBack() {
 
 .detail-img__placeholder {
   color: var(--color-text-placeholder);
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 .detail-img__dots {
@@ -186,21 +187,20 @@ function goBack() {
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 3px;
   background: var(--color-text-placeholder);
   opacity: 0.3;
 }
 
 .dot--active {
-  opacity: 0.8;
+  opacity: 1;
   background: var(--color-primary);
-  width: 20px;
-  border-radius: 3px;
+  width: 18px;
 }
 
 /* 商品信息 */
 .detail-info {
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   padding: 16px;
   margin-top: 8px;
 }
@@ -213,20 +213,20 @@ function goBack() {
 
 .detail-info__title {
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.4;
   flex: 1;
 }
 
 .detail-info__badge {
-  padding: 2px 6px;
-  background: var(--color-danger);
-  color: #fff;
+  padding: 2px 8px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   font-size: var(--font-size-xs);
-  border-radius: 4px;
+  border-radius: 3px;
   flex-shrink: 0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .detail-info__price-row {
@@ -238,14 +238,14 @@ function goBack() {
 
 .detail-info__symbol {
   font-size: var(--font-size-md);
-  color: var(--color-danger);
-  font-weight: 600;
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 .detail-info__price {
   font-size: 28px;
   font-weight: 800;
-  color: var(--color-danger);
+  color: var(--color-primary);
   letter-spacing: -1px;
 }
 
@@ -258,10 +258,10 @@ function goBack() {
 .detail-info__discount {
   font-size: var(--font-size-xs);
   color: #fff;
-  background: var(--color-danger);
+  background: var(--color-primary);
   padding: 1px 6px;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 3px;
+  font-weight: 600;
 }
 
 .detail-info__desc {
@@ -273,14 +273,14 @@ function goBack() {
 
 /* 规格 */
 .detail-spec {
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   padding: 16px;
   margin-top: 8px;
 }
 
 .detail-spec__title {
   font-size: var(--font-size-md);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }
@@ -293,19 +293,18 @@ function goBack() {
 
 .detail-spec__tag {
   padding: 8px 18px;
-  border-radius: 6px;
-  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-input);
   font-size: var(--font-size-sm);
   color: var(--color-text-regular);
   cursor: pointer;
-  border: 1px solid var(--color-border);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .detail-spec__tag--active {
   background: var(--color-primary-light);
   color: var(--color-primary);
-  border-color: var(--color-primary);
+  font-weight: 600;
 }
 
 /* 数量 */
@@ -314,14 +313,14 @@ function goBack() {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   margin-top: 8px;
 }
 
 .detail-quantity__label {
   font-size: var(--font-size-md);
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .detail-quantity__counter {
@@ -339,9 +338,14 @@ function goBack() {
   font-size: 18px;
   cursor: pointer;
   user-select: none;
-  background: var(--color-bg);
+  background: var(--color-bg-white);
   color: var(--color-text-regular);
   border-radius: 4px 0 0 4px;
+  transition: background 0.15s ease;
+}
+
+.counter__btn:active {
+  background: var(--color-bg-input);
 }
 
 .counter__btn--plus {
@@ -371,14 +375,13 @@ function goBack() {
   left: 0;
   right: 0;
   height: 52px;
-  background: var(--color-bg-card);
+  background: var(--color-bg-white);
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   padding: 0 12px;
   gap: 10px;
   z-index: 10;
-  backdrop-filter: blur(20px);
 }
 
 .detail-action__icons {
@@ -394,12 +397,12 @@ function goBack() {
   gap: 2px;
   cursor: pointer;
   color: var(--color-text-secondary);
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
   padding: 0 6px;
 }
 
 .detail-action__icon-item--active {
-  color: var(--color-danger);
+  color: var(--color-primary);
 }
 
 .detail-action__icon-label {
@@ -409,20 +412,28 @@ function goBack() {
 .detail-action__cart {
   flex: 1;
   height: 38px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: var(--color-gold);
   color: #fff;
   border-radius: 19px;
   font-size: var(--font-size-md);
   font-weight: 600;
 }
 
+.detail-action__cart:active {
+  background: #B08B3C;
+}
+
 .detail-action__buy {
   flex: 1;
   height: 38px;
-  background: linear-gradient(135deg, #4dabf7, #339af0);
+  background: var(--color-primary);
   color: #fff;
   border-radius: 19px;
   font-size: var(--font-size-md);
   font-weight: 600;
+}
+
+.detail-action__buy:active {
+  background: var(--color-primary-dark);
 }
 </style>
