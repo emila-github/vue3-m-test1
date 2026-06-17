@@ -50,9 +50,17 @@ const hotList = ref(
       <!-- 搜索栏 -->
       <div class="search-bar">
         <div class="search-bar__inner">
-          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
+          <svg
+            class="search-bar__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="16"
+            height="16"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
           </svg>
           <span class="search-bar__placeholder">搜索你想要的商品</span>
         </div>
@@ -61,10 +69,7 @@ const hotList = ref(
       <!-- 轮播图 -->
       <div class="banner-wrapper">
         <div class="banner">
-          <div
-            class="banner__inner"
-            :style="{ transform: `translateX(-${currentBanner * 100}%)` }"
-          >
+          <div class="banner__inner" :style="{ transform: `translateX(-${currentBanner * 100}%)` }">
             <div
               v-for="item in banners"
               :key="item.id"
@@ -91,29 +96,77 @@ const hotList = ref(
 
       <!-- 功能入口 -->
       <div class="grid-nav">
-        <div class="grid-nav__item" v-for="(item, i) in [
-          { label: '热销', icon: 'hot', color: '#FFF0EF', stroke: '#DA251D' },
-          { label: '精品', icon: 'star', color: '#FBF5E8', stroke: '#C5A05A' },
-          { label: '新品', icon: 'diamond', color: '#E8F4FD', stroke: '#1890FF' },
-          { label: '礼包', icon: 'gift', color: '#F0FBE8', stroke: '#52C41A' },
-        ]" :key="i">
+        <div
+          class="grid-nav__item"
+          v-for="(item, i) in [
+            { label: '热销', icon: 'hot', color: '#FFF0EF', stroke: '#DA251D' },
+            { label: '精品', icon: 'star', color: '#FBF5E8', stroke: '#C5A05A' },
+            { label: '新品', icon: 'diamond', color: '#E8F4FD', stroke: '#1890FF' },
+            { label: '礼包', icon: 'gift', color: '#F0FBE8', stroke: '#52C41A' },
+          ]"
+          :key="i"
+        >
           <div class="grid-nav__icon" :style="{ background: item.color }">
-            <svg v-if="item.icon === 'hot'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+            <svg
+              v-if="item.icon === 'hot'"
+              viewBox="0 0 24 24"
+              fill="none"
+              :stroke="item.stroke"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="24"
+              height="24"
+            >
+              <path
+                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+              />
             </svg>
-            <svg v-if="item.icon === 'star'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <svg
+              v-if="item.icon === 'star'"
+              viewBox="0 0 24 24"
+              fill="none"
+              :stroke="item.stroke"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="24"
+              height="24"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
             </svg>
-            <svg v-if="item.icon === 'diamond'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <path d="M6 2h12l4 8-10 12L2 10l4-8z"/>
-              <path d="M2 10h20"/>
+            <svg
+              v-if="item.icon === 'diamond'"
+              viewBox="0 0 24 24"
+              fill="none"
+              :stroke="item.stroke"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="24"
+              height="24"
+            >
+              <path d="M6 2h12l4 8-10 12L2 10l4-8z" />
+              <path d="M2 10h20" />
             </svg>
-            <svg v-if="item.icon === 'gift'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <polyline points="20 12 20 22 4 22 4 12"/>
-              <rect x="2" y="7" width="20" height="5"/>
-              <line x1="12" y1="22" x2="12" y2="7"/>
-              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+            <svg
+              v-if="item.icon === 'gift'"
+              viewBox="0 0 24 24"
+              fill="none"
+              :stroke="item.stroke"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="24"
+              height="24"
+            >
+              <polyline points="20 12 20 22 4 22 4 12" />
+              <rect x="2" y="7" width="20" height="5" />
+              <line x1="12" y1="22" x2="12" y2="7" />
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
             </svg>
           </div>
           <span class="grid-nav__text">{{ item.label }}</span>
@@ -130,17 +183,22 @@ const hotList = ref(
           <span class="section__more" @click="router.push('/category')">更多</span>
         </div>
         <div class="goods-grid">
-          <div
-            v-for="item in hotList"
-            :key="item.id"
-            class="goods-card"
-            @click="goDetail(item.id)"
-          >
+          <div v-for="item in hotList" :key="item.id" class="goods-card" @click="goDetail(item.id)">
             <div class="goods-card__img">
-              <svg class="goods-card__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              <svg
+                class="goods-card__img-placeholder"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                width="40"
+                height="40"
+              >
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
               <div class="goods-card__tag">热卖</div>
             </div>
@@ -150,9 +208,16 @@ const hotList = ref(
               <div class="goods-card__bottom">
                 <p class="goods-card__price">¥{{ item.price }}</p>
                 <span class="goods-card__cart-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    width="14"
+                    height="14"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
                   </svg>
                 </span>
               </div>
@@ -167,28 +232,29 @@ const hotList = ref(
 <style scoped>
 /* 搜索栏 */
 .search-bar {
-  padding: 10px 16px;
+  padding: var(--spacing-md) var(--spacing-xl);
   background: var(--color-bg-white);
 }
 
 .search-bar__inner {
   display: flex;
   align-items: center;
-  height: 36px;
-  background: var(--color-bg-input);
-  border-radius: 18px;
-  padding: 0 14px;
+  height: 40px;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: 0 var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
 }
 
 .search-bar__icon {
-  margin-right: 6px;
-  color: var(--color-text-placeholder);
+  margin-right: var(--spacing-sm);
+  color: var(--color-text-secondary);
   flex-shrink: 0;
 }
 
 .search-bar__placeholder {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-placeholder);
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
 }
 
 /* 轮播图 */
@@ -224,7 +290,7 @@ const hotList = ref(
 .banner__title {
   font-size: 22px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   letter-spacing: 1px;
 }
 
@@ -253,7 +319,7 @@ const hotList = ref(
 }
 
 .banner__dot--active {
-  background: #FFFFFF;
+  background: #ffffff;
   width: 18px;
 }
 
@@ -261,27 +327,28 @@ const hotList = ref(
 .grid-nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 8px 16px 16px;
+  padding: var(--spacing-sm) var(--spacing-xl) var(--spacing-xl);
   background: var(--color-bg-white);
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-sm);
 }
 
 .grid-nav__item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
   cursor: pointer;
 }
 
 .grid-nav__icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.15s ease;
+  background: var(--color-bg);
 }
 
 .grid-nav__item:active .grid-nav__icon {
@@ -291,67 +358,71 @@ const hotList = ref(
 .grid-nav__text {
   font-size: var(--font-size-xs);
   color: var(--color-text-regular);
+  font-weight: 600;
 }
 
 /* 区块 */
 .section {
   background: var(--color-bg-white);
-  padding: 0 16px 16px;
+  padding: 0 var(--spacing-xl) var(--spacing-xl);
+  margin-top: var(--spacing-sm);
 }
 
 .section__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
+  padding: var(--spacing-lg) 0;
 }
 
 .section__title {
   font-size: var(--font-size-lg);
-  font-weight: 700;
+  font-weight: 900;
   color: var(--color-text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
 .section__title-bar {
-  width: 3px;
-  height: 16px;
+  width: 4px;
+  height: 20px;
   background: var(--color-primary);
   border-radius: 2px;
 }
 
 .section__more {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-secondary);
   cursor: pointer;
+  font-weight: 500;
 }
 
 /* 商品网格 */
 .goods-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .goods-card {
   background: var(--color-bg-white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-xl);
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--color-border-light);
-  transition: border-color 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .goods-card:active {
-  border-color: var(--color-primary-light);
+  transform: scale(0.98);
 }
 
 .goods-card__img {
   width: 100%;
-  height: 140px;
-  background: var(--color-bg-input);
+  height: 148px;
+  background: var(--color-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,36 +430,36 @@ const hotList = ref(
 }
 
 .goods-card__img-placeholder {
-  opacity: 0.15;
-  color: var(--color-text-placeholder);
+  opacity: 0.2;
+  color: var(--color-text-secondary);
 }
 
 .goods-card__tag {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  padding: 2px 6px;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   font-size: var(--font-size-xs);
-  border-radius: 3px;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
 }
 
 .goods-card__info {
-  padding: 8px 10px;
+  padding: var(--spacing-md);
 }
 
 .goods-card__title {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-size: var(--font-size-md);
+  font-weight: 600;
   color: var(--color-text-primary);
 }
 
 .goods-card__desc {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
-  margin: 2px 0 8px;
+  margin: var(--spacing-xs) 0 var(--spacing-md);
 }
 
 .goods-card__bottom {
@@ -400,15 +471,15 @@ const hotList = ref(
 .goods-card__price {
   font-size: var(--font-size-lg);
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .goods-card__cart-btn {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   display: flex;
   align-items: center;
   justify-content: center;

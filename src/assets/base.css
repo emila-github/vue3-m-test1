@@ -1,60 +1,66 @@
-/* ========== PICC 品牌扁平化 CSS 变量 ========== */
+/* ========== Wise 品牌设计系统 CSS 变量 ========== */
 :root {
-  /* PICC 品牌色 */
-  --color-primary: #DA251D;
-  --color-primary-light: #FFF0EF;
-  --color-primary-dark: #B71C1C;
-  --color-gold: #C5A05A;
-  --color-gold-light: #FBF5E8;
-  --color-success: #52C41A;
-  --color-success-light: #F0FBE8;
-  --color-warning: #FAAD14;
-  --color-warning-light: #FFF8E8;
-  --color-danger: #FF4D4F;
-  --color-danger-light: #FFF0F0;
-  --color-info: #8C8C8C;
+  /* Wise 品牌色 */
+  --color-primary: #9fe870;
+  --color-primary-light: #e2f6d5;
+  --color-primary-dark: #c5edab;
+  --color-on-primary: #0e0f0c;
+  --color-gold: #ffc091;
+  --color-gold-light: #fff8f3;
+  --color-success: #2ead4b;
+  --color-success-light: #e8fae0;
+  --color-warning: #ffd11a;
+  --color-warning-light: #fffce8;
+  --color-danger: #d03238;
+  --color-danger-light: #fbe8e9;
+  --color-info: #868685;
 
-  /* 扁平化背景色 */
-  --color-bg: #F5F5F5;
-  --color-bg-white: #FFFFFF;
-  --color-bg-card: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-input: #F0F0F0;
+  /* 背景色 - Sage色调 */
+  --color-bg: #e8ebe6;
+  --color-bg-white: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-input: #ffffff;
 
-  /* 扁平化文字色 */
-  --color-text-primary: #1A1A1A;
-  --color-text-regular: #595959;
-  --color-text-secondary: #8C8C8C;
-  --color-text-placeholder: #BFBFBF;
+  /* 文字色 - Near-black ink */
+  --color-text-primary: #0e0f0c;
+  --color-text-regular: #454745;
+  --color-text-secondary: #868685;
+  --color-text-placeholder: #868685;
 
-  /* 扁平化边框 */
-  --color-border: #E8E8E8;
-  --color-border-light: #F0F0F0;
+  /* 边框 */
+  --color-border: #0e0f0c;
+  --color-border-light: #e8ebe6;
 
-  /* 扁平化 - 无阴影 */
+  /* 阴影 */
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
 
-  /* 间距 */
+  /* 间距 - Base unit 4px */
+  --spacing-xxs: 2px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
   --spacing-lg: 16px;
   --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
 
-  /* 圆角 - 扁平化大圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* 圆角 - Wise品牌标准 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
 
   /* 字体 */
-  --font-size-xs: 10px;
-  --font-size-sm: 12px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-xxl: 22px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-xxl: 32px;
 
   /* 底部安全区域 */
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -82,17 +88,8 @@ body {
   color: var(--color-text-primary);
   background: var(--color-bg);
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Helvetica Neue',
-    Helvetica,
-    'Segoe UI',
-    Arial,
-    Roboto,
-    'PingFang SC',
-    'Hiragino Sans GB',
-    'Microsoft YaHei',
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, Roboto,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   font-size: var(--font-size-md);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;

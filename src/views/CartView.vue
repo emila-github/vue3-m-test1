@@ -37,9 +37,7 @@ const totalPrice = computed(() => {
 })
 
 const selectedCount = computed(() => {
-  return cartList.value
-    .filter((item) => item.selected)
-    .reduce((sum, item) => sum + item.count, 0)
+  return cartList.value.filter((item) => item.selected).reduce((sum, item) => sum + item.count, 0)
 })
 
 function toggleSelect(item: CartItem) {
@@ -74,10 +72,18 @@ function removeItem(id: number) {
     <div class="page-content">
       <!-- 空状态 -->
       <div v-if="cartList.length === 0" class="empty-state">
-        <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
+        <svg
+          class="empty-state__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          width="64"
+          height="64"
+        >
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
         </svg>
         <p class="empty-state__text">购物车还是空的</p>
         <button class="empty-state__btn" @click="router.push('/')">去逛逛</button>
@@ -86,28 +92,50 @@ function removeItem(id: number) {
       <!-- 购物车列表 -->
       <template v-else>
         <div class="cart-list">
-          <div
-            v-for="item in cartList"
-            :key="item.id"
-            class="cart-item"
-          >
+          <div v-for="item in cartList" :key="item.id" class="cart-item">
             <div
               class="cart-item__check"
               :class="{ 'cart-item__check--active': item.selected }"
               @click="toggleSelect(item)"
             >
-              <svg v-if="item.selected" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="item.selected"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
             <div class="cart-item__img">
-              <svg class="cart-item__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="32" height="32">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              <svg
+                class="cart-item__img-placeholder"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                width="32"
+                height="32"
+              >
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
             </div>
             <div class="cart-item__info">
@@ -128,11 +156,27 @@ function removeItem(id: number) {
         <div class="settle-bar safe-area-bottom">
           <div class="settle-bar__left" @click="allSelected = !allSelected">
             <div class="settle-bar__check" :class="{ 'settle-bar__check--active': allSelected }">
-              <svg v-if="allSelected" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="allSelected"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
             <span class="settle-bar__all">全选</span>
@@ -142,9 +186,7 @@ function removeItem(id: number) {
               <span>合计：</span>
               <span class="settle-bar__price">¥{{ totalPrice }}</span>
             </div>
-            <button v-if="!editMode" class="settle-bar__btn">
-              结算({{ selectedCount }})
-            </button>
+            <button v-if="!editMode" class="settle-bar__btn">结算({{ selectedCount }})</button>
             <button v-else class="settle-bar__btn settle-bar__btn--danger" @click="removeItem(1)">
               删除
             </button>
@@ -160,26 +202,26 @@ function removeItem(id: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 44px;
+  height: 48px;
   background: var(--color-bg-white);
-  padding: 0 16px;
+  padding: 0 var(--spacing-xl);
   flex-shrink: 0;
   position: relative;
-  border-bottom: 1px solid var(--color-border-light);
 }
 
 .nav-bar__title {
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: 900;
   color: var(--color-text-primary);
 }
 
 .nav-bar__action {
   position: absolute;
-  right: 16px;
+  right: var(--spacing-xl);
   font-size: var(--font-size-md);
   color: var(--color-primary);
   cursor: pointer;
+  font-weight: 600;
 }
 
 .empty-state {
@@ -187,39 +229,43 @@ function removeItem(id: number) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 120px;
+  padding-top: 140px;
 }
 
 .empty-state__icon {
-  color: var(--color-text-placeholder);
-  opacity: 0.4;
+  color: var(--color-text-secondary);
+  opacity: 0.3;
 }
 
 .empty-state__text {
   color: var(--color-text-secondary);
-  margin: 16px 0 24px;
+  margin: var(--spacing-xl) 0 var(--spacing-2xl);
   font-size: var(--font-size-md);
 }
 
 .empty-state__btn {
-  padding: 10px 40px;
+  padding: var(--spacing-md) var(--spacing-3xl);
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 20px;
+  color: var(--color-on-primary);
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-md);
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .cart-list {
   background: var(--color-bg-white);
-  margin-top: 8px;
+  margin-top: var(--spacing-sm);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-left: var(--spacing-xl);
+  margin-right: var(--spacing-xl);
 }
 
 .cart-item {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  gap: 12px;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-lg);
   border-bottom: 1px solid var(--color-border-light);
 }
 
@@ -230,7 +276,7 @@ function removeItem(id: number) {
 .cart-item__check {
   cursor: pointer;
   flex-shrink: 0;
-  color: var(--color-text-placeholder);
+  color: var(--color-text-secondary);
   transition: color 0.15s ease;
 }
 
@@ -239,10 +285,10 @@ function removeItem(id: number) {
 }
 
 .cart-item__img {
-  width: 76px;
-  height: 76px;
-  background: var(--color-bg-input);
-  border-radius: var(--radius-sm);
+  width: 80px;
+  height: 80px;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -250,8 +296,8 @@ function removeItem(id: number) {
 }
 
 .cart-item__img-placeholder {
-  opacity: 0.15;
-  color: var(--color-text-placeholder);
+  opacity: 0.2;
+  color: var(--color-text-secondary);
 }
 
 .cart-item__info {
@@ -262,94 +308,88 @@ function removeItem(id: number) {
 .cart-item__title {
   font-size: var(--font-size-md);
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .cart-item__bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
 }
 
 .cart-item__price {
   font-size: var(--font-size-lg);
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .cart-item__counter {
   display: flex;
   align-items: center;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
 }
 
 .counter__btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border);
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   user-select: none;
-  background: var(--color-bg-white);
   color: var(--color-text-regular);
-  transition: background 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .counter__btn:active {
-  background: var(--color-bg-input);
-}
-
-.counter__btn:first-child {
-  border-radius: 4px 0 0 4px;
+  color: var(--color-primary);
 }
 
 .counter__btn--plus {
-  border-radius: 0 4px 4px 0;
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 .counter__num {
-  width: 36px;
-  height: 28px;
+  width: 40px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-primary);
-  background: var(--color-bg-white);
+  font-weight: 600;
+  border-left: 1px solid var(--color-border-light);
+  border-right: 1px solid var(--color-border-light);
 }
 
 .settle-bar {
   position: fixed;
-  bottom: 50px;
+  bottom: 56px;
   left: 0;
   right: 0;
-  height: 50px;
+  height: 56px;
   background: var(--color-bg-white);
-  border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 var(--spacing-xl);
   z-index: 10;
+  box-shadow: 0 -2px 8px rgba(14, 15, 12, 0.05);
 }
 
 .settle-bar__left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-sm);
   cursor: pointer;
 }
 
 .settle-bar__check {
-  color: var(--color-text-placeholder);
+  color: var(--color-text-secondary);
   transition: color 0.15s ease;
 }
 
@@ -365,7 +405,7 @@ function removeItem(id: number) {
 .settle-bar__right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .settle-bar__total {
@@ -376,20 +416,20 @@ function removeItem(id: number) {
 .settle-bar__price {
   font-size: var(--font-size-xl);
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .settle-bar__btn {
-  padding: 10px 28px;
+  padding: var(--spacing-md) var(--spacing-2xl);
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 22px;
+  color: var(--color-on-primary);
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-md);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .settle-bar__btn:active {
-  background: var(--color-primary-dark);
+  opacity: 0.9;
 }
 
 .settle-bar__btn--danger {
