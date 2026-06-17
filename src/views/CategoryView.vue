@@ -18,7 +18,7 @@ const activeCategory = ref(0)
 <template>
   <div class="page-container">
     <div class="page-content">
-      <!-- 搜索栏 -->
+      <!-- Search bar -->
       <div class="search-bar">
         <div class="search-bar__inner">
           <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -29,8 +29,9 @@ const activeCategory = ref(0)
         </div>
       </div>
 
-      <!-- 分类内容 -->
+      <!-- Category split: sidebar + content -->
       <div class="category-wrapper">
+        <!-- Sidebar: surface-1, hairline right -->
         <div class="category-sidebar">
           <div
             v-for="(item, index) in categories"
@@ -83,7 +84,10 @@ const activeCategory = ref(0)
             <span>{{ item.name }}</span>
           </div>
         </div>
+
+        <!-- Content area -->
         <div class="category-content">
+          <!-- Category banner: product-color accent -->
           <div class="category-content__banner">
             <span class="banner-icon">
               <svg v-if="categories[activeCategory]?.icon === 'phone'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
@@ -113,6 +117,8 @@ const activeCategory = ref(0)
             </span>
             <span>{{ categories[activeCategory]?.name }} 专区</span>
           </div>
+
+          <!-- Sub-category grid -->
           <div class="category-content__grid">
             <div class="category-content__grid-item" v-for="i in 6" :key="i">
               <svg class="grid-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="24" height="24">
@@ -130,42 +136,48 @@ const activeCategory = ref(0)
 </template>
 
 <style scoped>
+/* ── Search bar ── */
 .search-bar {
   padding: 10px 16px;
-  background: var(--color-bg-white);
+  background: #000000;
+  flex-shrink: 0;
 }
 
 .search-bar__inner {
   display: flex;
   align-items: center;
-  height: 36px;
-  background: var(--color-bg-input);
-  border-radius: 18px;
+  height: 40px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: 8px;
   padding: 0 14px;
 }
 
 .search-bar__icon {
   margin-right: 6px;
-  color: var(--color-text-placeholder);
+  color: var(--color-ink-subtle);
   flex-shrink: 0;
 }
 
 .search-bar__placeholder {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-placeholder);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink-subtle);
 }
 
+/* ── Category layout ── */
 .category-wrapper {
   display: flex;
   height: calc(100% - 56px);
 }
 
+/* ── Sidebar ── */
 .category-sidebar {
   width: 90px;
-  background: var(--color-bg-white);
+  background: var(--color-surface-1);
   overflow-y: auto;
   flex-shrink: 0;
-  border-right: 1px solid var(--color-border-light);
+  border-right: 1px solid var(--color-hairline-soft);
 }
 
 .category-sidebar__item {
@@ -175,8 +187,9 @@ const activeCategory = ref(0)
   align-items: center;
   justify-content: center;
   gap: 2px;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -190,27 +203,28 @@ const activeCategory = ref(0)
 }
 
 .category-sidebar__item--active {
-  color: var(--color-primary);
+  color: var(--color-accent-blue);
   font-weight: 600;
-  background: var(--color-primary-light);
+  background: var(--color-surface-2);
 }
 
+/* ── Content area ── */
 .category-content {
   flex: 1;
   padding: 0 12px;
   overflow-y: auto;
-  background: var(--color-bg);
+  background: #000000;
 }
 
 .category-content__banner {
   height: 72px;
-  background: var(--color-primary);
-  border-radius: var(--radius-md);
+  background: var(--color-terraform);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
-  font-size: var(--font-size-lg);
+  color: #ffffff;
+  font-size: 18px;
   font-weight: 600;
   gap: 8px;
   margin: 12px 0;
@@ -234,23 +248,25 @@ const activeCategory = ref(0)
   align-items: center;
   padding: 14px 0;
   cursor: pointer;
-  background: var(--color-bg-white);
-  border-radius: var(--radius-sm);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline-soft);
+  border-radius: 8px;
   transition: background 0.15s ease;
 }
 
 .category-content__grid-item:active {
-  background: var(--color-primary-light);
+  background: var(--color-surface-2);
 }
 
 .grid-item__icon {
   margin-bottom: 4px;
   opacity: 0.25;
-  color: var(--color-text-placeholder);
+  color: var(--color-ink-muted);
 }
 
 .grid-item__text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
 }
 </style>

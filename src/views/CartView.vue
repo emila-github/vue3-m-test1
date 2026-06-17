@@ -178,7 +178,7 @@ function removeItem(id: number) {
   position: absolute;
   right: 16px;
   font-size: var(--font-size-md);
-  color: var(--color-primary);
+  color: var(--color-accent-blue);
   cursor: pointer;
 }
 
@@ -204,10 +204,11 @@ function removeItem(id: number) {
 .empty-state__btn {
   padding: 10px 40px;
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 20px;
+  color: var(--color-inverse-ink);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-md);
-  font-weight: 500;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .cart-list {
@@ -299,17 +300,17 @@ function removeItem(id: number) {
 }
 
 .counter__btn:active {
-  background: var(--color-bg-input);
+  background: var(--color-surface-3);
 }
 
 .counter__btn:first-child {
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-xs) 0 0 var(--radius-xs);
 }
 
 .counter__btn--plus {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-inverse-ink);
   border-color: var(--color-primary);
 }
 
@@ -382,14 +383,15 @@ function removeItem(id: number) {
 .settle-bar__btn {
   padding: 10px 28px;
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 22px;
+  color: var(--color-inverse-ink);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-md);
   font-weight: 600;
+  cursor: pointer;
 }
 
 .settle-bar__btn:active {
-  background: var(--color-primary-dark);
+  opacity: 0.92;
 }
 
 .settle-bar__btn--danger {

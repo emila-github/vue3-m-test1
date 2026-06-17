@@ -12,9 +12,9 @@ interface Banner {
 }
 
 const banners = ref<Banner[]>([
-  { id: 1, title: 'PICC 品质保障', subtitle: '专业保险 · 品质商城', bg: '#DA251D' },
-  { id: 2, title: '限时特惠', subtitle: '全场低至 5 折', bg: '#C5A05A' },
-  { id: 3, title: '爆款推荐', subtitle: '精选品质好物', bg: '#2C2C2C' },
+  { id: 1, title: 'PICC 品质保障', subtitle: '专业保险 · 品质商城', bg: '#7b42bc' },
+  { id: 2, title: '限时特惠', subtitle: '全场低至 5 折', bg: '#1868f2' },
+  { id: 3, title: '爆款推荐', subtitle: '精选品质好物', bg: '#14c6cb' },
 ])
 
 const currentBanner = ref(0)
@@ -47,7 +47,7 @@ const hotList = ref(
 <template>
   <div class="page-container">
     <div class="page-content">
-      <!-- 搜索栏 -->
+      <!-- Search bar: text-input style -->
       <div class="search-bar">
         <div class="search-bar__inner">
           <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -58,7 +58,7 @@ const hotList = ref(
         </div>
       </div>
 
-      <!-- 轮播图 -->
+      <!-- Banner carousel: product-colored backgrounds -->
       <div class="banner-wrapper">
         <div class="banner">
           <div
@@ -72,6 +72,7 @@ const hotList = ref(
               :style="{ background: item.bg }"
             >
               <div class="banner__content">
+                <p class="banner__eyebrow eyebrow">FEATURED</p>
                 <h2 class="banner__title">{{ item.title }}</h2>
                 <p class="banner__subtitle">{{ item.subtitle }}</p>
               </div>
@@ -89,26 +90,26 @@ const hotList = ref(
         </div>
       </div>
 
-      <!-- 功能入口 -->
+      <!-- Grid nav: surface-1 tiles -->
       <div class="grid-nav">
         <div class="grid-nav__item" v-for="(item, i) in [
-          { label: '热销', icon: 'hot', color: '#FFF0EF', stroke: '#DA251D' },
-          { label: '精品', icon: 'star', color: '#FBF5E8', stroke: '#C5A05A' },
-          { label: '新品', icon: 'diamond', color: '#E8F4FD', stroke: '#1890FF' },
-          { label: '礼包', icon: 'gift', color: '#F0FBE8', stroke: '#52C41A' },
+          { label: '热销', icon: 'hot', accent: '#7b42bc' },
+          { label: '精品', icon: 'star', accent: '#ffcf25' },
+          { label: '新品', icon: 'diamond', accent: '#1868f2' },
+          { label: '礼包', icon: 'gift', accent: '#00ca8e' },
         ]" :key="i">
-          <div class="grid-nav__icon" :style="{ background: item.color }">
-            <svg v-if="item.icon === 'hot'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+          <div class="grid-nav__icon">
+            <svg v-if="item.icon === 'hot'" viewBox="0 0 24 24" fill="none" :stroke="item.accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
               <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
             </svg>
-            <svg v-if="item.icon === 'star'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+            <svg v-if="item.icon === 'star'" viewBox="0 0 24 24" fill="none" :stroke="item.accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
-            <svg v-if="item.icon === 'diamond'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+            <svg v-if="item.icon === 'diamond'" viewBox="0 0 24 24" fill="none" :stroke="item.accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
               <path d="M6 2h12l4 8-10 12L2 10l4-8z"/>
               <path d="M2 10h20"/>
             </svg>
-            <svg v-if="item.icon === 'gift'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+            <svg v-if="item.icon === 'gift'" viewBox="0 0 24 24" fill="none" :stroke="item.accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
               <polyline points="20 12 20 22 4 22 4 12"/>
               <rect x="2" y="7" width="20" height="5"/>
               <line x1="12" y1="22" x2="12" y2="7"/>
@@ -120,14 +121,14 @@ const hotList = ref(
         </div>
       </div>
 
-      <!-- 热门推荐 -->
+      <!-- Hot products section -->
       <div class="section">
         <div class="section__header">
-          <h3 class="section__title">
-            <span class="section__title-bar"></span>
-            热门推荐
-          </h3>
-          <span class="section__more" @click="router.push('/category')">更多</span>
+          <div>
+            <p class="section__eyebrow eyebrow">RECOMMENDED</p>
+            <h3 class="section__title">热门推荐</h3>
+          </div>
+          <span class="section__more" @click="router.push('/category')">更多 →</span>
         </div>
         <div class="goods-grid">
           <div
@@ -165,42 +166,44 @@ const hotList = ref(
 </template>
 
 <style scoped>
-/* 搜索栏 */
+/* ── Search bar (text-input style) ── */
 .search-bar {
   padding: 10px 16px;
-  background: var(--color-bg-white);
+  background: #000000;
 }
 
 .search-bar__inner {
   display: flex;
   align-items: center;
-  height: 36px;
-  background: var(--color-bg-input);
-  border-radius: 18px;
+  height: 40px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: 8px;
   padding: 0 14px;
 }
 
 .search-bar__icon {
   margin-right: 6px;
-  color: var(--color-text-placeholder);
+  color: var(--color-ink-subtle);
   flex-shrink: 0;
 }
 
 .search-bar__placeholder {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-placeholder);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink-subtle);
 }
 
-/* 轮播图 */
+/* ── Banner ── */
 .banner-wrapper {
   padding: 0 16px 12px;
-  background: var(--color-bg-white);
+  background: #000000;
 }
 
 .banner {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
 }
 
 .banner__inner {
@@ -210,26 +213,34 @@ const hotList = ref(
 
 .banner__item {
   min-width: 100%;
-  height: 140px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
 }
 
 .banner__content {
   text-align: center;
 }
 
+.banner__eyebrow {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .banner__title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: 1px;
+  font-family: var(--font-family-body);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.21;
+  letter-spacing: -0.6px;
+  color: #ffffff;
 }
 
 .banner__subtitle {
-  font-size: var(--font-size-sm);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.69;
   color: rgba(255, 255, 255, 0.8);
   margin-top: 4px;
 }
@@ -247,23 +258,23 @@ const hotList = ref(
   width: 6px;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .banner__dot--active {
-  background: #FFFFFF;
+  background: #ffffff;
   width: 18px;
 }
 
-/* 功能入口 */
+/* ── Grid nav ── */
 .grid-nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 8px 16px 16px;
-  background: var(--color-bg-white);
-  margin-bottom: 8px;
+  padding: 12px 16px 16px;
+  background: #000000;
+  margin-bottom: 1px;
 }
 
 .grid-nav__item {
@@ -277,58 +288,62 @@ const hotList = ref(
 .grid-nav__icon {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .grid-nav__item:active .grid-nav__icon {
-  transform: scale(0.92);
+  background: var(--color-surface-2);
 }
 
 .grid-nav__text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-regular);
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
 }
 
-/* 区块 */
+/* ── Section ── */
 .section {
-  background: var(--color-bg-white);
+  background: #000000;
   padding: 0 16px 16px;
 }
 
 .section__header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
+  align-items: flex-end;
+  padding: 18px 0 12px;
+}
+
+.section__eyebrow {
+  margin-bottom: 4px;
 }
 
 .section__title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section__title-bar {
-  width: 3px;
-  height: 16px;
-  background: var(--color-primary);
-  border-radius: 2px;
+  font-family: var(--font-family-body);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.4px;
+  color: #ffffff;
 }
 
 .section__more {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-blue);
   cursor: pointer;
 }
 
-/* 商品网格 */
+/* ── Goods grid ── */
 .goods-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -336,22 +351,22 @@ const hotList = ref(
 }
 
 .goods-card {
-  background: var(--color-bg-white);
-  border-radius: var(--radius-md);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline-soft);
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--color-border-light);
   transition: border-color 0.2s ease;
 }
 
 .goods-card:active {
-  border-color: var(--color-primary-light);
+  border-color: var(--color-accent-blue);
 }
 
 .goods-card__img {
   width: 100%;
   height: 140px;
-  background: var(--color-bg-input);
+  background: var(--color-surface-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,35 +375,40 @@ const hotList = ref(
 
 .goods-card__img-placeholder {
   opacity: 0.15;
-  color: var(--color-text-placeholder);
+  color: var(--color-ink-subtle);
 }
 
 .goods-card__tag {
   position: absolute;
   top: 6px;
   left: 6px;
-  padding: 2px 6px;
-  background: var(--color-primary);
-  color: #fff;
-  font-size: var(--font-size-xs);
-  border-radius: 3px;
+  padding: 4px 8px;
+  background: var(--color-terraform);
+  color: #ffffff;
+  font-size: 12px;
   font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 
 .goods-card__info {
-  padding: 8px 10px;
+  padding: 10px 12px;
 }
 
 .goods-card__title {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text-primary);
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  color: #ffffff;
 }
 
 .goods-card__desc {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin: 2px 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  margin: 4px 0 8px;
 }
 
 .goods-card__bottom {
@@ -398,19 +418,26 @@ const hotList = ref(
 }
 
 .goods-card__price {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-primary);
+  font-family: var(--font-family-body);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
 }
 
 .goods-card__cart-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: opacity 0.15s ease;
+}
+
+.goods-card__cart-btn:active {
+  opacity: 0.85;
 }
 </style>

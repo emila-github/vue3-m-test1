@@ -148,7 +148,7 @@ function goBack() {
 
 .nav-bar__title {
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-primary);
 }
 
@@ -213,7 +213,7 @@ function goBack() {
 
 .detail-info__title {
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.4;
   flex: 1;
@@ -244,7 +244,7 @@ function goBack() {
 
 .detail-info__price {
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-primary);
   letter-spacing: -1px;
 }
@@ -257,10 +257,10 @@ function goBack() {
 
 .detail-info__discount {
   font-size: var(--font-size-xs);
-  color: #fff;
+  color: var(--color-inverse-ink);
   background: var(--color-primary);
   padding: 1px 6px;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   font-weight: 600;
 }
 
@@ -340,18 +340,18 @@ function goBack() {
   user-select: none;
   background: var(--color-bg-white);
   color: var(--color-text-regular);
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-xs) 0 0 var(--radius-xs);
   transition: background 0.15s ease;
 }
 
 .counter__btn:active {
-  background: var(--color-bg-input);
+  background: var(--color-surface-3);
 }
 
 .counter__btn--plus {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-inverse-ink);
   border-color: var(--color-primary);
 }
 
@@ -413,27 +413,29 @@ function goBack() {
   flex: 1;
   height: 38px;
   background: var(--color-gold);
-  color: #fff;
-  border-radius: 19px;
+  color: var(--color-inverse-ink);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-md);
   font-weight: 600;
+  cursor: pointer;
 }
 
 .detail-action__cart:active {
-  background: #B08B3C;
+  opacity: 0.92;
 }
 
 .detail-action__buy {
   flex: 1;
   height: 38px;
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 19px;
+  color: var(--color-inverse-ink);
+  border-radius: var(--radius-md);
   font-size: var(--font-size-md);
   font-weight: 600;
+  cursor: pointer;
 }
 
 .detail-action__buy:active {
-  background: var(--color-primary-dark);
+  opacity: 0.92;
 }
 </style>

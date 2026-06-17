@@ -1,24 +1,24 @@
 @import './base.css';
 
-/* ========== PICC 扁平化全局布局 ========== */
+/* ========== HashiCorp Global Layout ========== */
 #app {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-bg);
+  background: #000000;
 }
 
-/* 页面通用容器 */
+/* Page container */
 .page-container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--color-bg);
+  background: #000000;
 }
 
-/* 有底部 TabBar 的页面主内容区 */
+/* Content area with bottom tab */
 .page-content {
   flex: 1;
   overflow-y: auto;
@@ -27,7 +27,7 @@
   padding-bottom: calc(50px + var(--safe-area-bottom));
 }
 
-/* 无底部 TabBar 的页面主内容区 */
+/* Content area without bottom tab */
 .page-content--full {
   flex: 1;
   overflow-y: auto;
@@ -35,22 +35,138 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* 通用卡片 */
-.card {
-  background: var(--color-bg-card);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  margin: var(--spacing-md) var(--spacing-lg);
+/* ── HashiCorp Button System ── */
+
+/* Primary: white on dark, 8px radius */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  letter-spacing: 0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  min-height: 40px;
+}
+.btn-primary:active {
+  opacity: 0.85;
 }
 
-/* 通用安全区适配 */
-.safe-area-bottom {
-  padding-bottom: var(--safe-area-bottom);
+/* Secondary: surface-2 bg, white text */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-2);
+  color: #ffffff;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  letter-spacing: 0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 40px;
+}
+.btn-secondary:active {
+  background: var(--color-surface-3);
 }
 
-/* 扁平分割线 */
+/* Tertiary: transparent on canvas */
+.btn-tertiary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  letter-spacing: 0;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 40px;
+}
+.btn-tertiary:active {
+  background: var(--color-surface-2);
+}
+
+/* ── HashiCorp Card System ── */
+
+/* Feature / Product card (surface-1 + 1px hairline) */
+.card-hcp {
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+  padding: 24px;
+}
+.card-hcp--compact {
+  padding: 16px;
+}
+
+/* Featured card (surface-2 lift) */
+.card-hcp--featured {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+/* ── Input ── */
+.input-hcp {
+  background: var(--color-surface-1);
+  color: #ffffff;
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.50;
+  border: 1px solid var(--color-hairline);
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: border-color 0.15s ease;
+}
+.input-hcp:focus {
+  border-color: var(--color-accent-blue);
+  outline: 1px solid var(--color-accent-blue);
+}
+
+/* ── Eyebrow (section label, uppercase, 12px/600, +0.6px tracking) ── */
+.eyebrow {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.23;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 12px;
+}
+
+/* ── Divider ── */
 .flat-divider {
   height: 1px;
-  background: var(--color-border);
+  background: var(--color-hairline-soft);
   margin: 0 16px;
+}
+
+/* ── Section spacing ── */
+.section-gap {
+  margin-top: 12px;
+}
+
+/* ── Safe area ── */
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-bottom);
 }

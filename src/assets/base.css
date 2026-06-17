@@ -1,66 +1,131 @@
-/* ========== PICC 品牌扁平化 CSS 变量 ========== */
+/* ========== HashiCorp Design System Tokens ========== */
+/* Reference: DESIGN.md — dark-canvas, charcoal surfaces, per-product accents */
+
 :root {
-  /* PICC 品牌色 */
-  --color-primary: #DA251D;
-  --color-primary-light: #FFF0EF;
-  --color-primary-dark: #B71C1C;
-  --color-gold: #C5A05A;
-  --color-gold-light: #FBF5E8;
-  --color-success: #52C41A;
-  --color-success-light: #F0FBE8;
-  --color-warning: #FAAD14;
-  --color-warning-light: #FFF8E8;
-  --color-danger: #FF4D4F;
-  --color-danger-light: #FFF0F0;
-  --color-info: #8C8C8C;
+  /* ── Brand & Primary ── */
+  --color-primary: #ffffff;
+  --color-primary-light: #1f232b;
+  --color-primary-dark: #b2b6bd;
 
-  /* 扁平化背景色 */
-  --color-bg: #F5F5F5;
-  --color-bg-white: #FFFFFF;
-  --color-bg-card: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-input: #F0F0F0;
+  /* ── Per-Product Identity ── */
+  --color-terraform: #7b42bc;
+  --color-terraform-bright: #911ced;
+  --color-vault: #ffcf25;
+  --color-consul: #e62b1e;
+  --color-waypoint: #14c6cb;
+  --color-vagrant: #1868f2;
+  --color-nomad: #00ca8e;
+  --color-boundary: #f24c53;
 
-  /* 扁平化文字色 */
-  --color-text-primary: #1A1A1A;
-  --color-text-regular: #595959;
-  --color-text-secondary: #8C8C8C;
-  --color-text-placeholder: #BFBFBF;
+  /* ── Canvas & Surface ── */
+  --color-canvas: #000000;
+  --color-surface-1: #15181e;
+  --color-surface-2: #1f232b;
+  --color-surface-3: #3b3d45;
+  --color-inverse-canvas: #ffffff;
+  --color-inverse-ink: #000000;
 
-  /* 扁平化边框 */
-  --color-border: #E8E8E8;
-  --color-border-light: #F0F0F0;
+  /* ── Text ── */
+  --color-ink: #ffffff;
+  --color-ink-muted: #b2b6bd;
+  --color-ink-subtle: #656a76;
 
-  /* 扁平化 - 无阴影 */
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  /* ── Borders ── */
+  --color-hairline: #3b3d45;
+  --color-hairline-soft: #252830;
 
-  /* 间距 */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 24px;
+  /* ── Accent & Semantic ── */
+  --color-accent: #2b89ff;
+  --color-accent-blue: #2b89ff;
+  --color-semantic-visited: #a737ff;
+  --color-success: #00ca8e;
+  --color-warning: #ffcf25;
+  --color-error: #e62b1e;
 
-  /* 圆角 - 扁平化大圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* ── Backward-compat aliases (map old PICC tokens → HashiCorp) ── */
+  --color-bg: #000000;
+  --color-bg-white: #15181e;
+  --color-bg-card: #15181e;
+  --color-bg-elevated: #1f232b;
+  --color-bg-input: #1f232b;
 
-  /* 字体 */
-  --font-size-xs: 10px;
-  --font-size-sm: 12px;
+  --color-text-primary: #ffffff;
+  --color-text-regular: #b2b6bd;
+  --color-text-secondary: #656a76;
+  --color-text-placeholder: #656a76;
+
+  --color-border: #3b3d45;
+  --color-border-light: #252830;
+
+  --color-gold: #7b42bc;
+  --color-gold-light: #1f232b;
+
+  --color-danger: #e62b1e;
+  --color-danger-light: #1f232b;
+  --color-info: #656a76;
+
+  /* ── Typography (Inter ≈ hashicorpSans substitute) ── */
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif;
+  --font-display-xl: 80px;
+  --font-display-lg: 56px;
+  --font-display-md: 40px;
+  --font-headline: 28px;
+  --font-card-title: 22px;
+  --font-subhead: 20px;
+  --font-body-lg: 18px;
+  --font-body: 16px;
+  --font-body-sm: 14px;
+  --font-caption: 13px;
+  --font-button: 14px;
+  --font-eyebrow: 12px;
+
+  /* legacy size aliases */
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
   --font-size-md: 14px;
   --font-size-lg: 16px;
   --font-size-xl: 18px;
   --font-size-xxl: 22px;
 
-  /* 底部安全区域 */
+  /* ── Spacing (8px base) ── */
+  --spacing-hair: 1px;
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 96px;
+
+  /* legacy aliases */
+  --spacing-xs-legacy: 4px;
+  --spacing-sm-legacy: 8px;
+  --spacing-md-legacy: 12px;
+  --spacing-lg-legacy: 16px;
+  --spacing-xl-legacy: 24px;
+
+  /* ── Border Radius ── */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 24px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
+
+  /* ── Shadows: none (surface lift, not shadows) ── */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+
+  /* ── Misc ── */
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ========== 全局 Reset ========== */
+/* ========== Global Reset ========== */
 *,
 *::before,
 *::after {
@@ -76,25 +141,18 @@ body {
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   -webkit-overflow-scrolling: touch;
+  background: #000000;
 }
 
 body {
-  color: var(--color-text-primary);
-  background: var(--color-bg);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Helvetica Neue',
-    Helvetica,
-    'Segoe UI',
-    Arial,
-    Roboto,
-    'PingFang SC',
-    'Hiragino Sans GB',
-    'Microsoft YaHei',
-    sans-serif;
-  font-size: var(--font-size-md);
-  line-height: 1.5;
+  color: #ffffff;
+  background: #000000;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.50;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -105,7 +163,7 @@ ol {
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--color-accent);
   text-decoration: none;
   -webkit-touch-callout: none;
 }
@@ -134,19 +192,18 @@ img {
   max-width: 100%;
 }
 
-/* 滚动条 */
 ::-webkit-scrollbar {
   width: 0;
 }
 
-/* 单行文本溢出省略 */
+/* Single-line ellipsis */
 .text-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 多行文本溢出省略 */
+/* Two-line ellipsis */
 .text-ellipsis-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;

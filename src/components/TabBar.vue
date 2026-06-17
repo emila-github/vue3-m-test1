@@ -68,13 +68,14 @@ function switchTab(tab: Tab) {
 </template>
 
 <style scoped>
+/* HashiCorp tab bar: canvas black + top hairline */
 .tab-bar {
   display: flex;
   align-items: center;
   justify-content: space-around;
   height: 50px;
-  background: var(--color-bg-white);
-  border-top: 1px solid var(--color-border);
+  background: #000000;
+  border-top: 1px solid var(--color-hairline-soft);
   flex-shrink: 0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -88,11 +89,11 @@ function switchTab(tab: Tab) {
   height: 100%;
   cursor: pointer;
   transition: color 0.2s ease;
-  color: var(--color-text-placeholder);
+  color: var(--color-ink-subtle);
 }
 
 .tab-bar__item--active {
-  color: var(--color-primary);
+  color: var(--color-accent-blue);
 }
 
 .tab-bar__icon {
@@ -106,7 +107,11 @@ function switchTab(tab: Tab) {
 }
 
 .tab-bar__title {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 </style>

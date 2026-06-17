@@ -129,46 +129,56 @@ const menuList = [
 </template>
 
 <style scoped>
+/* ── User card: surface-1 charcoal header ── */
 .user-card {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 24px 16px;
-  background: var(--color-primary);
-  color: #FFFFFF;
+  padding: 28px 16px 24px;
+  background: var(--color-surface-1);
+  border-bottom: 1px solid var(--color-hairline-soft);
 }
 
 .user-card__avatar {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-hairline);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #FFFFFF;
+  color: var(--color-ink-muted);
 }
 
 .user-card__info {
   flex: 1;
+  min-width: 0;
 }
 
 .user-card__name {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-family: var(--font-family-body);
+  font-size: var(--font-subhead);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.2px;
+  color: var(--color-ink);
 }
 
 .user-card__desc {
-  font-size: var(--font-size-sm);
-  opacity: 0.8;
+  font-family: var(--font-family-body);
+  font-size: var(--font-caption);
+  font-weight: 500;
+  line-height: 1.38;
+  color: var(--color-ink-muted);
   margin-top: 4px;
 }
 
 .user-card__arrow {
-  opacity: 0.6;
   display: flex;
   align-items: center;
+  color: var(--color-ink-subtle);
 }
 
 .order-panel {
@@ -186,8 +196,8 @@ const menuList = [
 
 .order-panel__title {
   font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-text-primary);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .order-panel__more {
@@ -228,15 +238,15 @@ const menuList = [
   right: -10px;
   min-width: 16px;
   height: 16px;
-  background: var(--color-primary);
-  color: #fff;
+  background: var(--color-accent-blue);
+  color: #ffffff;
   font-size: 10px;
+  font-weight: 600;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
-  font-weight: 700;
+  padding: 0 5px;
 }
 
 .order-panel__label {
@@ -267,7 +277,7 @@ const menuList = [
 }
 
 .menu-item:active {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
 }
 
 .menu-item__icon {
