@@ -12,9 +12,9 @@ interface Banner {
 }
 
 const banners = ref<Banner[]>([
-  { id: 1, title: 'PICC 品质保障', subtitle: '专业保险 · 品质商城', bg: '#DA251D' },
-  { id: 2, title: '限时特惠', subtitle: '全场低至 5 折', bg: '#C5A05A' },
-  { id: 3, title: '爆款推荐', subtitle: '精选品质好物', bg: '#2C2C2C' },
+  { id: 1, title: '品质保障', subtitle: '专业服务 · 品质商城', bg: '#010120' },
+  { id: 2, title: '限时特惠', subtitle: '全场低至 5 折', bg: '#000000' },
+  { id: 3, title: '爆款推荐', subtitle: '精选品质好物', bg: '#313641' },
 ])
 
 const currentBanner = ref(0)
@@ -38,7 +38,7 @@ const hotList = ref(
   Array.from({ length: 6 }, (_, i) => ({
     id: i + 1,
     title: `热门商品 ${i + 1}`,
-    desc: 'PICC品质好物，限时特惠',
+    desc: '品质好物，限时特惠',
     price: (99.9 + i * 10).toFixed(1),
   })),
 )
@@ -50,21 +50,29 @@ const hotList = ref(
       <!-- 搜索栏 -->
       <div class="search-bar">
         <div class="search-bar__inner">
-          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
+          <svg
+            class="search-bar__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="16"
+            height="16"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
           </svg>
           <span class="search-bar__placeholder">搜索你想要的商品</span>
         </div>
       </div>
 
-      <!-- 轮播图 -->
+      <!-- 品牌渐变装饰条 -->
+      <div class="brand-stripe"></div>
+
+      <!-- 轮播图 - Dark hero 风格 -->
       <div class="banner-wrapper">
         <div class="banner">
-          <div
-            class="banner__inner"
-            :style="{ transform: `translateX(-${currentBanner * 100}%)` }"
-          >
+          <div class="banner__inner" :style="{ transform: `translateX(-${currentBanner * 100}%)` }">
             <div
               v-for="item in banners"
               :key="item.id"
@@ -72,6 +80,7 @@ const hotList = ref(
               :style="{ background: item.bg }"
             >
               <div class="banner__content">
+                <span class="banner__eyebrow">ON-DEMAND</span>
                 <h2 class="banner__title">{{ item.title }}</h2>
                 <p class="banner__subtitle">{{ item.subtitle }}</p>
               </div>
@@ -89,72 +98,118 @@ const hotList = ref(
         </div>
       </div>
 
-      <!-- 功能入口 -->
+      <!-- 功能入口 - Stats-card-tinted 风格 -->
       <div class="grid-nav">
-        <div class="grid-nav__item" v-for="(item, i) in [
-          { label: '热销', icon: 'hot', color: '#FFF0EF', stroke: '#DA251D' },
-          { label: '精品', icon: 'star', color: '#FBF5E8', stroke: '#C5A05A' },
-          { label: '新品', icon: 'diamond', color: '#E8F4FD', stroke: '#1890FF' },
-          { label: '礼包', icon: 'gift', color: '#F0FBE8', stroke: '#52C41A' },
-        ]" :key="i">
-          <div class="grid-nav__icon" :style="{ background: item.color }">
-            <svg v-if="item.icon === 'hot'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+        <div
+          class="grid-nav__item"
+          v-for="(item, i) in [
+            { label: '热销', icon: 'hot', color: '#010120', textColor: '#FFFFFF' },
+            { label: '精品', icon: 'star', color: '#010120', textColor: '#FFFFFF' },
+            { label: '新品', icon: 'diamond', color: '#010120', textColor: '#FFFFFF' },
+            { label: '礼包', icon: 'gift', color: '#010120', textColor: '#FFFFFF' },
+          ]"
+          :key="i"
+        >
+          <div class="grid-nav__icon" :style="{ background: item.color, color: item.textColor }">
+            <svg
+              v-if="item.icon === 'hot'"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="22"
+              height="22"
+            >
+              <path
+                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+              />
             </svg>
-            <svg v-if="item.icon === 'star'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <svg
+              v-if="item.icon === 'star'"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="22"
+              height="22"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
             </svg>
-            <svg v-if="item.icon === 'diamond'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <path d="M6 2h12l4 8-10 12L2 10l4-8z"/>
-              <path d="M2 10h20"/>
+            <svg
+              v-if="item.icon === 'diamond'"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="22"
+              height="22"
+            >
+              <path d="M6 2h12l4 8-10 12L2 10l4-8z" />
+              <path d="M2 10h20" />
             </svg>
-            <svg v-if="item.icon === 'gift'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-              <polyline points="20 12 20 22 4 22 4 12"/>
-              <rect x="2" y="7" width="20" height="5"/>
-              <line x1="12" y1="22" x2="12" y2="7"/>
-              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+            <svg
+              v-if="item.icon === 'gift'"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="22"
+              height="22"
+            >
+              <polyline points="20 12 20 22 4 22 4 12" />
+              <rect x="2" y="7" width="20" height="5" />
+              <line x1="12" y1="22" x2="12" y2="7" />
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
             </svg>
           </div>
           <span class="grid-nav__text">{{ item.label }}</span>
         </div>
       </div>
 
-      <!-- 热门推荐 -->
+      <!-- 热门推荐 - 用 section 标题 -->
       <div class="section">
         <div class="section__header">
-          <h3 class="section__title">
-            <span class="section__title-bar"></span>
-            热门推荐
-          </h3>
+          <span class="section__eyebrow">FEATURED</span>
+          <h3 class="section__title">热门推荐</h3>
           <span class="section__more" @click="router.push('/category')">更多</span>
         </div>
         <div class="goods-grid">
-          <div
-            v-for="item in hotList"
-            :key="item.id"
-            class="goods-card"
-            @click="goDetail(item.id)"
-          >
+          <div v-for="item in hotList" :key="item.id" class="goods-card" @click="goDetail(item.id)">
             <div class="goods-card__img">
-              <svg class="goods-card__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              <svg
+                class="goods-card__img-placeholder"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                width="40"
+                height="40"
+              >
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
-              <div class="goods-card__tag">热卖</div>
+              <span class="badge-subtle-on-dark">热卖</span>
             </div>
             <div class="goods-card__info">
               <p class="goods-card__title text-ellipsis">{{ item.title }}</p>
               <p class="goods-card__desc text-ellipsis">{{ item.desc }}</p>
               <div class="goods-card__bottom">
                 <p class="goods-card__price">¥{{ item.price }}</p>
-                <span class="goods-card__cart-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                  </svg>
-                </span>
+                <button class="btn-primary-icon">+</button>
               </div>
             </div>
           </div>
@@ -169,6 +224,7 @@ const hotList = ref(
 .search-bar {
   padding: 10px 16px;
   background: var(--color-bg-white);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .search-bar__inner {
@@ -176,7 +232,7 @@ const hotList = ref(
   align-items: center;
   height: 36px;
   background: var(--color-bg-input);
-  border-radius: 18px;
+  border-radius: var(--radius-sm);
   padding: 0 14px;
 }
 
@@ -187,20 +243,25 @@ const hotList = ref(
 }
 
 .search-bar__placeholder {
-  font-size: var(--font-size-sm);
+  font: var(--typo-body-md);
   color: var(--color-text-placeholder);
 }
 
-/* 轮播图 */
+/* 品牌渐变装饰条 */
+.brand-stripe {
+  height: 3px;
+  background: var(--gradient-brand);
+}
+
+/* 轮播图 - Dark hero 风格 */
 .banner-wrapper {
-  padding: 0 16px 12px;
-  background: var(--color-bg-white);
+  padding: 0;
+  background: var(--color-canvas-dark);
 }
 
 .banner {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-md);
 }
 
 .banner__inner {
@@ -210,28 +271,35 @@ const hotList = ref(
 
 .banner__item {
   min-width: 100%;
-  height: 140px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
 }
 
 .banner__content {
   text-align: center;
 }
 
+.banner__eyebrow {
+  font: var(--typo-mono-eyebrow);
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--color-accent-mint);
+  display: block;
+  margin-bottom: 8px;
+}
+
 .banner__title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: 1px;
+  font: var(--typo-display-xl);
+  color: var(--color-on-dark);
+  letter-spacing: -0.8px;
 }
 
 .banner__subtitle {
-  font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 4px;
+  font: var(--typo-body-md);
+  color: var(--color-text-secondary);
+  margin-top: 6px;
 }
 
 .banner__dots {
@@ -247,23 +315,23 @@ const hotList = ref(
   width: 6px;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .banner__dot--active {
-  background: #FFFFFF;
+  background: var(--color-on-dark);
   width: 18px;
 }
 
-/* 功能入口 */
+/* 功能入口 - Dark surface 风格 */
 .grid-nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 8px 16px 16px;
+  padding: 16px;
   background: var(--color-bg-white);
-  margin-bottom: 8px;
+  gap: 8px;
 }
 
 .grid-nav__item {
@@ -277,7 +345,7 @@ const hotList = ref(
 .grid-nav__icon {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,8 +357,9 @@ const hotList = ref(
 }
 
 .grid-nav__text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-regular);
+  font: var(--typo-body-md);
+  color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 /* 区块 */
@@ -301,51 +370,50 @@ const hotList = ref(
 
 .section__header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 0;
+  gap: 4px;
+}
+
+.section__eyebrow {
+  font: var(--typo-mono-eyebrow);
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
 }
 
 .section__title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
+  font: var(--typo-display-lg);
   color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section__title-bar {
-  width: 3px;
-  height: 16px;
-  background: var(--color-primary);
-  border-radius: 2px;
 }
 
 .section__more {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  font: var(--typo-body-md);
+  color: var(--color-primary);
+  font-weight: 500;
   cursor: pointer;
+  margin-top: 4px;
 }
 
 /* 商品网格 */
 .goods-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 
 .goods-card {
   background: var(--color-bg-white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   transition: border-color 0.2s ease;
 }
 
 .goods-card:active {
-  border-color: var(--color-primary-light);
+  border-color: var(--color-text-secondary);
 }
 
 .goods-card__img {
@@ -363,32 +431,31 @@ const hotList = ref(
   color: var(--color-text-placeholder);
 }
 
-.goods-card__tag {
+.badge-subtle-on-dark {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  padding: 2px 6px;
-  background: var(--color-primary);
-  color: #fff;
-  font-size: var(--font-size-xs);
-  border-radius: 3px;
-  font-weight: 600;
+  top: 8px;
+  left: 8px;
+  padding: 2px 8px;
+  background: var(--color-canvas-dark);
+  color: var(--color-on-dark);
+  font: var(--typo-body-md);
+  border-radius: var(--radius-sm);
 }
 
 .goods-card__info {
-  padding: 8px 10px;
+  padding: 10px 12px;
 }
 
 .goods-card__title {
-  font-size: var(--font-size-sm);
+  font: var(--typo-body-md);
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
 .goods-card__desc {
-  font-size: var(--font-size-xs);
+  font: var(--typo-caption, 12px/16px var(--font-family-display));
   color: var(--color-text-secondary);
-  margin: 2px 0 8px;
+  margin: 4px 0 10px;
 }
 
 .goods-card__bottom {
@@ -398,19 +465,22 @@ const hotList = ref(
 }
 
 .goods-card__price {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
+  font: var(--typo-display-md);
   color: var(--color-primary);
+  font-weight: 500;
 }
 
-.goods-card__cart-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+.btn-primary-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  font: var(--typo-mono-button);
+  font-size: 16px;
+  line-height: 1;
 }
 </style>

@@ -1,6 +1,6 @@
 @import './base.css';
 
-/* ========== PICC 扁平化全局布局 ========== */
+/* ========== Together AI 全局布局 ========== */
 #app {
   width: 100%;
   height: 100%;
@@ -35,12 +35,13 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* 通用卡片 */
+/* 通用卡片 - Together AI 风格：hairline 边框 + rounded-sm */
 .card {
   background: var(--color-bg-card);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   padding: var(--spacing-lg);
   margin: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--color-border);
 }
 
 /* 通用安全区适配 */
@@ -52,5 +53,5 @@
 .flat-divider {
   height: 1px;
   background: var(--color-border);
-  margin: 0 16px;
+  margin: 0 var(--spacing-lg);
 }

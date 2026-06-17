@@ -39,27 +39,67 @@ function switchTab(tab: Tab) {
     >
       <span class="tab-bar__icon">
         <!-- 首页 -->
-        <svg v-if="tab.icon === 'home'" viewBox="0 0 24 24" :fill="currentPath === tab.path ? 'currentColor' : 'none'" :stroke="currentPath === tab.path ? 'none' : 'currentColor'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
+        <svg
+          v-if="tab.icon === 'home'"
+          viewBox="0 0 24 24"
+          :fill="currentPath === tab.path ? 'currentColor' : 'none'"
+          :stroke="currentPath === tab.path ? 'none' : 'currentColor'"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          width="24"
+          height="24"
+        >
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
         <!-- 分类 -->
-        <svg v-if="tab.icon === 'category'" viewBox="0 0 24 24" :fill="currentPath === tab.path ? 'currentColor' : 'none'" :stroke="currentPath === tab.path ? 'none' : 'currentColor'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-          <rect x="3" y="3" width="7" height="7" rx="1"/>
-          <rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/>
-          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        <svg
+          v-if="tab.icon === 'category'"
+          viewBox="0 0 24 24"
+          :fill="currentPath === tab.path ? 'currentColor' : 'none'"
+          :stroke="currentPath === tab.path ? 'none' : 'currentColor'"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          width="24"
+          height="24"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
         <!-- 购物车 -->
-        <svg v-if="tab.icon === 'cart'" viewBox="0 0 24 24" :fill="currentPath === tab.path ? 'currentColor' : 'none'" :stroke="currentPath === tab.path ? 'none' : 'currentColor'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-          <circle cx="9" cy="21" r="1"/>
-          <circle cx="20" cy="21" r="1"/>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        <svg
+          v-if="tab.icon === 'cart'"
+          viewBox="0 0 24 24"
+          :fill="currentPath === tab.path ? 'currentColor' : 'none'"
+          :stroke="currentPath === tab.path ? 'none' : 'currentColor'"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          width="24"
+          height="24"
+        >
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
         </svg>
         <!-- 我的 -->
-        <svg v-if="tab.icon === 'mine'" viewBox="0 0 24 24" :fill="currentPath === tab.path ? 'currentColor' : 'none'" :stroke="currentPath === tab.path ? 'none' : 'currentColor'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
+        <svg
+          v-if="tab.icon === 'mine'"
+          viewBox="0 0 24 24"
+          :fill="currentPath === tab.path ? 'currentColor' : 'none'"
+          :stroke="currentPath === tab.path ? 'none' : 'currentColor'"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          width="24"
+          height="24"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
         </svg>
       </span>
       <span class="tab-bar__title">{{ tab.title }}</span>
@@ -106,7 +146,8 @@ function switchTab(tab: Tab) {
 }
 
 .tab-bar__title {
-  font-size: var(--font-size-xs);
-  line-height: 1;
+  font: var(--typo-mono-eyebrow);
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
 }
 </style>

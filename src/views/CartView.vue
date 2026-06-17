@@ -13,7 +13,7 @@ interface CartItem {
 }
 
 const cartList = ref<CartItem[]>([
-  { id: 1, title: '商品名称示例 1 - PICC品质精选好物', price: 99.9, count: 1, selected: true },
+  { id: 1, title: '商品名称示例 1 - 品质精选好物', price: 99.9, count: 1, selected: true },
   { id: 2, title: '商品名称示例 2 - 限时优惠', price: 199.0, count: 2, selected: true },
   { id: 3, title: '商品名称示例 3', price: 59.5, count: 1, selected: false },
 ])
@@ -37,9 +37,7 @@ const totalPrice = computed(() => {
 })
 
 const selectedCount = computed(() => {
-  return cartList.value
-    .filter((item) => item.selected)
-    .reduce((sum, item) => sum + item.count, 0)
+  return cartList.value.filter((item) => item.selected).reduce((sum, item) => sum + item.count, 0)
 })
 
 function toggleSelect(item: CartItem) {
@@ -63,8 +61,9 @@ function removeItem(id: number) {
 
 <template>
   <div class="page-container">
-    <!-- 顶部导航 -->
+    <!-- 顶部导航 - Together AI 风格 -->
     <div class="nav-bar">
+      <span class="nav-bar__eyebrow">CART</span>
       <h2 class="nav-bar__title">购物车</h2>
       <span class="nav-bar__action" @click="editMode = !editMode">
         {{ editMode ? '完成' : '编辑' }}
@@ -74,40 +73,70 @@ function removeItem(id: number) {
     <div class="page-content">
       <!-- 空状态 -->
       <div v-if="cartList.length === 0" class="empty-state">
-        <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
+        <svg
+          class="empty-state__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          width="64"
+          height="64"
+        >
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
         </svg>
         <p class="empty-state__text">购物车还是空的</p>
-        <button class="empty-state__btn" @click="router.push('/')">去逛逛</button>
+        <button class="btn-primary" @click="router.push('/')">去逛逛</button>
       </div>
 
       <!-- 购物车列表 -->
       <template v-else>
         <div class="cart-list">
-          <div
-            v-for="item in cartList"
-            :key="item.id"
-            class="cart-item"
-          >
+          <div v-for="item in cartList" :key="item.id" class="cart-item">
             <div
               class="cart-item__check"
               :class="{ 'cart-item__check--active': item.selected }"
               @click="toggleSelect(item)"
             >
-              <svg v-if="item.selected" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="item.selected"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
             <div class="cart-item__img">
-              <svg class="cart-item__img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="32" height="32">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              <svg
+                class="cart-item__img-placeholder"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                width="32"
+                height="32"
+              >
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
             </div>
             <div class="cart-item__info">
@@ -128,11 +157,27 @@ function removeItem(id: number) {
         <div class="settle-bar safe-area-bottom">
           <div class="settle-bar__left" @click="allSelected = !allSelected">
             <div class="settle-bar__check" :class="{ 'settle-bar__check--active': allSelected }">
-              <svg v-if="allSelected" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="allSelected"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
             <span class="settle-bar__all">全选</span>
@@ -142,10 +187,14 @@ function removeItem(id: number) {
               <span>合计：</span>
               <span class="settle-bar__price">¥{{ totalPrice }}</span>
             </div>
-            <button v-if="!editMode" class="settle-bar__btn">
+            <button v-if="!editMode" class="btn-primary settle-bar__btn">
               结算({{ selectedCount }})
             </button>
-            <button v-else class="settle-bar__btn settle-bar__btn--danger" @click="removeItem(1)">
+            <button
+              v-else
+              class="btn-primary settle-bar__btn settle-bar__btn--danger"
+              @click="removeItem(1)"
+            >
               删除
             </button>
           </div>
@@ -165,20 +214,31 @@ function removeItem(id: number) {
   padding: 0 16px;
   flex-shrink: 0;
   position: relative;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-bar__eyebrow {
+  font: var(--typo-mono-eyebrow);
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
 }
 
 .nav-bar__title {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
+  font: var(--typo-display-md);
   color: var(--color-text-primary);
 }
 
 .nav-bar__action {
   position: absolute;
   right: 16px;
-  font-size: var(--font-size-md);
+  top: 50%;
+  transform: translateY(-50%);
+  font: var(--typo-body-md);
   color: var(--color-primary);
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -198,16 +258,18 @@ function removeItem(id: number) {
 .empty-state__text {
   color: var(--color-text-secondary);
   margin: 16px 0 24px;
-  font-size: var(--font-size-md);
+  font: var(--typo-body-md);
 }
 
-.empty-state__btn {
-  padding: 10px 40px;
+/* 通用 button-primary */
+.btn-primary {
+  padding: 8px 28px;
   background: var(--color-primary);
-  color: #fff;
-  border-radius: 20px;
-  font-size: var(--font-size-md);
-  font-weight: 500;
+  color: var(--color-on-primary);
+  border-radius: var(--radius-sm);
+  font: var(--typo-mono-button);
+  letter-spacing: 0.08px;
+  text-transform: uppercase;
 }
 
 .cart-list {
@@ -220,7 +282,7 @@ function removeItem(id: number) {
   align-items: center;
   padding: 12px 16px;
   gap: 12px;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .cart-item:last-child {
@@ -260,7 +322,8 @@ function removeItem(id: number) {
 }
 
 .cart-item__title {
-  font-size: var(--font-size-md);
+  font: var(--typo-body-md);
+  font-weight: 500;
   color: var(--color-text-primary);
   line-height: 1.4;
 }
@@ -273,9 +336,9 @@ function removeItem(id: number) {
 }
 
 .cart-item__price {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
+  font: var(--typo-display-md);
   color: var(--color-primary);
+  font-weight: 500;
 }
 
 .cart-item__counter {
@@ -303,13 +366,13 @@ function removeItem(id: number) {
 }
 
 .counter__btn:first-child {
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
 }
 
 .counter__btn--plus {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   border-color: var(--color-primary);
 }
 
@@ -321,7 +384,7 @@ function removeItem(id: number) {
   justify-content: center;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  font-size: var(--font-size-sm);
+  font: var(--typo-body-md);
   color: var(--color-text-primary);
   background: var(--color-bg-white);
 }
@@ -358,7 +421,7 @@ function removeItem(id: number) {
 }
 
 .settle-bar__all {
-  font-size: var(--font-size-md);
+  font: var(--typo-body-md);
   color: var(--color-text-regular);
 }
 
@@ -369,27 +432,19 @@ function removeItem(id: number) {
 }
 
 .settle-bar__total {
-  font-size: var(--font-size-md);
+  font: var(--typo-body-md);
   color: var(--color-text-primary);
 }
 
 .settle-bar__price {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
+  font: var(--typo-display-md);
   color: var(--color-primary);
+  font-weight: 500;
 }
 
 .settle-bar__btn {
-  padding: 10px 28px;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: 22px;
-  font-size: var(--font-size-md);
-  font-weight: 600;
-}
-
-.settle-bar__btn:active {
-  background: var(--color-primary-dark);
+  padding: 8px 24px;
+  font-size: 13px;
 }
 
 .settle-bar__btn--danger {
