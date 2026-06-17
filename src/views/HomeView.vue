@@ -12,7 +12,7 @@ interface Banner {
 }
 
 const banners = ref<Banner[]>([
-  { id: 1, title: '品质生活', subtitle: '专业保险 · 品质商城', bg: '#272729' },
+  { id: 1, title: '品质生活', subtitle: '专业保险 · 品质商城', bg: '#26251e' },
   { id: 2, title: '限时特惠', subtitle: '全场低至 5 折', bg: '#1d1d1f' },
   { id: 3, title: '新款上市', subtitle: '精选品质好物', bg: '#2a2a2c' },
 ])
@@ -48,7 +48,7 @@ const hotList = ref(
   <div class="page-container">
     <div class="page-content">
 
-      <!-- Hero Tile — 暗色全幅 -->
+      <!-- Hero Tile — 暗色全幅 banner（display-sm / 400 / -0.11px） -->
       <section class="hero-tile">
         <div class="banner-wrapper">
           <div class="banner">
@@ -83,14 +83,14 @@ const hotList = ref(
         </div>
       </section>
 
-      <!-- 功能入口 — 浅色 Tile -->
+      <!-- 功能入口 — 暖奶油底 4 列 -->
       <section class="nav-tile">
         <div class="grid-nav">
           <div class="grid-nav__item" v-for="(item, i) in [
-            { label: '热销', icon: 'hot', stroke: '#ff6b6b' },
-            { label: '精品', icon: 'star', stroke: '#ffa726' },
-            { label: '新品', icon: 'diamond', stroke: '#0066cc' },
-            { label: '礼包', icon: 'gift', stroke: '#66bb6a' },
+            { label: '热销', icon: 'hot', stroke: '#cf2d56' },
+            { label: '精品', icon: 'star', stroke: '#c08532' },
+            { label: '新品', icon: 'diamond', stroke: '#f54e00' },
+            { label: '礼包', icon: 'gift', stroke: '#1f8a65' },
           ]" :key="i">
             <div class="grid-nav__icon">
               <svg v-if="item.icon === 'hot'" viewBox="0 0 24 24" fill="none" :stroke="item.stroke" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">
@@ -113,14 +113,14 @@ const hotList = ref(
         </div>
       </section>
 
-      <!-- 热门推荐 — Parchment Tile -->
+      <!-- 热门推荐 — 暖奶油底 + 白卡网格 -->
       <section class="goods-tile">
         <div class="goods-section">
           <div class="goods-section__header">
             <h3 class="goods-section__title">
               热门推荐
             </h3>
-            <a class="text-link" @click="router.push('/category')">查看全部 &rarr;</a>
+            <a class="text-link" @click="router.push('/category')">查看全部 →</a>
           </div>
           <div class="goods-grid">
             <div
@@ -149,7 +149,7 @@ const hotList = ref(
 </template>
 
 <style scoped>
-/* ===== Hero Tile (暗色全幅) ===== */
+/* ===== Hero Tile（暗色全幅） ===== */
 .hero-tile {
   background: var(--color-surface-tile-1);
   padding: 0 0 var(--spacing-md);
@@ -182,9 +182,10 @@ const hotList = ref(
 
 .banner__title {
   font-family: var(--font-family-display);
-  font-size: var(--text-display-lg);
-  font-weight: 600;
-  line-height: 1.1;
+  font-size: var(--text-display-sm);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.11px;
   color: var(--color-body-on-dark);
 }
 
@@ -193,7 +194,7 @@ const hotList = ref(
   font-size: var(--text-lead);
   font-weight: 400;
   line-height: 1.14;
-  letter-spacing: 0.196px;
+  letter-spacing: 0;
   color: var(--color-body-on-dark);
   opacity: 0.8;
   margin-top: var(--spacing-xs);
@@ -207,7 +208,12 @@ const hotList = ref(
 
 .banner__actions .btn-pill--secondary {
   color: var(--color-primary-on-dark);
-  border-color: var(--color-primary-on-dark);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+}
+
+.banner__actions .btn-pill--secondary:active {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .banner__dots {
@@ -232,7 +238,7 @@ const hotList = ref(
   background: var(--color-primary-on-dark);
 }
 
-/* ===== Nav Tile (白色) ===== */
+/* ===== Nav Tile（暖奶油底） ===== */
 .nav-tile {
   background: var(--color-canvas);
   padding: var(--spacing-md) 0 var(--spacing-lg);
@@ -256,29 +262,31 @@ const hotList = ref(
   width: 64px;
   height: 64px;
   border-radius: var(--radius-lg);
-  background: var(--color-canvas-parchment);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .grid-nav__item:active .grid-nav__icon {
-  transform: scale(0.92);
+  border-color: var(--color-ink-muted-48);
 }
 
 .grid-nav__text {
   font-family: var(--font-family-body);
   font-size: var(--text-caption);
   font-weight: 400;
-  color: var(--color-ink-muted-80);
-  letter-spacing: -0.224px;
+  letter-spacing: 0;
+  color: var(--color-body);
 }
 
-/* ===== Goods Tile (Parchment) ===== */
+/* ===== Goods Tile（暖奶油底 + 白卡） ===== */
 .goods-tile {
-  background: var(--color-canvas-parchment);
+  background: var(--color-canvas);
   padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-hairline);
 }
 
 .goods-section {
@@ -294,20 +302,20 @@ const hotList = ref(
 
 .goods-section__title {
   font-family: var(--font-family-display);
-  font-size: var(--text-tagline);
-  font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.231px;
+  font-size: var(--text-display-sm);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.11px;
   color: var(--color-ink);
 }
 
 .text-link {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
-  font-weight: 400;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
   color: var(--color-primary);
   cursor: pointer;
-  letter-spacing: -0.374px;
+  letter-spacing: 0;
 }
 
 .goods-grid {
@@ -317,12 +325,12 @@ const hotList = ref(
 }
 
 .goods-card {
-  background: var(--color-canvas);
+  background: var(--color-surface-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-hairline);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .goods-card:active {
@@ -332,7 +340,7 @@ const hotList = ref(
 .goods-card__img {
   width: 100%;
   height: 140px;
-  background: var(--color-canvas-parchment);
+  background: var(--color-canvas);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -351,8 +359,8 @@ const hotList = ref(
   font-family: var(--font-family-body);
   font-size: var(--text-caption);
   font-weight: 600;
-  line-height: 1.29;
-  letter-spacing: -0.224px;
+  line-height: 1.4;
+  letter-spacing: 0;
   color: var(--color-ink);
   margin-bottom: var(--spacing-xxs);
 }
@@ -361,8 +369,8 @@ const hotList = ref(
   font-family: var(--font-family-body);
   font-size: var(--text-body);
   font-weight: 600;
-  line-height: 1.24;
-  letter-spacing: -0.374px;
-  color: var(--color-ink);
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--color-primary);
 }
 </style>

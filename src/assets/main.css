@@ -37,43 +37,54 @@
   background: var(--color-canvas);
 }
 
-/* 通用胶囊按钮 */
+/* ===== Cursor 主按钮 —— 8px 圆角 / 40px 高 / 14px·500（button-primary 规范） ===== */
 .btn-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 11px 22px;
+  padding: 10px 18px;
+  height: 40px;
   background: var(--color-primary);
   color: #ffffff;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
-  font-weight: 400;
-  letter-spacing: -0.374px;
+  font-size: var(--text-button);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
   transition: background 0.15s ease;
-  min-height: 44px;
-  min-width: 44px;
+  min-width: auto;
+  min-height: auto;
 }
 
 .btn-pill:active {
-  transform: scale(0.95);
+  background: var(--color-primary-active);
 }
 
+/* 次要按钮：白底 + 强细线边框 */
 .btn-pill--secondary {
-  background: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  background: var(--color-surface-card);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
 }
 
-/* 通用卡片 */
+/* 下载/深色按钮：ink 底 + canvas 字 */
+.btn-pill--dark {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  padding: 12px 20px;
+  height: 44px;
+}
+
+/* ===== 卡片 —— 白卡 + 1px 细线 / 12px 圆角 ===== */
 .card-utility {
-  background: var(--color-canvas);
+  background: var(--color-surface-card);
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
 }
 
-/* 安全区 */
+/* ===== 安全区 ===== */
 .safe-area-bottom {
   padding-bottom: var(--safe-area-bottom);
 }

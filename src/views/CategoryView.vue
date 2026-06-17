@@ -18,7 +18,7 @@ const activeCategory = ref(0)
 <template>
   <div class="page-container">
     <div class="page-content">
-      <!-- Sub Nav — Parchment 毛玻璃 -->
+      <!-- Sub Nav — 暖奶油底，无 blur -->
       <div class="sub-nav">
         <div class="sub-nav__inner">
           <span class="sub-nav__title">全部分类</span>
@@ -32,7 +32,7 @@ const activeCategory = ref(0)
 
       <!-- 分类内容 -->
       <div class="category-wrapper">
-        <!-- 侧边栏 — Parchment 底 -->
+        <!-- 左侧边栏 — 暖奶油底 + 细线 -->
         <div class="category-sidebar">
           <div
             v-for="(item, index) in categories"
@@ -71,7 +71,7 @@ const activeCategory = ref(0)
           </div>
         </div>
 
-        <!-- 右侧内容 — 白色 -->
+        <!-- 右侧内容 — 暖奶油底 + 白卡网格 -->
         <div class="category-content">
           <div class="category-content__banner">
             <span class="banner-text">{{ categories[activeCategory]?.name }}</span>
@@ -94,12 +94,10 @@ const activeCategory = ref(0)
 </template>
 
 <style scoped>
-/* ===== Sub Nav ===== */
+/* ===== Sub Nav — 暖奶油，无 blur ===== */
 .sub-nav {
-  background: var(--color-canvas-parchment);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline);
   flex-shrink: 0;
 }
 
@@ -113,10 +111,10 @@ const activeCategory = ref(0)
 
 .sub-nav__title {
   font-family: var(--font-family-display);
-  font-size: var(--text-tagline);
+  font-size: var(--text-title-sm);
   font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.231px;
+  line-height: 1.4;
+  letter-spacing: 0;
   color: var(--color-ink);
 }
 
@@ -126,9 +124,9 @@ const activeCategory = ref(0)
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface-pearl);
-  border: 1px solid var(--color-divider-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
   color: var(--color-ink-muted-48);
   cursor: pointer;
 }
@@ -142,7 +140,8 @@ const activeCategory = ref(0)
 
 .category-sidebar {
   width: 94px;
-  background: var(--color-canvas-parchment);
+  background: var(--color-canvas);
+  border-right: 1px solid var(--color-hairline);
   overflow-y: auto;
   flex-shrink: 0;
 }
@@ -155,7 +154,7 @@ const activeCategory = ref(0)
   justify-content: center;
   gap: var(--spacing-xxs);
   cursor: pointer;
-  color: var(--color-ink-muted-80);
+  color: var(--color-ink-muted-48);
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
 }
@@ -163,7 +162,7 @@ const activeCategory = ref(0)
 .category-sidebar__item--active {
   color: var(--color-primary);
   font-weight: 600;
-  background: var(--color-canvas);
+  background: var(--color-surface-card);
   border-left-color: var(--color-primary);
 }
 
@@ -177,9 +176,9 @@ const activeCategory = ref(0)
 
 .category-sidebar__item-text {
   font-family: var(--font-family-body);
-  font-size: var(--text-nav-link);
+  font-size: var(--text-fine-print);
   font-weight: 400;
-  letter-spacing: -0.12px;
+  letter-spacing: 0;
 }
 
 .category-content {
@@ -191,8 +190,9 @@ const activeCategory = ref(0)
 
 .category-content__banner {
   height: 64px;
-  background: var(--color-canvas-parchment);
-  border-radius: var(--radius-sm);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,10 +201,10 @@ const activeCategory = ref(0)
 
 .banner-text {
   font-family: var(--font-family-display);
-  font-size: var(--text-tagline);
+  font-size: var(--text-title-md);
   font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.231px;
+  line-height: 1.4;
+  letter-spacing: 0;
   color: var(--color-ink);
 }
 
@@ -221,7 +221,7 @@ const activeCategory = ref(0)
   align-items: center;
   padding: var(--spacing-md) 0;
   cursor: pointer;
-  background: var(--color-canvas);
+  background: var(--color-surface-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-hairline);
   transition: border-color 0.15s ease;
@@ -245,7 +245,7 @@ const activeCategory = ref(0)
   font-family: var(--font-family-body);
   font-size: var(--text-caption);
   font-weight: 400;
-  letter-spacing: -0.224px;
-  color: var(--color-ink-muted-80);
+  letter-spacing: 0;
+  color: var(--color-body);
 }
 </style>

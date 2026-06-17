@@ -61,7 +61,7 @@ function removeItem(id: number) {
 
 <template>
   <div class="page-container">
-    <!-- Sub Nav -->
+    <!-- Sub Nav — 暖奶油，无 blur -->
     <div class="sub-nav">
       <h2 class="sub-nav__title">购物车</h2>
       <span class="sub-nav__action" @click="editMode = !editMode">
@@ -117,7 +117,7 @@ function removeItem(id: number) {
           </div>
         </div>
 
-        <!-- Floating Sticky Bar -->
+        <!-- Bottom Bar — 暖奶油，无 blur -->
         <div class="sticky-bar safe-area-bottom">
           <div class="sticky-bar__left" @click="allSelected = !allSelected">
             <div class="sticky-bar__check" :class="{ 'sticky-bar__check--active': allSelected }">
@@ -136,7 +136,7 @@ function removeItem(id: number) {
               <span class="sticky-bar__price">¥{{ totalPrice }}</span>
             </div>
             <button v-if="!editMode" class="btn-pill">结算({{ selectedCount }})</button>
-            <button v-else class="btn-pill" style="background: #ff3b30;" @click="removeItem(1)">删除</button>
+            <button v-else class="btn-pill btn-pill--danger" @click="removeItem(1)">删除</button>
           </div>
         </div>
       </template>
@@ -145,16 +145,14 @@ function removeItem(id: number) {
 </template>
 
 <style scoped>
-/* ===== Sub Nav ===== */
+/* ===== Sub Nav — 暖奶油，无 blur ===== */
 .sub-nav {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 48px;
-  background: var(--color-canvas-parchment);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline);
   flex-shrink: 0;
   position: relative;
   padding: 0 var(--spacing-lg);
@@ -162,10 +160,10 @@ function removeItem(id: number) {
 
 .sub-nav__title {
   font-family: var(--font-family-display);
-  font-size: var(--text-tagline);
+  font-size: var(--text-title-sm);
   font-weight: 600;
-  line-height: 1.19;
-  letter-spacing: 0.231px;
+  line-height: 1.4;
+  letter-spacing: 0;
   color: var(--color-ink);
 }
 
@@ -173,11 +171,11 @@ function removeItem(id: number) {
   position: absolute;
   right: var(--spacing-lg);
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
-  font-weight: 400;
+  font-size: var(--text-body-sm);
+  font-weight: 500;
   color: var(--color-primary);
   cursor: pointer;
-  letter-spacing: -0.374px;
+  letter-spacing: 0;
 }
 
 /* ===== Empty State ===== */
@@ -198,9 +196,9 @@ function removeItem(id: number) {
   font-family: var(--font-family-body);
   font-size: var(--text-body);
   font-weight: 400;
-  color: var(--color-ink-muted-80);
+  letter-spacing: 0;
+  color: var(--color-body);
   margin: var(--spacing-lg) 0 var(--spacing-xl);
-  letter-spacing: -0.374px;
 }
 
 /* ===== Cart List ===== */
@@ -239,7 +237,7 @@ function removeItem(id: number) {
 .cart-item__img {
   width: 80px;
   height: 80px;
-  background: var(--color-canvas-parchment);
+  background: var(--color-canvas);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -256,10 +254,10 @@ function removeItem(id: number) {
 
 .cart-item__title {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
+  font-size: var(--text-body-sm);
   font-weight: 400;
-  line-height: 1.47;
-  letter-spacing: -0.374px;
+  line-height: 1.5;
+  letter-spacing: 0;
   color: var(--color-ink);
 }
 
@@ -272,10 +270,10 @@ function removeItem(id: number) {
 
 .cart-item__price {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
+  font-size: var(--text-title-sm);
   font-weight: 600;
-  letter-spacing: -0.374px;
-  color: var(--color-ink);
+  letter-spacing: 0;
+  color: var(--color-primary);
 }
 
 .cart-item__counter {
@@ -290,17 +288,17 @@ function removeItem(id: number) {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-hairline);
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   user-select: none;
-  background: var(--color-canvas);
-  color: var(--color-ink-muted-80);
+  background: var(--color-surface-card);
+  color: var(--color-body);
   border-radius: var(--radius-xs);
   transition: background 0.15s ease;
 }
 
 .counter__btn:active {
-  background: var(--color-canvas-parchment);
+  background: var(--color-canvas);
 }
 
 .counter__btn--plus {
@@ -321,24 +319,22 @@ function removeItem(id: number) {
   font-size: var(--text-caption);
   font-weight: 400;
   color: var(--color-ink);
-  background: var(--color-canvas);
+  background: var(--color-surface-card);
 }
 
-/* ===== Floating Sticky Bar ===== */
+/* ===== Bottom Bar — 暖奶油，无 blur ===== */
 .sticky-bar {
   position: fixed;
   bottom: 50px;
   left: 0;
   right: 0;
-  height: 64px;
-  background: var(--color-canvas-parchment);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  height: 60px;
+  background: var(--color-canvas);
+  border-top: 1px solid var(--color-hairline);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--spacing-xl);
+  padding: 0 var(--spacing-lg);
   z-index: 10;
 }
 
@@ -365,31 +361,36 @@ function removeItem(id: number) {
 
 .sticky-bar__all {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
+  font-size: var(--text-body-sm);
   font-weight: 400;
-  letter-spacing: -0.374px;
-  color: var(--color-ink-muted-80);
+  letter-spacing: 0;
+  color: var(--color-body);
 }
 
 .sticky-bar__right {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .sticky-bar__total-label {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
+  font-size: var(--text-body-sm);
   font-weight: 400;
-  letter-spacing: -0.374px;
-  color: var(--color-ink-muted-80);
+  letter-spacing: 0;
+  color: var(--color-body);
 }
 
 .sticky-bar__price {
   font-family: var(--font-family-body);
-  font-size: var(--text-body);
+  font-size: var(--text-title-sm);
   font-weight: 600;
-  letter-spacing: -0.374px;
-  color: var(--color-ink);
+  letter-spacing: 0;
+  color: var(--color-primary);
+}
+
+.btn-pill--danger {
+  background: #cf2d56;
+  color: #fff;
 }
 </style>

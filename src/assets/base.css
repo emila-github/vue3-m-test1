@@ -1,72 +1,84 @@
-/* ========== Apple Design System - 品牌色 ========== */
+/* ========== Cursor Design System ========== */
 :root {
-  /* 唯一强调色 — Action Blue */
-  --color-primary: #0066cc;
-  --color-primary-focus: #0071e3;
-  --color-primary-on-dark: #2997ff;
+  /* ---- 品牌主色：Cursor Orange（唯一 CTA 色，稀缺使用） ---- */
+  --color-primary: #f54e00;
+  --color-primary-active: #d04200;
+  --color-primary-focus: #f54e00;
+  --color-primary-on-dark: #f54e00;
 
-  /* 表面色 */
-  --color-canvas: #ffffff;
-  --color-canvas-parchment: #f5f5f7;
-  --color-surface-pearl: #fafafc;
-  --color-surface-tile-1: #272729;
+  /* ---- 表面色：暖奶油基底 + 白卡对比 ---- */
+  --color-canvas: #f7f7f4;
+  --color-canvas-parchment: #f7f7f4;
+  --color-canvas-soft: #fafaf7;
+  --color-surface-pearl: #fafaf7;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #e6e5e0;
+  --color-surface-tile-1: #26251e;
   --color-surface-tile-2: #2a2a2c;
   --color-surface-black: #000000;
 
-  /* 文字色 */
-  --color-ink: #1d1d1f;
-  --color-body: #1d1d1f;
+  /* ---- 文字色：温暖近黑 ---- */
+  --color-ink: #26251e;
+  --color-body: #5a5852;
   --color-body-on-dark: #ffffff;
   --color-body-muted: #cccccc;
-  --color-ink-muted-80: #333333;
-  --color-ink-muted-48: #7a7a7a;
+  --color-ink-muted-80: #5a5852;
+  --color-ink-muted-48: #807d72;
+  --color-ink-muted-soft: #a09c92;
 
-  /* 分割线 */
-  --color-divider-soft: #f0f0f0;
-  --color-hairline: #e0e0e0;
+  /* ---- 细线：无阴影，仅细线分层 ---- */
+  --color-divider-soft: #efeee8;
+  --color-hairline: #e6e5e0;
+  --color-hairline-strong: #cfcdc4;
 
-  /* 间距 — 基准 8px */
+  /* ---- 间距（基准 4px） ---- */
   --spacing-xxs: 4px;
   --spacing-xs: 8px;
   --spacing-sm: 12px;
-  --spacing-md: 17px;
+  --spacing-base: 16px;
+  --spacing-md: 20px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-xxl: 48px;
   --spacing-section: 80px;
 
-  /* 圆角 */
+  /* ---- 圆角（紧凑开发者方言） ---- */
   --radius-none: 0px;
-  --radius-xs: 5px;
-  --radius-sm: 8px;
-  --radius-md: 11px;
-  --radius-lg: 18px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-pill: 9999px;
   --radius-full: 9999px;
 
-  /* 字体 — SF Pro 体系 */
-  --font-family-display: 'SF Pro Display', system-ui, -apple-system, sans-serif;
-  --font-family-body: 'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif;
+  /* ---- 字体：Inter 降级 CursorGothic ---- */
+  --font-family-display: 'CursorGothic', 'Inter', system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-body: 'CursorGothic', 'Inter', system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-code: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* 字体尺寸 Token */
-  --text-hero: 56px;
-  --text-display-lg: 40px;
-  --text-display-md: 34px;
-  --text-lead: 28px;
+  /* ---- 字体 Token（严格对齐 DESIGN.md 排版表） ---- */
+  --text-display-mega: 72px;
+  --text-display-lg: 36px;
+  --text-display-md: 26px;
+  --text-display-sm: 22px;
   --text-tagline: 21px;
-  --text-body: 17px;
-  --text-caption: 14px;
-  --text-caption-strong: 14px;
-  --text-button-large: 18px;
-  --text-button-utility: 14px;
+  --text-title-md: 18px;
+  --text-title-sm: 16px;
+  --text-body: 16px;
+  --text-body-sm: 14px;
+  --text-caption: 13px;
+  --text-caption-uppercase: 11px;
+  --text-button: 14px;
+  --text-nav-link: 14px;
   --text-fine-print: 12px;
-  --text-nav-link: 12px;
   --text-micro: 10px;
+  --text-lead: 28px;
 
-  /* 产品影像阴影 — 唯一阴影 */
-  --shadow-product: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+  /* ---- 无阴影 ---- */
+  --shadow-product: none;
 
-  /* 底部安全区 */
+  /* ---- 底部安全区 ---- */
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -94,16 +106,13 @@ body {
   font-family: var(--font-family-body);
   font-size: var(--text-body);
   font-weight: 400;
-  line-height: 1.47;
-  letter-spacing: -0.374px;
+  line-height: 1.5;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-ul,
-ol {
-  list-style: none;
-}
+ul, ol { list-style: none; }
 
 a {
   color: var(--color-primary);
@@ -120,8 +129,7 @@ button {
   cursor: pointer;
 }
 
-input,
-textarea {
+input, textarea {
   border: none;
   outline: none;
   font: inherit;
@@ -130,17 +138,10 @@ textarea {
   background: transparent;
 }
 
-img {
-  display: block;
-  max-width: 100%;
-}
+img { display: block; max-width: 100%; }
 
-/* 无滚动条 */
-::-webkit-scrollbar {
-  width: 0;
-}
+::-webkit-scrollbar { width: 0; }
 
-/* 文本截断 */
 .text-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
