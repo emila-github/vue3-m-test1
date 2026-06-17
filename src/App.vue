@@ -4,19 +4,19 @@ import TabBar from './components/TabBar.vue'
 </script>
 
 <template>
-  <div class="app-container">
+  <div class="app-shell">
     <RouterView />
     <TabBar />
   </div>
 </template>
 
 <style scoped>
-.app-container {
+.app-shell {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-canvas);
 }
 </style>

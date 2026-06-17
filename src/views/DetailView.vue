@@ -16,29 +16,26 @@ function goBack() {
 
 <template>
   <div class="page-container">
-    <!-- 顶部导航 -->
-    <div class="nav-bar">
-      <span class="nav-bar__back" @click="goBack">
+    <!-- Sub Nav — frosted -->
+    <div class="sub-nav">
+      <span class="sub-nav__back" @click="goBack">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
           <path d="m15 18-6-6 6-6"/>
         </svg>
       </span>
-      <h2 class="nav-bar__title">商品详情</h2>
-      <span class="nav-bar__share">
+      <h2 class="sub-nav__title">商品详情</h2>
+      <span class="sub-nav__share">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-          <circle cx="18" cy="5" r="3"/>
-          <circle cx="6" cy="12" r="3"/>
-          <circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
         </svg>
       </span>
     </div>
 
     <div class="page-content--full">
-      <!-- 商品图片 -->
-      <div class="detail-img">
-        <div class="detail-img__placeholder">
+      <!-- 商品图片 — Parchment 底 -->
+      <section class="img-tile">
+        <div class="detail-img">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="80" height="80">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
             <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -50,390 +47,381 @@ function goBack() {
           <span class="dot"></span>
           <span class="dot"></span>
         </div>
-      </div>
+      </section>
 
-      <!-- 商品信息 -->
-      <div class="detail-info">
-        <div class="detail-info__header">
-          <h1 class="detail-info__title">商品名称 - 商品 ID: {{ route.params.id }}</h1>
-          <div class="detail-info__badge">PICC自营</div>
+      <!-- 商品信息 — 白色 -->
+      <section class="info-tile">
+        <div class="detail-info">
+          <div class="detail-info__header">
+            <h1 class="detail-info__title">商品名称 - 商品 ID: {{ route.params.id }}</h1>
+            <span class="detail-info__badge">自营</span>
+          </div>
+          <div class="detail-info__price-row">
+            <span class="detail-info__price">¥99.90</span>
+            <span class="detail-info__original">¥199.00</span>
+          </div>
+          <p class="detail-info__desc">
+            品质保障，专业优选好物。这是一段商品描述文案，用于展示商品的基本信息和卖点。
+          </p>
         </div>
-        <div class="detail-info__price-row">
-          <span class="detail-info__symbol">¥</span>
-          <span class="detail-info__price">99.90</span>
-          <span class="detail-info__original">¥199.00</span>
-          <span class="detail-info__discount">5折</span>
-        </div>
-        <p class="detail-info__desc">
-          PICC品质保障，专业优选好物。这是一段商品描述文案，用于展示商品的基本信息和卖点。
-        </p>
-      </div>
+      </section>
 
-      <!-- 规格选择 -->
-      <div class="detail-spec">
-        <h3 class="detail-spec__title">规格选择</h3>
-        <div class="detail-spec__tags">
+      <!-- 规格选择 — 白色 -->
+      <section class="spec-tile">
+        <h3 class="spec-tile__title">选择规格</h3>
+        <div class="spec-tile__chips">
           <span
             v-for="(spec, i) in ['标准版', '升级版', '豪华版']"
             :key="i"
-            class="detail-spec__tag"
-            :class="{ 'detail-spec__tag--active': activeSpec === i }"
+            class="spec-chip"
+            :class="{ 'spec-chip--active': activeSpec === i }"
             @click="activeSpec = i"
           >{{ spec }}</span>
         </div>
-      </div>
+      </section>
 
-      <!-- 数量选择 -->
-      <div class="detail-quantity">
-        <span class="detail-quantity__label">数量</span>
-        <div class="detail-quantity__counter">
+      <!-- 数量 — 白色 -->
+      <section class="qty-tile">
+        <span class="qty-tile__label">数量</span>
+        <div class="qty-tile__counter">
           <span class="counter__btn" @click="count > 1 && count--">−</span>
           <span class="counter__num">{{ count }}</span>
           <span class="counter__btn counter__btn--plus" @click="count++">+</span>
         </div>
-      </div>
+      </section>
 
-      <!-- 底部操作栏 -->
-      <div class="detail-action safe-area-bottom">
-        <div class="detail-action__icons">
-          <div class="detail-action__icon-item" @click="router.push('/cart')">
+      <!-- Floating Sticky Bar -->
+      <div class="sticky-bar safe-area-bottom">
+        <div class="sticky-bar__icons">
+          <div class="sticky-bar__icon-item" @click="router.push('/cart')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 01-8 0"/>
+              <line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
             </svg>
-            <span class="detail-action__icon-label">购物车</span>
+            <span class="sticky-bar__icon-label">购物车</span>
           </div>
           <div
-            class="detail-action__icon-item"
-            :class="{ 'detail-action__icon-item--active': selected }"
+            class="sticky-bar__icon-item"
+            :class="{ 'sticky-bar__icon-item--active': selected }"
             @click="selected = !selected"
           >
             <svg viewBox="0 0 24 24" :fill="selected ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" width="22" height="22">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            <span class="detail-action__icon-label">收藏</span>
+            <span class="sticky-bar__icon-label">收藏</span>
           </div>
         </div>
-        <button class="detail-action__cart" @click="router.push('/cart')">
-          加入购物车
-        </button>
-        <button class="detail-action__buy">立即购买</button>
+        <button class="btn-pill btn-pill--secondary" @click="router.push('/cart')">加入购物车</button>
+        <button class="btn-pill">立即购买</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.nav-bar {
+/* ===== Sub Nav ===== */
+.sub-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 44px;
-  background: var(--color-bg-white);
-  padding: 0 16px;
+  height: 48px;
+  background: var(--color-canvas-parchment);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
   position: relative;
-  border-bottom: 1px solid var(--color-border-light);
+  padding: 0 var(--spacing-lg);
 }
 
-.nav-bar__back {
+.sub-nav__back {
   position: absolute;
-  left: 12px;
+  left: var(--spacing-sm);
   cursor: pointer;
-  color: var(--color-text-primary);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
 }
 
-.nav-bar__title {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
+.sub-nav__title {
+  font-family: var(--font-family-display);
+  font-size: var(--text-tagline);
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+  color: var(--color-ink);
 }
 
-.nav-bar__share {
+.sub-nav__share {
   position: absolute;
-  right: 16px;
+  right: var(--spacing-lg);
   cursor: pointer;
-  color: var(--color-text-primary);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
 }
 
-/* 商品图片 */
-.detail-img {
+/* ===== 图片 Tile ===== */
+.img-tile {
+  background: var(--color-canvas-parchment);
   width: 100%;
   height: 300px;
-  background: var(--color-bg-input);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
-.detail-img__placeholder {
-  color: var(--color-text-placeholder);
-  opacity: 0.25;
+.detail-img {
+  color: var(--color-ink-muted-48);
+  opacity: 0.2;
 }
 
 .detail-img__dots {
   position: absolute;
-  bottom: 16px;
+  bottom: var(--spacing-lg);
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color-text-placeholder);
-  opacity: 0.3;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-ink-muted-48);
+  opacity: 0.25;
 }
 
 .dot--active {
   opacity: 1;
-  background: var(--color-primary);
-  width: 18px;
+  background: var(--color-ink-muted-80);
 }
 
-/* 商品信息 */
+/* ===== 信息 Tile ===== */
+.info-tile {
+  background: var(--color-canvas);
+  padding: 0;
+}
+
 .detail-info {
-  background: var(--color-bg-white);
-  padding: 16px;
-  margin-top: 8px;
+  padding: var(--spacing-lg);
 }
 
 .detail-info__header {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--spacing-xs);
 }
 
 .detail-info__title {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1.4;
+  font-family: var(--font-family-body);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.24;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
   flex: 1;
 }
 
 .detail-info__badge {
-  padding: 2px 8px;
-  background: var(--color-primary-light);
+  padding: 2px var(--spacing-xs);
   color: var(--color-primary);
-  font-size: var(--font-size-xs);
-  border-radius: 3px;
-  flex-shrink: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--text-fine-print);
   font-weight: 600;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
 }
 
 .detail-info__price-row {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.detail-info__symbol {
-  font-size: var(--font-size-md);
-  color: var(--color-primary);
-  font-weight: 700;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
 }
 
 .detail-info__price {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--color-primary);
-  letter-spacing: -1px;
+  font-family: var(--font-family-display);
+  font-size: var(--text-display-md);
+  font-weight: 600;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
 }
 
 .detail-info__original {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-placeholder);
+  font-family: var(--font-family-body);
+  font-size: var(--text-caption);
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  color: var(--color-ink-muted-48);
   text-decoration: line-through;
 }
 
-.detail-info__discount {
-  font-size: var(--font-size-xs);
-  color: #fff;
-  background: var(--color-primary);
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-weight: 600;
-}
-
 .detail-info__desc {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-top: 12px;
-  line-height: 1.6;
+  font-family: var(--font-family-body);
+  font-size: var(--text-caption);
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -0.224px;
+  color: var(--color-ink-muted-80);
+  margin-top: var(--spacing-md);
 }
 
-/* 规格 */
-.detail-spec {
-  background: var(--color-bg-white);
-  padding: 16px;
-  margin-top: 8px;
+/* ===== 规格 Tile ===== */
+.spec-tile {
+  background: var(--color-canvas);
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
 }
 
-.detail-spec__title {
-  font-size: var(--font-size-md);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 10px;
+.spec-tile__title {
+  font-family: var(--font-family-body);
+  font-size: var(--text-body);
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
+  margin-bottom: var(--spacing-sm);
 }
 
-.detail-spec__tags {
+.spec-tile__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--spacing-sm);
 }
 
-.detail-spec__tag {
-  padding: 8px 18px;
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-input);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-regular);
+.spec-chip {
+  padding: var(--spacing-sm) 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  font-family: var(--font-family-body);
+  font-size: var(--text-caption);
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  color: var(--color-ink);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.detail-spec__tag--active {
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  font-weight: 600;
+.spec-chip--active {
+  border-color: var(--color-primary-focus);
+  border-width: 2px;
 }
 
-/* 数量 */
-.detail-quantity {
+/* ===== 数量 Tile ===== */
+.qty-tile {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background: var(--color-bg-white);
-  margin-top: 8px;
+  padding: var(--spacing-lg);
+  background: var(--color-canvas);
 }
 
-.detail-quantity__label {
-  font-size: var(--font-size-md);
-  color: var(--color-text-primary);
+.qty-tile__label {
+  font-family: var(--font-family-body);
+  font-size: var(--text-body);
   font-weight: 600;
+  letter-spacing: -0.374px;
+  color: var(--color-ink);
 }
 
-.detail-quantity__counter {
+.qty-tile__counter {
   display: flex;
   align-items: center;
 }
 
 .counter__btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-hairline);
   font-size: 18px;
   cursor: pointer;
   user-select: none;
-  background: var(--color-bg-white);
-  color: var(--color-text-regular);
-  border-radius: 4px 0 0 4px;
+  background: var(--color-canvas);
+  color: var(--color-ink-muted-80);
+  border-radius: var(--radius-xs);
   transition: background 0.15s ease;
 }
 
 .counter__btn:active {
-  background: var(--color-bg-input);
+  background: var(--color-canvas-parchment);
 }
 
 .counter__btn--plus {
-  border-radius: 0 4px 4px 0;
   background: var(--color-primary);
   color: #fff;
   border-color: var(--color-primary);
 }
 
 .counter__num {
-  width: 44px;
-  height: 32px;
+  width: 48px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  font-size: var(--font-size-md);
-  color: var(--color-text-primary);
-  font-weight: 600;
+  border-top: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+  font-family: var(--font-family-body);
+  font-size: var(--text-caption);
+  font-weight: 400;
+  color: var(--color-ink);
 }
 
-/* 底部操作栏 */
-.detail-action {
+/* ===== Floating Sticky Bar ===== */
+.sticky-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 52px;
-  background: var(--color-bg-white);
-  border-top: 1px solid var(--color-border);
+  height: 64px;
+  background: var(--color-canvas-parchment);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  gap: 10px;
+  padding: 0 var(--spacing-sm);
+  gap: var(--spacing-xs);
   z-index: 10;
 }
 
-.detail-action__icons {
+.sticky-bar__icons {
   display: flex;
-  gap: 8px;
+  gap: 0;
   flex-shrink: 0;
 }
 
-.detail-action__icon-item {
+.sticky-bar__icon-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   cursor: pointer;
-  color: var(--color-text-secondary);
+  color: var(--color-ink-muted-48);
   transition: color 0.15s ease;
-  padding: 0 6px;
+  padding: 0 var(--spacing-xs);
+  min-width: 48px;
 }
 
-.detail-action__icon-item--active {
+.sticky-bar__icon-item--active {
   color: var(--color-primary);
 }
 
-.detail-action__icon-label {
-  font-size: var(--font-size-xs);
-}
-
-.detail-action__cart {
-  flex: 1;
-  height: 38px;
-  background: var(--color-gold);
-  color: #fff;
-  border-radius: 19px;
-  font-size: var(--font-size-md);
-  font-weight: 600;
-}
-
-.detail-action__cart:active {
-  background: #B08B3C;
-}
-
-.detail-action__buy {
-  flex: 1;
-  height: 38px;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: 19px;
-  font-size: var(--font-size-md);
-  font-weight: 600;
-}
-
-.detail-action__buy:active {
-  background: var(--color-primary-dark);
+.sticky-bar__icon-label {
+  font-family: var(--font-family-body);
+  font-size: var(--text-nav-link);
+  font-weight: 400;
+  letter-spacing: -0.12px;
 }
 </style>

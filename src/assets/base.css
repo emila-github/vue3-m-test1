@@ -1,62 +1,72 @@
-/* ========== PICC 品牌扁平化 CSS 变量 ========== */
+/* ========== Apple Design System - 品牌色 ========== */
 :root {
-  /* PICC 品牌色 */
-  --color-primary: #DA251D;
-  --color-primary-light: #FFF0EF;
-  --color-primary-dark: #B71C1C;
-  --color-gold: #C5A05A;
-  --color-gold-light: #FBF5E8;
-  --color-success: #52C41A;
-  --color-success-light: #F0FBE8;
-  --color-warning: #FAAD14;
-  --color-warning-light: #FFF8E8;
-  --color-danger: #FF4D4F;
-  --color-danger-light: #FFF0F0;
-  --color-info: #8C8C8C;
+  /* 唯一强调色 — Action Blue */
+  --color-primary: #0066cc;
+  --color-primary-focus: #0071e3;
+  --color-primary-on-dark: #2997ff;
 
-  /* 扁平化背景色 */
-  --color-bg: #F5F5F5;
-  --color-bg-white: #FFFFFF;
-  --color-bg-card: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-input: #F0F0F0;
+  /* 表面色 */
+  --color-canvas: #ffffff;
+  --color-canvas-parchment: #f5f5f7;
+  --color-surface-pearl: #fafafc;
+  --color-surface-tile-1: #272729;
+  --color-surface-tile-2: #2a2a2c;
+  --color-surface-black: #000000;
 
-  /* 扁平化文字色 */
-  --color-text-primary: #1A1A1A;
-  --color-text-regular: #595959;
-  --color-text-secondary: #8C8C8C;
-  --color-text-placeholder: #BFBFBF;
+  /* 文字色 */
+  --color-ink: #1d1d1f;
+  --color-body: #1d1d1f;
+  --color-body-on-dark: #ffffff;
+  --color-body-muted: #cccccc;
+  --color-ink-muted-80: #333333;
+  --color-ink-muted-48: #7a7a7a;
 
-  /* 扁平化边框 */
-  --color-border: #E8E8E8;
-  --color-border-light: #F0F0F0;
+  /* 分割线 */
+  --color-divider-soft: #f0f0f0;
+  --color-hairline: #e0e0e0;
 
-  /* 扁平化 - 无阴影 */
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  /* 间距 — 基准 8px */
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 17px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section: 80px;
 
-  /* 间距 */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 24px;
+  /* 圆角 */
+  --radius-none: 0px;
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
 
-  /* 圆角 - 扁平化大圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* 字体 — SF Pro 体系 */
+  --font-family-display: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  --font-family-body: 'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif;
 
-  /* 字体 */
-  --font-size-xs: 10px;
-  --font-size-sm: 12px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-xxl: 22px;
+  /* 字体尺寸 Token */
+  --text-hero: 56px;
+  --text-display-lg: 40px;
+  --text-display-md: 34px;
+  --text-lead: 28px;
+  --text-tagline: 21px;
+  --text-body: 17px;
+  --text-caption: 14px;
+  --text-caption-strong: 14px;
+  --text-button-large: 18px;
+  --text-button-utility: 14px;
+  --text-fine-print: 12px;
+  --text-nav-link: 12px;
+  --text-micro: 10px;
 
-  /* 底部安全区域 */
+  /* 产品影像阴影 — 唯一阴影 */
+  --shadow-product: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+
+  /* 底部安全区 */
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -79,22 +89,13 @@ body {
 }
 
 body {
-  color: var(--color-text-primary);
-  background: var(--color-bg);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Helvetica Neue',
-    Helvetica,
-    'Segoe UI',
-    Arial,
-    Roboto,
-    'PingFang SC',
-    'Hiragino Sans GB',
-    'Microsoft YaHei',
-    sans-serif;
-  font-size: var(--font-size-md);
-  line-height: 1.5;
+  color: var(--color-body);
+  background: var(--color-canvas);
+  font-family: var(--font-family-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -134,19 +135,18 @@ img {
   max-width: 100%;
 }
 
-/* 滚动条 */
+/* 无滚动条 */
 ::-webkit-scrollbar {
   width: 0;
 }
 
-/* 单行文本溢出省略 */
+/* 文本截断 */
 .text-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 多行文本溢出省略 */
 .text-ellipsis-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
