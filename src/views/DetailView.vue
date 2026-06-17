@@ -313,7 +313,8 @@ function goBack() {
 
 .spec-chip--active {
   border-color: var(--color-primary-focus);
-  border-width: 2px;
+  outline: 1px solid var(--color-primary-focus);
+  outline-offset: -2px;
 }
 
 /* ===== 数量 Tile ===== */
@@ -423,5 +424,14 @@ function goBack() {
   font-size: var(--text-nav-link);
   font-weight: 400;
   letter-spacing: -0.12px;
+}
+
+/* sticky bar 内按钮收窄 */
+.sticky-bar .btn-pill {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: var(--text-caption);
+  letter-spacing: -0.224px;
+  min-height: 36px;
 }
 </style>
