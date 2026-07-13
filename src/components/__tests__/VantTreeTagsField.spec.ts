@@ -15,7 +15,10 @@ const tree = [
   {
     text: '浙江',
     value: 'zj',
-    children: [{ text: '杭州', value: 'hz' }, { text: '宁波', value: 'nb' }],
+    children: [
+      { text: '杭州', value: 'hz' },
+      { text: '宁波', value: 'nb' },
+    ],
   },
   { text: '江苏', value: 'js', children: [{ text: '南京', value: 'nj' }] },
 ]
@@ -112,7 +115,12 @@ describe('VantTreeTagsField', () => {
     // 从折叠态开始（open() 会先展开第一层，点击会折叠回去），验证“点击父节点仅展开”
     vm.expanded = new Set()
     vm.tempSelected = []
-    vm.onRowClick({ node: { text: '浙江', value: 'zj' }, depth: 0, hasChildren: true, expanded: false })
+    vm.onRowClick({
+      node: { text: '浙江', value: 'zj' },
+      depth: 0,
+      hasChildren: true,
+      expanded: false,
+    })
     // 不应勾选父节点，仅展开
     expect(vm.tempSelected).not.toContain('zj')
     expect(vm.expanded.has('zj')).toBe(true)

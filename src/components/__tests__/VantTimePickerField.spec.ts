@@ -45,13 +45,19 @@ describe('VantTimePickerField', () => {
   })
 
   it('onConfirm time 返回 HH:mm', () => {
-    const wrapper = shallowMount(VantTimePickerField, { global: { stubs }, props: { type: 'time' } })
+    const wrapper = shallowMount(VantTimePickerField, {
+      global: { stubs },
+      props: { type: 'time' },
+    })
     ;(wrapper.vm as any).onConfirm({ selectedValues: ['09', '30'] })
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['09:30'])
   })
 
   it('onConfirm date 返回 YYYY-MM-DD', () => {
-    const wrapper = shallowMount(VantTimePickerField, { global: { stubs }, props: { type: 'date' } })
+    const wrapper = shallowMount(VantTimePickerField, {
+      global: { stubs },
+      props: { type: 'date' },
+    })
     ;(wrapper.vm as any).onConfirm({ selectedValues: ['2026', '07', '10'] })
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2026-07-10'])
   })

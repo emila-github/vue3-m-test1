@@ -9,11 +9,7 @@ vi.mock('@/api/modules/permission', () => ({
   })),
 }))
 
-import {
-  permissionDirective,
-  permissionAllDirective,
-  permissionNoneDirective,
-} from '../permission'
+import { permissionDirective, permissionAllDirective, permissionNoneDirective } from '../permission'
 import { usePermission } from '@/composables/usePermission'
 
 const el = () => document.createElement('button')

@@ -14,7 +14,10 @@ const tree = [
   {
     text: '浙江',
     value: 'zj',
-    children: [{ text: '杭州', value: 'hz' }, { text: '宁波', value: 'nb' }],
+    children: [
+      { text: '杭州', value: 'hz' },
+      { text: '宁波', value: 'nb' },
+    ],
   },
   { text: '江苏', value: 'js', children: [{ text: '南京', value: 'nj' }] },
 ]

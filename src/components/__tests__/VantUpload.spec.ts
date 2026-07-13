@@ -22,37 +22,63 @@ function file(name: string, size: number, type = 'image/png') {
 
 describe('VantUpload', () => {
   it('realMaxSize 默认值：image 5 / document 10 / 自定义', () => {
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { type: 'image' } }).vm as any).realMaxSize).toBe(5)
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { type: 'document' } }).vm as any).realMaxSize).toBe(10)
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { maxSize: 20 } }).vm as any).realMaxSize).toBe(20)
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { type: 'image' } }).vm as any)
+        .realMaxSize,
+    ).toBe(5)
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { type: 'document' } }).vm as any)
+        .realMaxSize,
+    ).toBe(10)
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { maxSize: 20 } }).vm as any)
+        .realMaxSize,
+    ).toBe(20)
   })
 
   it('realAccept 默认值：image image/* / document image/*,.pdf / 自定义', () => {
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { type: 'image' } }).vm as any).realAccept).toBe('image/*')
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { type: 'document' } }).vm as any).realAccept).toBe('image/*,.pdf')
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { accept: 'image/png' } }).vm as any).realAccept).toBe('image/png')
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { type: 'image' } }).vm as any)
+        .realAccept,
+    ).toBe('image/*')
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { type: 'document' } }).vm as any)
+        .realAccept,
+    ).toBe('image/*,.pdf')
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { accept: 'image/png' } }).vm as any)
+        .realAccept,
+    ).toBe('image/png')
   })
 
   it('effectiveMaxCount：单选 1 / 多选 9 / 多选指定 maxCount', () => {
     expect((shallowMount(VantUpload, { global: { stubs } }).vm as any).effectiveMaxCount).toBe(1)
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { multiple: true } }).vm as any).effectiveMaxCount).toBe(9)
-    expect((shallowMount(VantUpload, { global: { stubs }, props: { multiple: true, maxCount: 3 } }).vm as any).effectiveMaxCount).toBe(3)
+    expect(
+      (shallowMount(VantUpload, { global: { stubs }, props: { multiple: true } }).vm as any)
+        .effectiveMaxCount,
+    ).toBe(9)
+    expect(
+      (
+        shallowMount(VantUpload, { global: { stubs }, props: { multiple: true, maxCount: 3 } })
+          .vm as any
+      ).effectiveMaxCount,
+    ).toBe(3)
   })
 
   it('formatSize 单位换算', () => {
-    const vm = (shallowMount(VantUpload, { global: { stubs } }).vm as any)
+    const vm = shallowMount(VantUpload, { global: { stubs } }).vm as any
     expect(vm.formatSize(500)).toBe('500 B')
     expect(vm.formatSize(2048)).toBe('2.0 KB')
     expect(vm.formatSize(3 * 1024 * 1024)).toBe('3.00 MB')
   })
 
   it('nameFromUrl 解码文件名', () => {
-    const vm = (shallowMount(VantUpload, { global: { stubs } }).vm as any)
+    const vm = shallowMount(VantUpload, { global: { stubs } }).vm as any
     expect(vm.nameFromUrl('https://x.com/a%20b.png?t=1')).toBe('a b.png')
   })
 
   it('docIcon 按扩展名选择图标', () => {
-    const vm = (shallowMount(VantUpload, { global: { stubs } }).vm as any)
+    const vm = shallowMount(VantUpload, { global: { stubs } }).vm as any
     expect(vm.docIcon({ name: 'a.png' })).toBe('photo-o')
     expect(vm.docIcon({ name: 'a.pdf' })).toBe('description-o')
     expect(vm.docIcon({ name: 'a.zip' })).toBe('file-o')
@@ -65,7 +91,10 @@ describe('VantUpload', () => {
   })
 
   it('beforeRead 超限返回 false 并派发 oversize', () => {
-    const wrapper = shallowMount(VantUpload, { global: { stubs }, props: { type: 'image', maxSize: 5 } })
+    const wrapper = shallowMount(VantUpload, {
+      global: { stubs },
+      props: { type: 'image', maxSize: 5 },
+    })
     const ok = (wrapper.vm as any).beforeRead(file('big.png', 6 * 1024 * 1024))
     expect(ok).toBe(false)
     expect(wrapper.emitted('oversize')).toBeTruthy()
@@ -89,7 +118,10 @@ describe('VantUpload', () => {
   })
 
   it('removeItem 删除并派发 remove', () => {
-    const wrapper = shallowMount(VantUpload, { global: { stubs }, props: { modelValue: 'http://x' } })
+    const wrapper = shallowMount(VantUpload, {
+      global: { stubs },
+      props: { modelValue: 'http://x' },
+    })
     // 必须用 fileList 中真实存在的对象引用，removeItem 按引用查找
     const item = (wrapper.vm as any).fileList[0]
     ;(wrapper.vm as any).removeItem(item)
@@ -98,7 +130,8 @@ describe('VantUpload', () => {
   })
 
   it('toItems 由 modelValue 还原文件项', () => {
-    const vm = (shallowMount(VantUpload, { global: { stubs }, props: { modelValue: 'http://a' } }).vm as any)
+    const vm = shallowMount(VantUpload, { global: { stubs }, props: { modelValue: 'http://a' } })
+      .vm as any
     expect(vm.toItems('http://a')).toEqual([
       { url: 'http://a', value: 'http://a', name: 'a', status: 'done' },
     ])
