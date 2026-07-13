@@ -1,0 +1,23 @@
+@import './base.css';
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+  color: #3178c6;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #235a97;
+}
+
+@media (min-width: 1024px) {
+  #app {
+    padding: 0 2rem;
+  }
+}
