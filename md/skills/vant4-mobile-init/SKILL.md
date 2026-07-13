@@ -5,11 +5,12 @@ description: >
   本地 Mock 插件（写盘上传 + 约定路由）+ 角色权限（v-permission 指令 + usePermission 单例）+
   自由路由（vue-router 5 原生约定式 + 手写并存）+ Vite 优化（代理自解析 / Mock 插件 /
   组件按需 / 包分析）」的完整工程化能力，并附带 src/views/vant 下 12 个 Vant 示例页
-  （VantIndex + 10 个 VantXXXXXDemo）及其对应的 components 与 composables。涉及「从零搭建
+  （VantIndex + 10 个 VantXXXXXDemo）及其对应的 components 与 composables，并附带覆盖组件 /
+  composables / directives 的单元测试（Vitest + @vue/test-utils）。涉及「从零搭建
   Vant4 移动端」「给现有 Vue3 项目接入 Vant4 移动端工程化（api/mock/权限/自由路由/vite 优化）」
   「套用本项目 Vant 示例」的任务必须加载此技能；若目标项目同时存在 vant-picc-skin 技能则
   自动完成 PICC 皮肤初始化。
-version: 1.0.0
+version: 1.1.0
 license: MIT
 metadata:
   author: 'PICC Design System'
@@ -100,6 +101,15 @@ pnpm dev:mock         # 本地 Mock 模式（vite --mode mock），无需后端�
 - **包分析**：`rollup-plugin-visualizer` 打包后生成 `stats.html`。
 - **开发体验**：`vite-plugin-vue-devtools`、`@vitejs/plugin-vue-jsx`。
 
+### 1.6 单元测试（Vitest + @vue/test-utils）
+- **配置**：`vitest.config.ts` 复用 `vite.config.ts`；因 Vite 8 的 `mergeConfig` 不支持合并回调式配置，先解析 `vite.config` 导出函数，并**过滤掉 `Components` 插件**（避免 VantResolver 在编译期注入 `import { X } from 'vant'` 及其 `.css` 副作用，导致 Node ESM 下 `ERR_UNKNOWN_FILE_EXTENSION`）；测试环境为 `jsdom`。
+- **vant mock**：`src/test/setup.ts` 用 `vi.mock('vant', ...)` 全局 mock `vant`（仅 `VantUpload` 在脚本中 `import { showToast } from 'vant'`，其余 `van-*` 标签由 `shallowMount` 的 `global.stubs` 接管）。
+- **测试范围**（共 13 个 spec、101 用例全绿）：
+  - `src/components/__tests__/`：10 个 `VantXXX` 组件用例（字段回传 / 事件派发 / 权限门禁）。
+  - `src/composables/__tests__/`：`useCrudList`（分页 / CRUD / 权限码）、`usePermission`（单例角色权限）。
+  - `src/directives/__tests__/`：`v-permission` / `v-permission-all` / `v-permission-none` 三种指令。
+- **断言要点**（写组件测试易踩的坑）：`wrapper.emitted('x')` 返回 `[[args]]`，取真实入参用 `emitted('x')?.[0]?.[0]`；`script setup` 暴露的 ref 在 `wrapper.vm` 上**已自动解包**（直接 `wrapper.vm.loading`，无需 `.value`）；`VantUpload` 单选 `update:modelValue` 回传**字符串**、多选取数组。
+
 ---
 
 ## 2. 附带示例（开箱即跑）
@@ -120,6 +130,7 @@ pnpm dev:mock         # 本地 Mock 模式（vite --mode mock），无需后端�
 > 通用组件：`VantList` / `VantUpload` / `VantSearch` / `VantSearchField` / `VantSelectField` /
 > `VantSelectMultipleField` / `VantTimePickerField` / `VantCalendarField` / `VantTreeSelectField` / `VantTreeTagsField`。
 > 通用 Hook：`useCrudList`（列表 CRUD + 权限 + 分页）、`usePermission`（角色权限单例，供 `v-permission` 指令与 `useCrudList` 复用）。
+> 以上组件 / composables / directives 均配套单元测试用例（`__tests__/` 目录），初始化后可直接 `pnpm test:unit` 验证。
 
 ---
 
@@ -131,6 +142,7 @@ pnpm dev:mock         # 本地 Mock 模式（vite --mode mock），无需后端�
 4. 调接口：在 `src/api/modules` 加 `xxx.ts`，页面 `import { ... } from '@/api/modules/xxx'`；无后端时在 `src/mock` 加对应路由。
 5. 控权限：页面写 `v-permission="'xxx:edit'"`；行级差异化用 `VantList` 的 `:row-permission` 回调。
 6. 接 PICC 皮肤：若已装 `vant-picc-skin` 技能，初始化时已自动接入；否则单独运行该技能。
+7. 跑单测：`pnpm test:unit`（或 `pnpm test:unit <文件>` 单文件；`jsdom` 环境，已内置 vant mock，101 用例全绿）。
 
 ---
 
@@ -140,6 +152,7 @@ pnpm dev:mock         # 本地 Mock 模式（vite --mode mock），无需后端�
 - 把 api / mock / composables / components 当作基线直接复用、按需删减。
 - 用 `VantList` + `useCrudList` 快速搭 CRUD 列表页。
 - 用 `VantUpload` 的 `:upload` + `:result-field` 控制「先上传拿地址、保存 url/base64/fileName」。
+- 用 `@vue/test-utils` + `vitest` 给 `VantXXX` 组件 / `useCrudList` / `usePermission` / `v-permission` 指令补回归测试（参考 `__tests__/` 目录写法）。
 
 ### 不可做
 - 不要手动改 `src/mock/index.ts` 的路由匹配逻辑，新增接口只需在 `index.ts` 底部加 import 并展开。

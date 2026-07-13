@@ -135,6 +135,61 @@ if (import.meta.hot) handleHotUpdate(router)
 
 ---
 
+## H. 单元测试（Vitest + @vue/test-utils）
+
+### H.1 配置要点（`vitest.config.ts`）
+```ts
+import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
+import viteConfig from './vite.config'
+
+// vite.config 以「回调函数」形式导出，需先解析为普通对象才能 merge
+// （Vite 8 的 mergeConfig 不支持直接合并回调形式的配置）
+const resolvedVite =
+  typeof viteConfig === 'function'
+    ? viteConfig({ command: 'serve', mode: 'test' })
+    : viteConfig
+
+// 单元测试中移除 Components 插件：避免 VantResolver 在编译期注入 `import { X } from 'vant'`
+// 及其 .css 副作用，导致 Node ESM 下报 ERR_UNKNOWN_FILE_EXTENSION
+resolvedVite.plugins = (resolvedVite.plugins || [])
+  .flat()
+  .filter((p) => !/components/i.test(p?.name || ''))
+
+export default mergeConfig(resolvedVite, defineConfig({
+  test: {
+    setupFiles: ['./src/test/setup.ts'],
+    environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'e2e/**'],
+  },
+}))
+```
+
+### H.2 全局 mock（`src/test/setup.ts`）
+```ts
+import { vi } from 'vitest'
+vi.mock('vant', () => ({
+  default: {},
+  showToast: vi.fn(), showSuccessToast: vi.fn(),
+  showFailToast: vi.fn(), showLoadingToast: vi.fn(), closeToast: vi.fn(),
+}))
+```
+
+### H.3 写组件测试的坑
+- `wrapper.emitted('x')` 返回 `[[args]]`（数组的数组），取真实入参用 `emitted('x')?.[0]?.[0]`。
+- `script setup` 暴露的 `ref` 在 `wrapper.vm` 上**自动解包**：直接 `wrapper.vm.loading`，不要 `.value`。
+- `shallowMount` 自动 stub 子组件；`<van-*>` 标签默认被 stub，无需真实加载 vant。
+- `VantUpload` 单选模式 `update:modelValue` 回传**字符串**、多选取数组；测试 `afterRead` 需先把文件项 `push` 进内部 `fileList` 再断言 `item.value`。
+- `VantTreeTagsField.onRowClick` 在折叠态点击父节点仅展开（`expanded` 为 `ref<Set>`，断言用 `expanded.value.has('zj')`）。
+- 测试环境会出现 `[Vue warn]: injection "Symbol(router)" not found`，属无害噪音，不影响结果。
+
+### H.4 运行
+```bash
+pnpm test:unit                                         # 全量（jsdom + vant mock）
+pnpm test:unit src/components/__tests__/VantUpload.spec.ts  # 单文件
+```
+
+---
+
 ## G. 故障排查
 
 - **`vue-router/auto-routes` 报缺类型**：运行一次 `pnpm dev` 由 vue-router 5 生成 `typed-router.d.ts`（技能内置占位声明，dev 后会被覆盖）。

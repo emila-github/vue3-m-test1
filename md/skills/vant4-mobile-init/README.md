@@ -2,7 +2,7 @@
 
 一键把「API 分层 + 本地 Mock + 角色权限 + 自由路由 + Vite 优化」的完整工程化能力，以及本项目 `src/views/vant` 下 11 个 Vant 示例页（VantIndex + 10 个 VantXXXXXDemo），落地到任意 Vue3 移动端项目（新建或改造）。
 
-版本：v1.0.0
+版本：v1.1.0
 
 ## 能力清单
 - **API 分层**：`src/api`（axios 拦截 + 模块化 `modules/*` + `PageResult` 分页类型）
@@ -11,6 +11,7 @@
 - **自由路由**：vue-router 5 原生约定式（`src/views/test`，`vue-router/vite`）+ 手写路由（`src/router/index.ts`）并存
 - **Vite 优化**：代理自解析（按 `VITE_API_BASE_URL`）、Mock 插件、组件按需、包分析、devtools
 - **示例全家桶**：`src/views/vant` 11 个 Vant 示例页（VantIndex + 10 个 `VantXXXXXDemo.vue`）+ 对应 `components` / `composables`
+- **单元测试**：`vitest.config.ts` + `src/test/setup.ts` 全局 mock vant + 组件 / composables / directives 全覆盖（13 个 spec、101 用例），`pnpm test:unit` 开箱即跑
 
 ## 快速开始
 把整个技能目录复制到目标 Vue3 项目（或放进 `.codebuddy/skills/`），在目标项目根目录执行：
