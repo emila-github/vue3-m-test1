@@ -566,6 +566,11 @@ html.picc-skin .van-button--default:not(.van-button--plain):not([class*='ghost']
   border-width: 1.5px;
 }
 
+/* --- 悬浮新增按钮（VantList .vl-fab）：开启皮肤时红色投影 --- */
+html.picc-skin .vl-fab {
+  box-shadow: 0 6px 20px rgba(215, 25, 32, 0.35);
+}
+
 /* --- Collapse 折叠面板：选中图标红 --- */
 html.picc-skin .van-collapse-item .van-collapse-item__title--expanded .van-icon {
   color: #d71920;

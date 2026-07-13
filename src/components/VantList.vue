@@ -680,7 +680,8 @@ function onBack() {
   font-weight: 600;
   letter-spacing: 1px;
   border: none;
-  box-shadow: 0 6px 20px rgba(215, 25, 32, 0.35);
+  /* 默认中性投影；PICC 品牌红投影由皮肤 CSS（html.picc-skin .vl-fab）在开启皮肤时覆盖 */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 .vl-fab:active {
   transform: scale(0.97);
