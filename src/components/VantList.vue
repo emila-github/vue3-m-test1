@@ -293,6 +293,18 @@ function onActionSelect(action: { name: string; value: string }) {
 function onBack() {
   router.back()
 }
+
+// ==================== 表单校验：提交前先校验 #form 内配置了 :rules 的字段 ====================
+const formRef = ref()
+async function onFormSubmit() {
+  try {
+    // van-form.validate()：任一带 :rules 的字段校验不通过则 reject，此时中断提交
+    await formRef.value?.validate()
+  } catch {
+    return
+  }
+  submit()
+}
 </script>
 
 <template>
@@ -506,18 +518,20 @@ function onBack() {
     >
       <van-nav-bar :title="isEdit ? '编辑' : '新增'" left-arrow @click-left="formVisible = false">
         <template #right>
-          <van-button type="primary" size="small" :loading="submitting" @click="submit"
+          <van-button type="primary" size="small" :loading="submitting" @click="onFormSubmit"
             >提交</van-button
           >
         </template>
       </van-nav-bar>
       <div class="vl-form-scroll picc-page">
-        <slot name="form" :form="form" :is-edit="isEdit" />
-        <div class="vl-submit-bar">
-          <van-button type="primary" block round :loading="submitting" @click="submit">
-            {{ isEdit ? '保存修改' : '提交' }}
-          </van-button>
-        </div>
+        <van-form ref="formRef">
+          <slot name="form" :form="form" :is-edit="isEdit" />
+          <div class="vl-submit-bar">
+            <van-button type="primary" block round :loading="submitting" @click="onFormSubmit">
+              {{ isEdit ? '保存修改' : '提交' }}
+            </van-button>
+          </div>
+        </van-form>
       </div>
     </van-popup>
 

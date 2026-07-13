@@ -311,6 +311,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
           placeholder="请输入投保人"
           required
           clearable
+          :rules="[{ required: true, message: '请输入投保人' }]"
         />
         <van-field v-model="form.plateNo" label="车牌号" placeholder="如 浙A·88888" clearable />
         <van-field v-model="form.policyNo" label="保单号" placeholder="请输入保单号" clearable />
