@@ -106,7 +106,7 @@ function mountDevToggle() {
   Object.assign(btn.style, {
     position: 'fixed',
     left: '16px',
-    bottom: '16px',
+    bottom: '80px',
     zIndex: '300',
     display: 'inline-flex',
     alignItems: 'center',
