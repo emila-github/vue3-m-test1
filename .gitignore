@@ -13,6 +13,8 @@ dist
 dist-ssr
 coverage
 *.local
+.agents/*
+.codebuddy/*
 
 # Editor directories and files
 .vscode/*
@@ -40,3 +42,5 @@ __screenshots__/
 
 test-results/
 playwright-report/
+/stats.html
+/src/assets/upload/

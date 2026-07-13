@@ -1,0 +1,2 @@
+# 约定式路由目录：unplugin-vue-router 扫描本目录自动生成路由（见 vite.config.ts 的 routesFolder）。
+# 在 src/views/test 下新建 xxx.vue 即可自动获得 /xxx 路由，无需手写。

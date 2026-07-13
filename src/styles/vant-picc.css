@@ -1,0 +1,652 @@
+/* ============================================================================
+ * PICC 人保财险 · Vant4 全局皮肤 (vant-picc.css) v2.0
+ * ----------------------------------------------------------------------------
+ * 设计基准：基于 PICC 官方 APP 界面截图（md/picc/app-ui/）重新设计。
+ *
+ * 核心变更（vs v1.0）：
+ *   - 主 CTA 按钮改为 PILL 全圆角（参考截图：立即报价/确定/签到等均为药丸形）
+ *   - 新增 NavBar 红色背景变体（首页风格：.van-nav-bar--picc-primary）
+ *   - 品牌红保持 #D71920，整体视觉更贴近官方 APP 温暖质感
+ *   - 按钮 height 提升至 48px，增强触控体验
+ *
+ * 作用域：仅当 <html class="picc-skin"> 存在时生效。
+ * 快速撤销 = 移除 picc-skin class，无需重新构建。
+ * ==========================================================================*/
+
+/* ===================== 1. 设计 Token（页面可直接引用） ===================== */
+html.picc-skin {
+  /* 品牌与强调 */
+  --picc-primary: #d71920;
+  --picc-primary-deep: #a91218;
+  --picc-primary-soft: #fcebec;
+  --picc-primary-tint: #f9d7d9;
+  --picc-info: #1a6fe8;
+  --picc-info-deep: #1455b8;
+  --picc-gold: #c9a063;
+  --picc-gold-soft: #f7efe0;
+
+  /* 中性灰 */
+  --picc-ink: #1a1a1a;
+  --picc-ink-tint: #333333;
+  --picc-charcoal: #4a4a4a;
+  --picc-slate: #666666;
+  --picc-steel: #8a8a8a;
+  --picc-stone: #a8a8a8;
+  --picc-muted: #bfbfbf;
+  --picc-hairline: #eaeaea;
+  --picc-hairline-soft: #f2f2f2;
+  --picc-hairline-strong: #d9d9d9;
+
+  /* 表面 */
+  --picc-canvas: #f5f6f8;
+  --picc-surface: #ffffff;
+  --picc-surface-alt: #fafafa;
+  --picc-surface-soft: #f7f8fa;
+
+  /* 语义色 */
+  --picc-success: #18a058;
+  --picc-success-soft: #e7f5ee;
+  --picc-warning: #f59e0b;
+  --picc-error: #d71920;
+  --picc-mask: rgba(0, 0, 0, 0.45);
+  --picc-link: #1a6fe8;
+
+  /* 圆角尺度（v2.0: 主按钮改用 full/pill，参考官方 APP） */
+  --picc-radius-xs: 4px;
+  --picc-radius-sm: 6px;
+  --picc-radius-md: 8px;
+  --picc-radius-lg: 12px;
+  --picc-radius-xl: 16px;
+  --picc-radius-xxl: 20px;
+  --picc-radius-full: 9999px;
+
+  /* 全局字族（金融级中文无衬线） */
+  font-family: 'PingFang SC', 'HarmonyOS Sans', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+/* ===================== 2. 全局基础变量覆写 ===================== */
+html.picc-skin {
+  /* 品牌主色：所有引用 --van-primary-color 的组件自动变红 */
+  --van-primary-color: #d71920;
+  --van-primary-color-light: #fcebec;
+  --van-primary-color-light-2: #f9d7d9;
+
+  /* 语义色 */
+  --van-success-color: #18a058;
+  --van-danger-color: #d71920;
+  --van-warning-color: #f59e0b;
+
+  /* 衍生色 */
+  --van-red: #d71920;
+  --van-blue: #1a6fe8;
+  --van-green: #18a058;
+  --van-orange: #f59e0b;
+
+  /* 文本层级 */
+  --van-text-color: #1a1a1a;
+  --van-text-color-2: #666666;
+  --van-text-color-3: #8a8a8a;
+
+  /* 按压态背景 / 透明度 */
+  --van-active-color: #f2f2f2;
+  --van-active-opacity: 0.6;
+  --van-disabled-opacity: 0.5;
+
+  /* 表面与边框 */
+  --van-background: #f5f6f8;
+  --van-background-2: #ffffff;
+  --van-background-3: #f7f8fa;
+  --van-border-color: #eaeaea;
+  --van-border-width: 1px;
+
+  /* 圆角：v2.0 主按钮 pill / 卡片 12px / 输入框 8px */
+  --van-radius-sm: 4px;
+  --van-radius-md: 8px;
+  --van-radius-lg: 12px;
+  --van-radius-max: 9999px;
+
+  /* 字号（中文阅读行高宽松） */
+  --van-font-size-xs: 13px;
+  --van-font-size-sm: 14px;
+  --van-font-size-md: 15px;
+  --van-font-size-lg: 16px;
+  --van-font-bold: 600;
+
+  /* 间距基准 */
+  --van-padding-base: 4px;
+  --van-padding-xs: 8px;
+  --van-padding-sm: 12px;
+  --van-padding-md: 16px;
+  --van-padding-lg: 20px;
+  --van-animation-duration-base: 0.2s;
+}
+
+/* ===================== 3. 组件级覆盖 ===================== */
+
+/* --- Button：v2.0 主 CTA 改为 PILL 全圆角 + 48px 高 --- */
+html.picc-skin {
+  /* 核心：全圆角药丸形按钮（参考官方 APP 所有主操作按钮） */
+  /* --van-button-radius: 9999px;
+  --van-button-round-radius: 9999px;
+  --van-button-height: 48px;
+  --van-button-line-height: 46px; */
+
+  /* 主按钮：品牌红实心 */
+  --van-button-primary-background: #d71920;
+  --van-button-primary-border-color: #d71920;
+  --van-button-primary-color: #ffffff;
+
+  /* 默认按钮：白底黑字细边框 */
+  --van-button-default-background: #ffffff;
+  --van-button-default-border-color: #d9d9d9;
+  --van-button-default-color: #1a1a1a;
+
+  /* 语义按钮 */
+  --van-button-success-background: #18a058;
+  --van-button-success-border-color: #18a058;
+  --van-button-success-color: #ffffff;
+  --van-button-danger-background: #d71920;
+  --van-button-danger-border-color: #d71920;
+  --van-button-danger-color: #ffffff;
+  --van-button-warning-background: #f59e0b;
+  --van-button-warning-border-color: #f59e0b;
+  --van-button-warning-color: #ffffff;
+
+  --van-button-plain-background: #ffffff;
+  --van-button-disabled-opacity: 0.5;
+
+  /* 小尺寸按钮保持适度圆角（不使用 full pill） */
+  --van-button-mini-height: 28px;
+  --van-button-mini-padding: 0 10px;
+  --van-button-small-height: 32px;
+}
+/* 主按钮按下态加深（仅实色按钮，排除 plain 描边按钮） */
+html.picc-skin .van-button--primary:not(.van-button--plain):active,
+html.picc-skin .van-button--danger:not(.van-button--plain):active {
+  background-color: #a91218 !important;
+  border-color: #a91218 !important;
+}
+/* 描边(plain)按钮按下态：浅红底 + 品牌红字（红字保持清晰可读，避免红底红字） */
+html.picc-skin .van-button--primary.van-button--plain:active,
+html.picc-skin .van-button--danger.van-button--plain:active {
+  background-color: #fcebec !important;
+  border-color: #d71920 !important;
+  color: #d71920 !important;
+}
+/* 主按钮禁用态：浅红底 + 红字（保证可见） */
+html.picc-skin .van-button--primary.van-button--disabled,
+html.picc-skin .van-button--primary.van-button--disabled:active {
+  background-color: #fcebec !important;
+  border-color: #fcebec !important;
+  color: #d71920 !important;
+  opacity: 1 !important;
+}
+
+/* --- NavBar：默认白底 / 支持红色变体 (.van-nav-bar--picc-primary) --- */
+html.picc-skin {
+  --van-nav-bar-height: 44px;
+  --van-nav-bar-background: #ffffff;
+  --van-nav-bar-title-text-color: #1a1a1a;
+  --van-nav-bar-title-font-size: 17px;
+  --van-nav-bar-icon-color: #1a1a1a;
+  --van-nav-bar-text-color: #1a6fe8; /* 右侧操作 = 信息蓝 */
+}
+html.picc-skin .van-nav-bar {
+  border-bottom: 1px solid #f2f2f2;
+}
+/* NavBar 红色变体（首页风格：红底白字，参考 app-ui 首页截图） */
+html.picc-skin .van-nav-bar--picc-primary {
+  background: linear-gradient(135deg, #d71920 0%, #e84a49 100%);
+  border-bottom: none;
+}
+html.picc-skin .van-nav-bar--picc-primary .van-nav-bar__title {
+  color: #ffffff;
+  font-weight: 600;
+}
+html.picc-skin .van-nav-bar--picc-primary .van-icon,
+html.picc-skin .van-nav-bar--picc-primary .van-nav-bar__text {
+  color: #ffffff;
+}
+
+/* --- TabBar：选中态品牌红 --- */
+html.picc-skin {
+  --van-tabbar-height: 50px;
+  --van-tabbar-background: #ffffff;
+  --van-tabbar-item-text-color: #8a8a8a;
+  --van-tabbar-item-icon-size: 22px;
+  --van-tabbar-item-font-size: 11px;
+  --van-tabbar-item-active-color: #d71920;
+  --van-tabbar-item-active-background: #ffffff;
+}
+
+/* --- Tabs：选中下划线 / 文字品牌红 --- */
+html.picc-skin {
+  --van-tabs-bottom-bar-color: #d71920;
+  --van-tabs-bottom-bar-height: 3px;
+  --van-tabs-bottom-bar-width: 24px;
+  --van-tabs-default-color: #1a1a1a;
+  --van-tabs-nav-background: #ffffff;
+  --van-tabs-line-height: 44px;
+  --van-tab-text-color: #666666;
+  --van-tab-active-text-color: #d71920;
+  --van-tab-disabled-text-color: #c8c9cc;
+}
+
+/* --- Cell / CellGroup：白卡 / 细线 / 标题灰 --- */
+html.picc-skin {
+  --van-cell-background: #ffffff;
+  --van-cell-group-background: #ffffff;
+  --van-cell-group-title-color: #8a8a8a;
+  --van-cell-group-title-font-size: 13px;
+  --van-cell-group-inset-radius: 12px;
+  --van-cell-text-color: #1a1a1a;
+  --van-cell-value-color: #666666;
+  --van-cell-label-color: #8a8a8a;
+  --van-cell-required-color: #d71920;
+  --van-cell-border-color: #f2f2f2;
+  --van-cell-vertical-padding: 13px;
+  --van-cell-font-size: 15px;
+}
+
+/* --- Field：标签炭灰 / 输入墨黑 / 占位静音灰 / 必填红 --- */
+html.picc-skin {
+  --van-field-label-color: #4a4a4a;
+  --van-field-input-text-color: #1a1a1a;
+  --van-field-placeholder-text-color: #bfbfbf;
+  --van-field-label-width: 92px;
+  --van-field-required-mark-color: #d71920;
+  --van-field-error-message-color: #d71920;
+  --van-field-clear-icon-color: #bfbfbf;
+}
+
+/* --- Switch：开启红 / 关闭灰 --- */
+html.picc-skin {
+  --van-switch-on-background: #d71920;
+  --van-switch-background: #d9d9d9;
+  --van-switch-height: 26px;
+  --van-switch-width: 44px;
+  --van-switch-node-size: 22px;
+}
+
+/* --- Checkbox / Radio：选中红 / 20px --- */
+html.picc-skin {
+  --van-checkbox-checked-icon-color: #d71920;
+  --van-checkbox-border-color: #d9d9d9;
+  --van-checkbox-size: 20px;
+  --van-checkbox-label-color: #1a1a1a;
+  --van-radio-checked-icon-color: #d71920;
+  --van-radio-border-color: #d9d9d9;
+  --van-radio-size: 20px;
+  --van-radio-label-color: #1a1a1a;
+}
+
+/* --- Stepper：加号红底白字 / 减号白底 --- */
+html.picc-skin {
+  --van-stepper-background: #ffffff;
+  --van-stepper-input-width: 40px;
+  --van-stepper-input-height: 32px;
+  --van-stepper-input-text-color: #1a1a1a;
+  --van-stepper-button-icon-color: #1a1a1a;
+  --van-stepper-radius: 6px;
+}
+html.picc-skin .van-stepper__plus {
+  background-color: #d71920;
+  color: #ffffff;
+  border-radius: 6px;
+}
+html.picc-skin .van-stepper__plus .van-stepper__plus-icon,
+html.picc-skin .van-stepper__plus .van-icon {
+  color: #ffffff;
+}
+html.picc-skin .van-stepper__minus {
+  border-radius: 6px;
+}
+
+/* --- Tag：按 PICC 风格重写，保证清晰可辨识 ---
+ * 规则：
+ *  - 实色标签：品牌红/语义色底 + 白字（高对比，主色红用法）
+ *  - 描边(hollow)标签：浅色底 + 同色字 + 同色描边，符合 PICC「浅红底标签用品牌红字、禁止白字」
+ *    且各语义类型底色互不串色（success=浅绿 / warning=浅橙 / primary/danger=浅红）
+ */
+html.picc-skin {
+  --van-tag-primary-color: #d71920;
+  --van-tag-success-color: #18a058;
+  --van-tag-warning-color: #f59e0b;
+  --van-tag-danger-color: #d71920;
+  --van-tag-text-color: #ffffff; /* 实色标签默认白字，保证红/绿/橙底上清晰可读 */
+  --van-tag-default-color: #4a4a4a;
+  --van-tag-plain-background: #fcebec; /* 默认描边底（primary/danger 使用），下方按类型覆盖 */
+  --van-tag-radius: 6px;
+  --van-tag-round-radius: 9999px;
+}
+
+/* 实色标签：品牌红/语义色底 + 白字 */
+html.picc-skin .van-tag--primary,
+html.picc-skin .van-tag--danger {
+  background: #d71920;
+  color: #fff;
+}
+html.picc-skin .van-tag--success {
+  background: #18a058;
+  color: #fff;
+}
+html.picc-skin .van-tag--warning {
+  background: #f59e0b;
+  color: #fff;
+}
+html.picc-skin .van-tag--default {
+  background: #f2f2f2;
+  color: #4a4a4a;
+}
+
+/* 描边(hollow)标签：浅色底 + 同色字 + 同色描边，清晰可辨 */
+html.picc-skin .van-tag--primary.van-tag--plain,
+html.picc-skin .van-tag--danger.van-tag--plain {
+  background: #fcebec; /* 品牌红浅 */
+  color: #d71920; /* 品牌红字（禁止白字） */
+  border-color: #d71920;
+}
+html.picc-skin .van-tag--success.van-tag--plain {
+  background: #e8f5ec; /* 成功浅绿 */
+  color: #18a058;
+  border-color: #18a058;
+}
+html.picc-skin .van-tag--warning.van-tag--plain {
+  background: #fef3e2; /* 警告浅橙 */
+  color: #b45309;
+  border-color: #f59e0b;
+}
+
+/* --- Badge：品牌红角标 --- */
+html.picc-skin {
+  --van-badge-background: #d71920;
+  --van-badge-color: #ffffff;
+  --van-badge-dot-color: #d71920;
+}
+
+/* --- Slider：激活红 / 轨道浅灰 --- */
+html.picc-skin {
+  --van-slider-active-background: #d71920;
+  --van-slider-inactive-background: #ebecee;
+  --van-slider-button-background: #ffffff;
+  --van-slider-bar-height: 4px;
+}
+html.picc-skin .van-slider__bar {
+  --van-slider-active-background: #d71920 !important;
+}
+
+/* --- Rate：满星红 / 空星浅灰 --- */
+html.picc-skin {
+  --van-rate-icon-full-color: #d71920;
+  --van-rate-icon-void-color: #eeeeee;
+}
+html.picc-skin .van-rate {
+  --van-rate-icon-full-color: #d71920 !important;
+}
+
+/* --- Progress：填充红 / 轨道浅灰 --- */
+html.picc-skin {
+  --van-progress-background: #eaeaea;
+  --van-progress-color: #d71920;
+  --van-progress-inactive-color: #eaeaea;
+  --van-progress-pivot-background: #d71920;
+  --van-progress-pivot-text-color: #ffffff;
+  --van-progress-height: 4px;
+}
+
+/* --- Popup / ActionSheet：白底 / 顶部圆角 --- */
+html.picc-skin {
+  --van-popup-background: #ffffff;
+  --van-popup-round-radius: 16px;
+  --van-action-sheet-item-text-color: #1a1a1a;
+  --van-action-sheet-item-background: #ffffff;
+  --van-action-sheet-cancel-text-color: #1a1a1a;
+  --van-action-sheet-close-icon-color: #8a8a8a;
+  --van-action-sheet-description-color: #8a8a8a;
+  --van-action-sheet-subname-color: #8a8a8a;
+}
+
+/* --- Picker / Calendar：选中红 --- */
+html.picc-skin {
+  --van-picker-confirm-action-color: #d71920;
+  --van-picker-cancel-action-color: #8a8a8a;
+  --van-picker-title-text-color: #1a1a1a;
+  --van-picker-option-text-color: #1a1a1a;
+  --van-calendar-selected-day-background: #d71920;
+  --van-calendar-selected-day-color: #ffffff;
+  --van-calendar-range-edge-background: #d71920;
+  --van-calendar-range-edge-color: #ffffff;
+  --van-calendar-range-middle-color: #fcebec;
+}
+
+/* --- Dialog：圆角 / 确认红 --- */
+html.picc-skin {
+  --van-dialog-background: #ffffff;
+  --van-dialog-radius: 12px;
+  --van-dialog-confirm-button-text-color: #d71920;
+  --van-dialog-has-title-message-text-color: #666666;
+}
+
+/* --- Search：浅底 + 全圆角（pill 搜索框）--- */
+html.picc-skin {
+  --van-search-background: #f5f6f8;
+  --van-search-content-background: #f7f8fa;
+  --van-search-label-color: #4a4a4a;
+  --van-search-action-text-color: #1a6fe8;
+  --van-search-left-icon-color: #8a8a8a;
+}
+html.picc-skin .van-search__content {
+  border-radius: 9999px;
+}
+
+/* --- Notify / Toast / NoticeBar --- */
+html.picc-skin {
+  --van-notify-primary-background: #d71920;
+  --van-notify-success-background: #18a058;
+  --van-notify-danger-background: #d71920;
+  --van-notify-warning-background: #f59e0b;
+  --van-notify-text-color: #ffffff;
+  --van-notice-bar-background: #fcebec;
+  --van-notice-bar-text-color: #d71920;
+  --van-empty-description-color: #8a8a8a;
+}
+
+/* Toast 元素同时带 van-popup 类，会被 Vant 自身的 .van-popup 白色背景规则（按 CSS 加载顺序）
+   覆盖底色，导致「白底 + 白字」看不见——皮肤开启或关闭都可能出现。
+   因此做成全局 + !important，强制保留「深灰底 + 白字」，无论皮肤开关状态都清晰可见。 */
+.van-toast {
+  background: rgba(0, 0, 0, 0.7) !important;
+  color: #fff !important;
+}
+
+/* Notify 同样基于 Popup 渲染，元素同时带 van-popup 类，其彩色底会被 .van-popup 的白色
+   背景规则（按 CSS 加载顺序）覆盖成白底。用 .van-notify.van-notify--xxx（0,2,0）提升优先级，
+   强制按类型使用对应彩色底；变量在皮肤开启时取 PICC 色、关闭时取 Vant 默认色，两者都生效。 */
+.van-notify.van-notify--primary {
+  background: var(--van-notify-primary-background, #d71920);
+}
+.van-notify.van-notify--success {
+  background: var(--van-notify-success-background, #18a058);
+}
+.van-notify.van-notify--danger {
+  background: var(--van-notify-danger-background, #d71920);
+}
+.van-notify.van-notify--warning {
+  background: var(--van-notify-warning-background, #f59e0b);
+}
+
+/* --- Loading / Spinner --- */
+html.picc-skin {
+  --van-loading-spinner-color: #d71920;
+  --van-loading-text-color: #8a8a8a;
+}
+
+/* --- Divider --- */
+html.picc-skin {
+  --van-divider-border-color: #f2f2f2;
+  --van-divider-text-color: #8a8a8a;
+}
+
+/* --- Uploader：添加框浅底 / 图标红 --- */
+html.picc-skin {
+  --van-uploader-upload-background: #f7f8fa;
+  --van-uploader-icon-color: #d71920;
+  --van-uploader-text-color: #8a8a8a;
+  --van-uploader-delete-background: #d71920;
+  --van-uploader-delete-color: #ffffff;
+  --van-uploader-border-radius: 12px;
+}
+
+/* --- Card：白卡 12px 圆角 / 价格红 --- */
+html.picc-skin {
+  --van-card-background: #ffffff;
+  --van-card-price-color: #d71920;
+  --van-card-origin-price-color: #8a8a8a;
+  --van-card-desc-color: #8a8a8a;
+  --van-card-thumb-radius: 12px;
+}
+
+/* --- SubmitBar / ActionBar：价格红 --- */
+html.picc-skin {
+  --van-submit-bar-background: #ffffff;
+  --van-submit-bar-text-color: #1a1a1a;
+  --van-action-bar-background: #ffffff;
+}
+html.picc-skin .van-submit-bar__price,
+html.picc-skin .van-submit-bar__price-integer {
+  color: #d71920;
+}
+
+/* --- Sidebar / TreeSelect / Dropdown：选中红 --- */
+html.picc-skin {
+  --van-sidebar-selected-border-color: #d71920;
+  --van-sidebar-selected-text-color: #d71920;
+  --van-sidebar-active-color: #d71920;
+  --van-tree-select-item-active-color: #d71920;
+  --van-dropdown-menu-option-active-color: #d71920;
+  --van-dropdown-menu-title-active-text-color: #d71920;
+}
+
+/* --- 其它组件语义色（优惠券/密码/联系卡等）--- */
+html.picc-skin {
+  --van-coupon-amount-color: #d71920;
+  --van-coupon-checkbox-color: #d71920;
+  --van-password-input-cursor-color: #d71920;
+  --van-password-input-dot-color: #d71920;
+  --van-contact-card-add-icon-color: #d71920;
+  --van-address-list-radio-color: #d71920;
+  --van-contact-list-radio-color: #d71920;
+  --van-back-top-background: #d71920;
+  --van-back-top-text-color: #ffffff;
+  --van-cascader-active-color: #d71920;
+  --van-cascader-tab-color: #d71920;
+}
+
+/* ===================== 4. PICC 特色增强样式 ===================== */
+
+/* --- 主 CTA 按钮增强阴影（参考截图中按钮的立体感） --- */
+html.picc-skin
+  .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(.van-button--mini) {
+  box-shadow: 0 4px 14px rgba(215, 25, 32, 0.35);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  font-weight: 500;
+}
+html.picc-skin
+  .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(
+    .van-button--mini
+  ):active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(215, 25, 32, 0.25);
+}
+
+/* --- 描边次级按钮（outline style，参考「新投保车辆 点击算费」） --- */
+html.picc-skin .van-button--default:not(.van-button--plain):not([class*='ghost']) {
+  border-width: 1.5px;
+}
+
+/* --- Collapse 折叠面板：选中图标红 --- */
+html.picc-skin .van-collapse-item .van-collapse-item__title--expanded .van-icon {
+  color: #d71920;
+}
+
+/* --- IndexBar 索引栏：激活态红 --- */
+html.picc-skin .van-index-bar__index--active {
+  color: #d71920;
+}
+
+/* --- Steps 步骤条：完成态红 --- */
+html.picc-skin .van-step__circle,
+html.picc-skin .van-step--finish .van-step__circle {
+  background-color: #d71920;
+}
+html.picc-skin .van-step--process .van-step__title,
+html.picc-skin .van-step--finish .van-step__title {
+  color: #d71920;
+}
+html.picc-skin .van-step--finish .van-step__circle-container .van-icon {
+  color: #d71920;
+}
+
+/* --- SweechCode 验证码输入：光标/点红 --- */
+html.picc-skin .van-skeleton__row {
+  background: linear-gradient(90deg, #f2f3f5 25%, #ebedf0 37%, #f2f3f5 63%);
+}
+
+/* ===================== 5. 页面级辅助类（可在模板中直接使用） ===================== */
+
+/*PICC 页面通用容器 */
+html.picc-skin .picc-page {
+  min-height: 100vh;
+  background: #f5f6f8;
+}
+
+/* PICC 白卡容器（参考截图中的卡片形态） */
+html.picc-skin .picc-card {
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 10px 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* PICC 红色渐变头部区域（参考首页/签到页截图的头部装饰区） */
+html.picc-skin .picc-header-gradient {
+  background: linear-gradient(135deg, #d71920 0%, #e84a49 50%, #f08a5b 100%);
+  padding: 20px 16px;
+  border-radius: 0 0 20px 20px;
+  min-height: 120px;
+}
+
+/* PICC 价格文字 */
+html.picc-skin .picc-price {
+  color: #d71920;
+  font-family: 'DIN Alternate', 'Bebas Neue', 'PingFang SC', system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* PICC 数字展示体（保费/保额大数字） */
+html.picc-skin .picc-number-display {
+  font-family: 'DIN Alternate', 'Bebas Neue', 'PingFang SC', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* PICC NoticeBar 软红底提示条（参考「显示与APP实名认证信息一致」提示条） */
+html.picc-skin .picc-notice-warm {
+  background: #fff7ed;
+  color: #c2410c;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* PICC 分组标题 */
+html.picc-skin .picc-section-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 14px 16px 8px;
+}
