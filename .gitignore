@@ -43,5 +43,5 @@ __screenshots__/
 test-results/
 playwright-report/
 /stats.html
-/src/assets/upload/
+/src/assets/demo-upload/
 ls/
