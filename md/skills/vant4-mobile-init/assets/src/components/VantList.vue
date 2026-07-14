@@ -560,14 +560,15 @@ function scrollToFirstError() {
       position="right"
       :style="{ width: '100%', height: '100%' }"
     >
-      <van-nav-bar :title="isEdit ? '编辑' : '新增'" left-arrow @click-left="formVisible = false">
-        <template #right>
-          <van-button type="primary" size="small" :loading="submitting" @click="onFormSubmit"
-            >提交</van-button
-          >
-        </template>
-      </van-nav-bar>
-      <div class="vl-form-scroll picc-page">
+      <div class="vl-form-popup">
+        <van-nav-bar :title="isEdit ? '编辑' : '新增'" left-arrow @click-left="formVisible = false">
+          <template #right>
+            <van-button type="primary" size="small" :loading="submitting" @click="onFormSubmit"
+              >提交</van-button
+            >
+          </template>
+        </van-nav-bar>
+        <div class="vl-form-scroll">
         <van-form ref="formRef">
           <slot name="form" :form="form" :is-edit="isEdit" />
           <div class="vl-submit-bar">
@@ -576,6 +577,7 @@ function scrollToFirstError() {
             </van-button>
           </div>
         </van-form>
+      </div>
       </div>
     </van-popup>
 
@@ -751,10 +753,16 @@ function scrollToFirstError() {
 .vl-fab:active {
   transform: scale(0.97);
 }
+.vl-form-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .vl-form-scroll {
-  height: calc(100% - 46px);
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding-bottom: 80px;
+  background: #f5f6f8;
 }
 .vl-submit-bar {
   padding: 16px;
