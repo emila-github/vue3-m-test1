@@ -38,6 +38,7 @@ import {
   updateRenewal,
   deleteRenewal,
   searchInsurers,
+  verifyApplicant,
 } from '@/api/modules/demo-renewal'
 // 通用文件上传：写入 src/assets/demo-upload，返回 /demo-upload/xxx 预览地址（demo 前缀，避免与正式项目冲突）
 import { uploadFile } from '@/api/modules/demo-upload'
@@ -68,6 +69,13 @@ function onAction(payload: { key: string; item: Renewal }) {
   else if (payload.key === 'export') showToast(`导出保单：${payload.item.policyNo}`)
 }
 
+// 打开「新增 / 编辑」弹层时重置投保人核验状态，
+// 避免沿用上一条记录残留的「已核验」（修复：编辑不同数据时投保人一直保持已核验）。
+function onOpenForm() {
+  applicantVerified.value = false
+  lastVerifiedApplicant.value = ''
+}
+
 function statusColor(status: string) {
   return status === '已续保'
     ? '#18a058'
@@ -76,6 +84,55 @@ function statusColor(status: string) {
       : status === '已流失'
         ? '#969799'
         : '#1989fa'
+}
+
+// ==================== 投保人核验（提交前必须核验通过，修正「投保人未验证」） ====================
+const applicantVerified = ref(false)
+const verifying = ref(false)
+const lastVerifiedApplicant = ref('')
+// 已有 :rules 时，VantList 的 onFormSubmit 会先 formRef.validate()；
+// 投保人未核验则校验不通过，阻断提交。
+const applicantRules = [
+  { required: true, message: '请输入投保人' },
+  { validator: () => (applicantVerified.value ? true : '请先核验投保人'), message: '请先核验投保人' },
+]
+function onApplicantInput(name: string) {
+  // 投保人姓名变更时，已核验状态失效，需重新核验
+  if (name !== lastVerifiedApplicant.value) applicantVerified.value = false
+}
+async function verifyApplicantHandler(name: string) {
+  if (!name) {
+    showToast('请先输入投保人')
+    return
+  }
+  verifying.value = true
+  try {
+    const res = await verifyApplicant(name)
+    if (res?.verified) {
+      applicantVerified.value = true
+      lastVerifiedApplicant.value = name
+      showToast('投保人核验通过')
+    } else {
+      applicantVerified.value = false
+      lastVerifiedApplicant.value = ''
+      showToast('未找到该投保人，请确认姓名')
+    }
+  } finally {
+    verifying.value = false
+  }
+}
+// 提交前强校验门禁（独立于 Vant 字段注册，确保「投保人未填写 / 未核验」必被拦截，
+// 修正「投保人未空直接提交」）：返回 false 即阻断提交。
+function onBeforeSubmit(f: Record<string, any>) {
+  if (!f.applicant || !String(f.applicant).trim()) {
+    showToast('请输入投保人')
+    return false
+  }
+  if (!applicantVerified.value) {
+    showToast('请先核验投保人')
+    return false
+  }
+  return true
 }
 
 // ==================== 附件上传：先上传图片，回传预览地址，再随表单提交地址 ====================
@@ -113,12 +170,15 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
     "
     :initial-query="initialQuery"
     :initial-form="initialForm"
+    :before-submit="onBeforeSubmit"
     :enable-log="true"
     more-filter-title="更多查询（组件全接入）"
     search-placeholder="搜索投保人 / 车牌 / 保单号"
     keyword-key="keyword"
     :actions="actions"
     @action="onAction"
+    @create="onOpenForm"
+    @edit="onOpenForm"
   >
     <!-- ==================== 查询区域：全部组件接入 ==================== -->
     <template #filters="{ query }">
@@ -307,12 +367,29 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
       <van-cell-group inset class="picc-card">
         <van-field
           v-model="form.applicant"
+          name="applicant"
           label="投保人"
           placeholder="请输入投保人"
           required
           clearable
-          :rules="[{ required: true, message: '请输入投保人' }]"
-        />
+          :rules="applicantRules"
+          @input="onApplicantInput(form.applicant)"
+        >
+          <template #button>
+            <van-button
+              size="small"
+              type="primary"
+              :loading="verifying"
+              :disabled="applicantVerified"
+              @click="verifyApplicantHandler(form.applicant)"
+            >
+              {{ applicantVerified ? '已核验' : '核验' }}
+            </van-button>
+          </template>
+        </van-field>
+        <van-tag v-if="applicantVerified" type="success" class="applicant-verified">
+          ✓ 投保人已核验
+        </van-tag>
         <van-field v-model="form.plateNo" label="车牌号" placeholder="如 浙A·88888" clearable />
         <van-field v-model="form.policyNo" label="保单号" placeholder="请输入保单号" clearable />
         <VantSearchField
@@ -466,6 +543,9 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
   font-size: 14px;
   color: #323233;
   min-width: 76px;
+}
+.applicant-verified {
+  margin: 0 16px 8px;
 }
 
 /* 列表行 */

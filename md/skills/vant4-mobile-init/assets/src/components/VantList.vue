@@ -45,7 +45,7 @@
  *     })"
  *   />
  */
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCrudList } from '@/composables/useCrudList'
 import type { CrudApi, CrudAction } from '@/composables/useCrudList'
@@ -109,6 +109,12 @@ const props = withDefaults(
      * 可用 #skeleton 插槽自定义（否则用默认 van-skeleton 卡片）。
      */
     skeletonCount?: number
+    /**
+     * 提交前自定义校验钩子（业务页强校验门禁，独立于 van-form 内置 :rules）。
+     * 入参为当前表单对象与是否编辑态；返回 false / 抛出 则阻断提交。
+     * 用于「投保人未填写 / 未核验」等业务强约束，避免依赖 Vant 字段注册而漏校验。
+     */
+    beforeSubmit?: (form: any, isEdit: boolean) => boolean | Promise<boolean>
   }>(),
   {
     rowKey: 'id',
@@ -301,23 +307,60 @@ async function onFormSubmit() {
     // van-form.validate()：任一带 :rules 的字段校验不通过则 reject，此时中断提交
     await formRef.value?.validate()
   } catch {
+    // 校验失败：等待错误提示渲染后滚动到第一个出错字段
+    await nextTick()
+    scrollToFirstError()
     return
   }
+  // 业务强校验钩子（独立于 Vant 字段注册，保证「投保人未填写/未核验」必被拦截）
+  if (props.beforeSubmit) {
+    try {
+      const ok = await props.beforeSubmit(form, isEdit.value)
+      if (ok === false) {
+        await nextTick()
+        scrollToFirstError()
+        return
+      }
+    } catch {
+      await nextTick()
+      scrollToFirstError()
+      return
+    }
+  }
   submit()
+}
+
+/**
+ * 校验失败后滚动到第一个出错的字段（在可滚动的表单容器内）。
+ * 优先定位带有错误文本提示的 .van-field，找不到时回退到 .van-field--error。
+ */
+function scrollToFirstError() {
+  const formEl = (formRef.value as any)?.$el as HTMLElement | undefined
+  if (!formEl) return
+  const errorMessages = formEl.querySelectorAll<HTMLElement>('.van-field__error-message')
+  const firstErrorMsg = Array.from(errorMessages).find(
+    (el) => el.textContent && el.textContent.trim().length > 0,
+  )
+  const target =
+    (firstErrorMsg?.closest('.van-field') as HTMLElement | null) ||
+    formEl.querySelector<HTMLElement>('.van-field--error')
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 </script>
 
 <template>
   <div class="vant-list picc-page" :data-perm="permTick">
-    <!-- 顶部导航栏 -->
-    <van-nav-bar
-      v-if="title"
-      :title="title"
-      class="van-nav-bar--picc-primary"
-      left-text="返回"
-      left-arrow
-      @click-left="onBack"
-    />
+    <!-- 顶部吸顶区：导航栏 + 搜索栏 + 更多查询，随页面滚动时固定在顶部 -->
+    <div class="vl-header">
+      <!-- 顶部导航栏 -->
+      <van-nav-bar
+        v-if="title"
+        :title="title"
+        class="van-nav-bar--picc-primary"
+        left-text="返回"
+        left-arrow
+        @click-left="onBack"
+      />
 
     <!-- 搜索栏 -->
     <div v-if="showSearch" class="vl-search-wrap">
@@ -403,6 +446,7 @@ async function onFormSubmit() {
           <van-button size="small" type="primary" @click="onMoreFilterApply">应用筛选</van-button>
         </div>
       </div>
+    </div>
     </div>
 
     <!-- 列表 -->
@@ -583,6 +627,13 @@ async function onFormSubmit() {
   padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   min-height: 100vh;
   box-sizing: border-box;
+}
+/* 顶部吸顶区：导航栏 + 搜索栏 + 更多查询，随列表滚动时固定在顶部 */
+.vl-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f5f6f8;
 }
 .vl-search-wrap {
   padding: 0 4px;
