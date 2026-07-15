@@ -172,6 +172,30 @@ const routes: MockRoute[] = [
       return { code: 200, data: { data }, message: '解析成功' }
     },
   },
+
+  // ===== 异名字段后端（演示 fieldMap 适配不同后端字段名） =====
+  // 请求体字段：fileData / name（与默认后端 fileName/base64 不同）
+  // 响应体字段：imgUrl / fileId / fileName（与默认后端 url 不同）
+  {
+    url: '/demo/upload-file/alt',
+    method: 'POST',
+    response: async (req: any) => {
+      const body = await parseBody(req)
+      ensureUploadDir()
+      const { buffer, ext } = base64ToBuffer(body.fileData || '')
+      const timestamp = Date.now()
+      const filename = `alt-${timestamp}${ext}`
+      const filePath = path.join(UPLOAD_DIR, filename)
+      fs.writeFileSync(filePath, buffer)
+      const fileUrl = `/demo-upload/${filename}`
+      console.log('[mock] 异名后端已保存:', filePath)
+      return {
+        code: 200,
+        data: { imgUrl: fileUrl, fileId: `F${timestamp}`, fileName: body.name },
+        message: '上传成功',
+      }
+    },
+  },
 ]
 
 export default routes

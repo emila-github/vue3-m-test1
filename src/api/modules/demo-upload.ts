@@ -42,3 +42,11 @@ export function uploadExcel(data: UploadParams) {
 export function parseExcel(data: { fileName: string }) {
   return get<ExcelParseResult>('/demo/upload-file/excel/parse', data as Record<string, any>)
 }
+
+/**
+ * 异名后端上传（演示 fieldMap 适配）：请求字段名按后端要求定制为 fileData / name，
+ * 响应字段名为 imgUrl / fileId / fileName。配合组件的 fieldMap 使用。
+ */
+export function uploadFileAlt(data: { name: string; fileData: string }) {
+  return post<UploadResult>('/demo/upload-file/alt', data as Record<string, any>)
+}

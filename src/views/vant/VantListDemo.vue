@@ -94,7 +94,10 @@ const lastVerifiedApplicant = ref('')
 // 投保人未核验则校验不通过，阻断提交。
 const applicantRules = [
   { required: true, message: '请输入投保人' },
-  { validator: () => (applicantVerified.value ? true : '请先核验投保人'), message: '请先核验投保人' },
+  {
+    validator: () => (applicantVerified.value ? true : '请先核验投保人'),
+    message: '请先核验投保人',
+  },
 ]
 function onApplicantInput(name: string) {
   // 投保人姓名变更时，已核验状态失效，需重新核验

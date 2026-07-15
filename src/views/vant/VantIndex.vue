@@ -93,6 +93,14 @@ const stages = ref([
     icon: '🔐',
     color: '#ee0a24',
   },
+  {
+    id: 'idcard-upload',
+    title: '身份证上传组件 VantIdCardUploadField',
+    desc: '卡片式上传预览区 + 示例引导弹窗 + mock落盘OCR回填，集成 van-field 表单，支持上传识别/本地识别双模式',
+    path: '/vant/vant-idcard-upload-field-demo',
+    icon: '🪪',
+    color: '#d71920',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -133,7 +141,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 11 个）</h2>
+      <h2>组件演示（共 12 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

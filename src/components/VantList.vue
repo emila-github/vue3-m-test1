@@ -571,15 +571,15 @@ function scrollToFirstError() {
         <van-nav-bar :title="isEdit ? '编辑' : '新增'" left-arrow @click-left="formVisible = false">
         </van-nav-bar>
         <div class="vl-form-scroll">
-        <van-form ref="formRef">
-          <slot name="form" :form="form" :is-edit="isEdit" />
-          <div class="vl-submit-bar">
-            <van-button type="primary" block round :loading="submitting" @click="onFormSubmit">
-              {{ isEdit ? '保存修改' : '提交' }}
-            </van-button>
-          </div>
-        </van-form>
-      </div>
+          <van-form ref="formRef">
+            <slot name="form" :form="form" :is-edit="isEdit" />
+            <div class="vl-submit-bar">
+              <van-button type="primary" block round :loading="submitting" @click="onFormSubmit">
+                {{ isEdit ? '保存修改' : '提交' }}
+              </van-button>
+            </div>
+          </van-form>
+        </div>
       </div>
     </van-popup>
 
