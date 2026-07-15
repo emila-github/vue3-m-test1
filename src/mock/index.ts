@@ -30,7 +30,12 @@ const MIME_MAP: Record<string, string> = {
 }
 
 // ===== 合并所有 mock 路由（新增文件后在这里加 import 并展开） =====
-const allRoutes: MockRoute[] = [...permissionRoutes, ...uploadRoutes, ...renewalRoutes, ...idcardRoutes]
+const allRoutes: MockRoute[] = [
+  ...permissionRoutes,
+  ...uploadRoutes,
+  ...renewalRoutes,
+  ...idcardRoutes,
+]
 
 // ===== 匹配并返回响应 =====
 function matchRoute(url: string, method: string | undefined) {

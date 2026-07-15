@@ -11,6 +11,7 @@ vi.mock('vant', () => ({
 import { showImagePreview } from 'vant'
 
 import VantUpload from '../VantUpload.vue'
+import { mockIdCardUploadResponse } from '@/api/modules/demo-idcard'
 
 /** van 组件桩：van-uploader 需渲染 default 插槽（身份证卡片在其内部） */
 const vantStubs = {
@@ -885,5 +886,84 @@ describe('compact 预览与占位同尺寸（防上传后换行 / 抖动）', ()
     await flushPromises()
     expect((wrapper.vm as any).fileList).toHaveLength(1)
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.[0]).toBe('http://x/c.png')
+  })
+})
+
+describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
+  it('人像面：response-path=data + ocrField=certNo → 回填证件号并 emit ocr（含完整响应）', async () => {
+    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const wrapper = shallow({
+      type: 'idcard',
+      variant: 'front',
+      ocrField: 'certNo',
+      responsePath: 'data',
+      upload,
+    })
+    const item: any = { file: file('f.png', 100), status: 'uploading' }
+    ;(wrapper.vm as any).afterRead([item])
+    await flushPromises()
+    expect(upload).toHaveBeenCalled()
+    // v-model:ocr 回填
+    expect(wrapper.emitted('update:ocr')?.at(-1)?.[0]).toBe('350123199001015836')
+    // @ocr 事件：value 为识别文本
+    const ocrArgs = wrapper.emitted('ocr')?.at(-1)
+    expect(ocrArgs?.[0]).toBe('350123199001015836')
+    // @ocr 第二参为完整原始响应（含 data.certNo）
+    expect((ocrArgs?.[1] as Record<string, any>).data.certNo).toBe('350123199001015836')
+  })
+
+  it('国徽面：ocrField=validPeriod → 回填有效期', async () => {
+    const upload = vi.fn(async () => mockIdCardUploadResponse('back', 'http://x/b.png'))
+    const wrapper = shallow({
+      type: 'idcard',
+      variant: 'back',
+      ocrField: 'validPeriod',
+      responsePath: 'data',
+      upload,
+    })
+    const item: any = { file: file('b.png', 100), status: 'uploading' }
+    ;(wrapper.vm as any).afterRead([item])
+    await flushPromises()
+    expect(wrapper.emitted('update:ocr')?.at(-1)?.[0]).toBe('2015.01.01-2035.01.01')
+    expect(wrapper.emitted('ocr')?.at(-1)?.[0]).toBe('2015.01.01-2035.01.01')
+  })
+
+  it('ocrField 支持点号嵌套路径（后端结构不确定时）', async () => {
+    const upload = vi.fn(async () => ({
+      code: 200,
+      data: { result: { idNumber: '440301199003070812' } },
+    }))
+    const wrapper = shallow({ type: 'idcard', variant: 'front', ocrField: 'data.result.idNumber', upload })
+    const item: any = { file: file('x.png', 100), status: 'uploading' }
+    ;(wrapper.vm as any).afterRead([item])
+    await flushPromises()
+    expect(wrapper.emitted('update:ocr')?.at(-1)?.[0]).toBe('440301199003070812')
+  })
+
+  it('未配置 ocrField → 不 emit ocr / update:ocr', async () => {
+    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const wrapper = shallow({ type: 'idcard', variant: 'front', responsePath: 'data', upload })
+    const item: any = { file: file('f.png', 100), status: 'uploading' }
+    ;(wrapper.vm as any).afterRead([item])
+    await flushPromises()
+    expect(wrapper.emitted('ocr')).toBeUndefined()
+    expect(wrapper.emitted('update:ocr')).toBeUndefined()
+  })
+
+  it('删除已上传文件 → 清空 OCR 回填（update:ocr 回写为空串）', async () => {
+    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const wrapper = shallow({
+      type: 'idcard',
+      variant: 'front',
+      ocrField: 'certNo',
+      responsePath: 'data',
+      upload,
+    })
+    const item: any = { file: file('f.png', 100), status: 'uploading' }
+    ;(wrapper.vm as any).afterRead([item])
+    await flushPromises()
+    expect(wrapper.emitted('update:ocr')?.at(-1)?.[0]).toBe('350123199001015836')
+    ;(wrapper.vm as any).removeItem(item)
+    expect(wrapper.emitted('update:ocr')?.at(-1)?.[0]).toBe('')
   })
 })

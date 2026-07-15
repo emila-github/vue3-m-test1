@@ -92,12 +92,6 @@ const manualRoutes = [
     component: () => import('../views/vant/VantPermissionDemo.vue'),
     meta: { title: '权限指令' },
   },
-  {
-    path: '/vant/vant-idcard-upload-field-demo',
-    name: 'vant-idcard-upload-field-demo',
-    component: () => import('../views/vant/VantIdCardUploadFieldDemo.vue'),
-    meta: { title: 'VantIdCardUploadField' },
-  },
 ]
 
 const router = createRouter({

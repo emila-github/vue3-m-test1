@@ -2,9 +2,10 @@
 /**
  * VantUpload 示例：头像 / 身份证人像面 / 身份证国徽面 / 证件上传（自定义 UI）
  */
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import VantUpload from '@/components/VantUpload.vue'
 import { uploadFile, uploadFileAlt, type UploadParams } from '@/api/modules/demo-upload'
+import { idCardUpload, mockIdCardOcr } from '@/api/modules/demo-idcard'
 
 // 模拟上传接口：延迟后返回本地预览 URL（真实项目替换为 :upload="apiUpload"）
 function mockUpload(file: File): Promise<{ url: string }> {
@@ -80,6 +81,70 @@ const videoValue = ref('')
 const anyValue = ref('')
 // 嵌套响应（responsePath）回写值
 const nestedValue = ref('')
+
+// ⑲ 身份证 OCR 识别回填：调用合并接口（按 side 返回 url + 识别字段），
+// 由组件 ocrField 提取对应字段回填；@success 透传完整响应供其它处理
+async function uploadIdCardOcr(file: File, side: 'front' | 'back') {
+  const base64 = await fileToBase64(file)
+  return idCardUpload({ fileName: file.name || 'idcard', base64, side })
+}
+const uploadIdCardFrontOcr = (file: File) => uploadIdCardOcr(file, 'front')
+const uploadIdCardBackOcr = (file: File) => uploadIdCardOcr(file, 'back')
+// 正反面各自独立的图片回写值（与场景③解耦，避免共用 ref 互相覆盖）
+const idFrontOcrImg = ref('')
+const idBackOcrImg = ref('')
+// OCR 识别文本回填值（v-model:ocr）
+const idFrontOcrText = ref('')
+const idBackOcrText = ref('')
+// 完整后端响应（@success 透传），用于演示「获取上传后的全部返回数据做其他处理」
+const ocrFullResp = ref<Record<string, any> | null>(null)
+// OCR 识别结果回填到 Vant4 表单控件（可读写，便于人工核对 / 修正后提交）
+const ocrForm = reactive({
+  certNo: '',
+  name: '',
+  gender: '',
+  nation: '',
+  birth: '',
+  address: '',
+  issueOrg: '',
+  validPeriod: '',
+})
+const ocrFormSubmitLog = ref('')
+// 兼容「完整响应（code/data/message）」与「拦截器直接返回 inner data」两种形态
+const ocrResultData = computed<Record<string, any> | null>(() => {
+  const r = ocrFullResp.value
+  if (!r) return null
+  return (r as any).data ?? r
+})
+function onOcrSuccess(
+  _value: string,
+  _item: Record<string, any>,
+  res?: Record<string, any> | null,
+) {
+  ocrFullResp.value = res ?? null
+  // 上传 + OCR 一步到位：从完整响应中取出识别数据，回填下方 Vant4 表单
+  const data = res && (res as any).data ? (res as any).data : res
+  if (data && typeof data === 'object') Object.assign(ocrForm, data)
+}
+function onOcrFormSubmit(values: Record<string, any>) {
+  ocrFormSubmitLog.value = JSON.stringify(values, null, 2)
+}
+function resetOcrForm() {
+  Object.assign(ocrForm, {
+    certNo: '',
+    name: '',
+    gender: '',
+    nation: '',
+    birth: '',
+    address: '',
+    issueOrg: '',
+    validPeriod: '',
+  })
+  ocrFormSubmitLog.value = ''
+}
+// 统一身份证模拟数据（前端安全，供单测 / 预填 / 离线演示，结构与后端一致）
+const idCardMockFront = mockIdCardOcr('front')
+const idCardMockBack = mockIdCardOcr('back')
 // success 事件示例：回写值 / 完整后端响应 / 逐文件成功信息（合并原⑬⑭）
 const successValue = ref<string[]>([])
 const fullResp = ref<Record<string, any> | null | undefined>(null)
@@ -90,7 +155,7 @@ const invoiceSingle = ref('')
 const invoiceMulti = ref<string[]>([])
 // 超限压缩示例：独立回写值（maxSize 设小以便演示压缩）
 const compressValue = ref('')
-// 统一开关：是否对所有示例（①-⑰）开启 van-field 表单回填效果（默认关闭）
+// 统一开关：是否对所有示例（②-⑰）开启 van-field 表单回填效果（默认关闭）
 const fieldOn = ref(false)
 // 统一开关：field 开启时，是否隐藏各示例原始上传/添加按钮（仅保留 van-field 相机入口）。默认关闭（保留原按钮）
 const hideUploadWhenFieldOn = ref(false)
@@ -101,10 +166,15 @@ function onSubmit(values: Record<string, any>) {
   formSubmitLog.value = JSON.stringify(values, null, 2)
 }
 
-// change 回显
-const log = ref('')
+// change 回显：累加为可滚动的实时操作日志（最新在上，带时间戳，可清空）
+const log = ref<string[]>([])
 function onChange(type: string, url: string) {
-  log.value = `[${type}] ${url ? url.slice(0, 40) + '…' : '（已移除）'}`
+  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+  const msg = url ? url.slice(0, 40) + '…' : '（已移除）'
+  log.value = [`[${time}] ${type}：${msg}`, ...log.value].slice(0, 50)
+}
+function clearLog() {
+  log.value = []
 }
 
 // success 事件：每次上传成功时触发（每文件一次），回调 (value, item, result?)。
@@ -150,7 +220,20 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">① 头像上传（圆形）</div>
+      <div class="log-head">
+        <div class="section-title">① change 事件回显（操作实时记录）</div>
+        <van-button v-if="log.length" size="mini" plain type="primary" @click="clearLog"
+          >清空</van-button
+        >
+      </div>
+      <div class="log-box">
+        <p v-for="(item, i) in log" :key="i" class="log-line">{{ item }}</p>
+        <p v-if="!log.length" class="hint">（暂无操作，上传 / 删除任意示例即在此记录）</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">② 头像上传（圆形）</div>
       <VantUpload
         v-model="avatar"
         type="avatar"
@@ -163,7 +246,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">② 身份证正反面（默认全宽自适应）</div>
+      <div class="section-title">③ 身份证正反面（默认全宽自适应）</div>
       <p class="hint">
         <code>type="idcard"</code> 默认 UI <b>自适应屏幕宽度</b>（高约 150px、占满整行），人像面 /
         国徽面各自独立上传，直观呈现身份证版面（与 ③ / ④ 的 compact 小宽度对照）。
@@ -192,7 +275,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">③ 身份证正反面（compact 小宽度）</div>
+      <div class="section-title">④ 身份证正反面（compact 小宽度）</div>
       <p class="hint">
         手动配置 <code>compact</code> 回退为 <b>150×95 固定小宽度</b> UI（与 ②
         默认全宽对照，适合紧凑布局），人像面 / 国徽面各自独立上传。 上传成功后的<b
@@ -228,12 +311,11 @@ function onSuccess(
 
     <div class="card">
       <div class="section-title">
-        ④ 身份证（带上传示例引导弹窗 · show-sample · 人像面 / 国徽面）
+        ⑤ 身份证（带上传示例引导弹窗 · show-sample · 人像面 / 国徽面）
       </div>
       <p class="hint">
         配置 <code>show-sample</code> 后，点击身份证卡片会先弹出<b>「身份证上传示例」引导弹窗</b>
-        （展示标准样张 + 四角定位框 + 拍摄提示 + 合规声明，参考
-        VantIdCardUploadField），点「上传照片」才唤起选图；
+        （展示标准样张 + 四角定位框 + 拍摄提示 + 合规声明），点「上传照片」才唤起选图；
         不传该配置则默认<b>直接选图、不弹示例</b>。<b>人像面 / 国徽面均适用</b>，弹窗内容随
         <code>variant</code> 自适应（样张图标与文案不同）。
       </p>
@@ -264,7 +346,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑤ 发票 / 票据图片（卡片 UI · 单张）</div>
+      <div class="section-title">⑥ 发票 / 票据图片（卡片 UI · 单张）</div>
       <p class="hint">
         <code>type="invoice"</code>
         大虚线框居中相机图标，label 右侧显示类型标签，适合报销 / OCR 场景。
@@ -285,7 +367,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑥ 发票 / 票据图片（卡片 UI · 多张）</div>
+      <div class="section-title">⑦ 发票 / 票据图片（卡片 UI · 多张）</div>
       <p class="hint">
         <code>type="invoice"</code> + <code>multiple</code>，多张图片以 3 列网格展示，最多 9
         张。<b>添加按钮常驻</b>于末尾，达到上限后自动隐藏；
@@ -307,7 +389,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑦ 证件上传（自定义 UI · 单选）</div>
+      <div class="section-title">⑧ 证件上传（自定义 UI · 单选）</div>
       <p class="hint">支持图片 / PDF，自定义文件列表展示名称、大小与进度。</p>
       <VantUpload
         v-model="certSingle"
@@ -322,7 +404,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑧ 证件上传（自定义 UI · 多选）</div>
+      <div class="section-title">⑨ 证件上传（自定义 UI · 多选）</div>
       <p class="hint">multiple 模式，最多 5 个。</p>
       <VantUpload
         v-model="certMulti"
@@ -339,7 +421,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑨ 多图片上传（多选）</div>
+      <div class="section-title">⑩ 多图片上传（多选）</div>
       <p class="hint">type="image" + multiple，最多 9 张，缩略图尺寸与占位保持一致。</p>
       <VantUpload
         v-model="images"
@@ -354,7 +436,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑩ 异名后端字段映射（fieldMap）</div>
+      <div class="section-title">⑪ 异名后端字段映射（fieldMap）</div>
       <p class="hint">
         该场景后端请求字段为 <code>fileData / name</code>、响应为
         <code>imgUrl / fileId / fileName</code>， 与默认后端（<code>url</code>）完全不同。通过
@@ -377,7 +459,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑪ Excel / 表格上传</div>
+      <div class="section-title">⑫ Excel / 表格上传</div>
       <p class="hint">
         <code>type="document"</code> + <code>accept=".xls,.xlsx"</code>，上传落盘到
         <code>excel</code> 路由（扩展名正确映射），可用于导入模板 / 数据报表。
@@ -397,7 +479,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑫ 视频上传</div>
+      <div class="section-title">⑬ 视频上传</div>
       <p class="hint">
         <code>type="document"</code> + <code>accept="video/*"</code>，支持 mp4 / mov 等， 自定义 UI
         展示文件名与大小（mock 落盘，演示非图片类文件）。
@@ -418,7 +500,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑬ 全类型文件（压缩包 / Word / 任意）</div>
+      <div class="section-title">⑭ 全类型文件（压缩包 / Word / 任意）</div>
       <p class="hint">
         <code>type="document"</code> + 不限制 <code>accept</code>，覆盖 zip / rar / doc / docx / txt
         等任意附件，统一落盘到 <code>src/assets/demo-upload</code>。
@@ -439,7 +521,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑭ 嵌套响应字段路径（responsePath）</div>
+      <div class="section-title">⑮ 嵌套响应字段路径（responsePath）</div>
       <p class="hint">
         后端返回结构为 <code>{ code, data: { result: { imgUrl, fileId, fileName } } }</code>，
         结果对象嵌套在 <code>data.result</code>。通过
@@ -461,7 +543,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑮ success 事件（回写值 + 完整响应 + 逐文件成功）</div>
+      <div class="section-title">⑯ success 事件（回写值 + 完整响应 + 逐文件成功）</div>
       <p class="hint">
         通过 <code>@success="onSuccess"</code> 在<b>每次上传成功时</b>触发（每个文件各自一次），
         回调为 <code>(value, item, result?)</code>：value 为该文件回写值（与 v-model 对应项一致），
@@ -491,7 +573,7 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑯ 超限自动压缩（compress-before-upload · 默认关闭）</div>
+      <div class="section-title">⑰ 超限自动压缩（compress-before-upload · 默认关闭）</div>
       <p class="hint">
         配置 <code>:compress-before-upload="true"</code> 后，若选中图片<b
           >超过 <code>maxSize</code></b
@@ -515,11 +597,6 @@ function onSuccess(
     </div>
 
     <div class="card">
-      <div class="section-title">⑰ change 事件回显</div>
-      <p class="hint">{{ log || '（暂无操作）' }}</p>
-    </div>
-
-    <div class="card">
       <div class="section-title">⑱ 表单内 van-field 回填提交（field · 默认关闭）</div>
       <p class="hint">
         配置 <code>:field="true"</code> 后，<b>原始上传 UI 下方</b>会额外渲染一行
@@ -527,7 +604,7 @@ function onSuccess(
         在左、已上传信息回显在右、右侧「上传」按钮可再次唤起同一套上传逻辑回填数据）， 从而和
         <code>van-form</code> 中其他 <code>van-field</code> 保持统一 UI，并参与表单提交：
         <code>name</code> 作为提交字段名、<code>rules</code> 做表单校验、<code>error-message</code>
-        显示错误提示。 上方开关仅统一控制 ①-⑰ 的 field
+        显示错误提示。 上方开关仅统一控制 ②-⑰ 的 field
         渲染效果；本示例为<b>固定开启</b>的独立表单提交演示。
       </p>
       <van-form @submit="onSubmit">
@@ -551,19 +628,151 @@ function onSuccess(
     </div>
 
     <div class="card">
+      <div class="section-title">⑲ 身份证 OCR 识别回填（控件 field 展示证件号 / 签发机关）</div>
+      <p class="hint">
+        身份证上传后端「合并接口」一次返回图片地址与识别结果（上传 + OCR 一步到位）。配置
+        <code>response-path="data"</code> 定位结果对象，并开启 <code>field</code> 让控件<b
+          >内置的 van-field</b
+        >
+        直接展示识别结果：正面上传后由
+        <code>:ocr-field="'certNo'"</code> 提取<b>证件号码</b>、反面上传后由
+        <code>:ocr-field="'issueOrg'"</code> 提取<b>签发机关</b>，回填到控件自带 van-field（label
+        即「证件号码 / 签发机关」，可随外层 van-form 提交）；同时
+        <code>@success</code> 仍透传<b>完整后端响应</b>（含 url / 识别字段）。
+        后端字段名不确定时，随意改 <code>ocrField</code> 即可适配，无需改组件内部。下方
+        <b>van-form + van-field</b> 回填其余识别字段（姓名 / 性别 / 民族 / 出生 / 地址 /
+        有效期），可人工核对修正后提交。
+      </p>
+
+      <div class="usage-subtitle">
+        OCR 识别结果 → Vant4 表单回填（控件 field 已直接展示证件号 /
+        签发机关，下方表单展示其余字段）
+      </div>
+      <van-form @submit="onOcrFormSubmit">
+        <van-cell-group>
+          <!-- 人像面：开启 field，控件内置 van-field 直接展示 OCR 识别的证件号（name=certNo，可随 van-form 提交） -->
+          <VantUpload
+            v-model="idFrontOcrImg"
+            type="idcard"
+            variant="front"
+            :upload="uploadIdCardFrontOcr"
+            response-path="data"
+            :ocr-field="'certNo'"
+            v-model:ocr="idFrontOcrText"
+            :field="fieldOn"
+            :hide-upload-when-field="hideUploadWhenFieldOn"
+            label="证件号码"
+            name="certNo"
+            :rules="[{ required: true, message: '请上传身份证人像面' }]"
+            @success="onOcrSuccess"
+            @change="onChange('人像面(OCR)', $event)"
+          />
+          <van-field
+            v-model="ocrForm.name"
+            name="name"
+            label="姓名"
+            placeholder="上传人像面后自动回填"
+          />
+          <van-field
+            v-model="ocrForm.gender"
+            name="gender"
+            label="性别"
+            placeholder="上传人像面后自动回填"
+          />
+          <van-field
+            v-model="ocrForm.nation"
+            name="nation"
+            label="民族"
+            placeholder="上传人像面后自动回填"
+          />
+          <van-field
+            v-model="ocrForm.birth"
+            name="birth"
+            label="出生"
+            placeholder="上传人像面后自动回填"
+          />
+          <van-field
+            v-model="ocrForm.address"
+            name="address"
+            label="地址"
+            type="textarea"
+            autosize
+            placeholder="上传人像面后自动回填"
+          />
+
+          <!-- 国徽面：开启 field，控件内置 van-field 直接展示 OCR 识别的签发机关（name=issueOrg，可随 van-form 提交） -->
+          <VantUpload
+            v-model="idBackOcrImg"
+            type="idcard"
+            variant="back"
+            :upload="uploadIdCardBackOcr"
+            response-path="data"
+            :ocr-field="'issueOrg'"
+            v-model:ocr="idBackOcrText"
+            :field="fieldOn"
+            :hide-upload-when-field="hideUploadWhenFieldOn"
+            label="签发机关"
+            name="issueOrg"
+            :rules="[{ required: true, message: '请上传身份证国徽面' }]"
+            @success="onOcrSuccess"
+            @change="onChange('国徽面(OCR)', $event)"
+          />
+          <van-field
+            v-model="ocrForm.validPeriod"
+            name="validPeriod"
+            label="有效期"
+            placeholder="上传国徽面后自动回填"
+          />
+        </van-cell-group>
+        <div class="form-actions">
+          <van-button round block type="primary" native-type="submit"
+            >提交（OCR 回填后可人工核对修正）</van-button
+          >
+          <van-button round block plain type="default" @click="resetOcrForm">清空</van-button>
+        </div>
+      </van-form>
+      <p class="hint" v-if="ocrFormSubmitLog">提交结果：{{ ocrFormSubmitLog }}</p>
+
+      <p class="hint">
+        人像面（控件内置 field 展示证件号）：{{ idFrontOcrText || '（上传后回填）' }}
+      </p>
+      <p class="hint">
+        国徽面（控件内置 field 展示签发机关）：{{ idBackOcrText || '（上传后回填）' }}
+      </p>
+      <p class="hint" v-if="ocrResultData">
+        完整识别数据（@success）：url=
+        {{ (ocrResultData.url || '').split('/').pop() }}；certNo={{ ocrResultData.certNo }}；
+        validPeriod={{ ocrResultData.validPeriod }}；name={{ ocrResultData.name }}
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="section-title">⑳ 统一身份证模拟数据（mockIdCardOcr）</div>
+      <p class="hint">
+        <code>src/api/modules/demo-idcard.ts</code> 提供<b>前端安全</b>的统一身份证 OCR
+        模拟数据生成器 <code>mockIdCardOcr(side)</code>，返回与后端一致字段（正面
+        certNo/name/address/birth/gender/nation，反面 issueOrg/validPeriod），
+        可用于单测预填、本地联调或离线演示，无需依赖 mock 服务；另提供
+        <code>mockIdCardUploadResponse(side, url)</code> 生成含图片地址的完整合并接口响应。
+      </p>
+      <pre class="mock-pre">front = {{ JSON.stringify(idCardMockFront, null, 2) }}</pre>
+      <pre class="mock-pre">back = {{ JSON.stringify(idCardMockBack, null, 2) }}</pre>
+    </div>
+
+    <div class="card">
       <div class="section-title">使用说明</div>
 
       <div class="usage-subtitle">一、五种内置 type</div>
       <p class="hint">
         · 组件基于 <code>van-uploader</code>（图片类）+ 自定义上传区（证件 / 发票类）封装。
       </p>
-      <p class="hint">· <code>type="avatar"</code> 圆形头像上传（场景①）。</p>
+      <p class="hint">· <code>type="avatar"</code> 圆形头像上传（场景②）。</p>
       <p class="hint">
         · <code>type="idcard"</code> 身份证上传，配合 <code>variant="front|back"</code> 展示人像面 /
         国徽面占位卡片。<b>默认 UI 自适应屏幕宽度</b>（占满整行、高约
-        150px，直观呈现身份证版面，场景②）； 传 <code>compact</code> 时回退为
-        <b>150×95 固定小宽度 UI</b>，适合并排 / 紧凑布局（场景③）； 还可配置
-        <code>show-sample</code> 使点击上传前先弹出「身份证上传示例」引导弹窗（场景④）——
+        150px，直观呈现身份证版面，场景③）； 传 <code>compact</code> 时回退为
+        <b>150×95 固定小宽度 UI</b>，适合并排 / 紧凑布局（场景④）； 还可配置
+        <code>show-sample</code> 使点击上传前先弹出「身份证上传示例」引导弹窗（场景⑤）——
         弹窗含标准样张、四角定位框、横向拍摄提示与合规声明，确认后才唤起选图；
         <code>variant="front|back"</code> 会切换样张图标与文案，<b>人像面 / 国徽面均适用</b>；
         <code>show-sample</code> 默认 <code>false</code>（不传则点击直接选图）。
@@ -572,51 +781,68 @@ function onSuccess(
         · <code>type="invoice"</code> 发票 / 票据图片卡片：大虚线框居中相机图标，
         <code>label</code> 右侧显示
         <code>invoice-tag</code> 类型标签。单张上传后图片占据原卡片位置、 再次上传直接替换；多张以 3
-        列网格展示且<b>添加按钮常驻至上限</b>。点击缩略图可放大预览，右上角删除（场景⑤-⑥）。
+        列网格展示且<b>添加按钮常驻至上限</b>。点击缩略图可放大预览，右上角删除（场景⑥-⑦）。
       </p>
       <p class="hint">
         · <code>type="document"</code> 证件 / 附件上传，自定义 UI 展示图标 / 名称 / 大小 / 进度 /
         删除；配合 <code>accept</code> 适配 PDF / Excel / 视频 /
-        压缩包等任意文件类型（场景⑦-⑧、⑪-⑬）。
+        压缩包等任意文件类型（场景⑧-⑨、⑫-⑭）。
       </p>
       <p class="hint">
         · <code>type="image"</code>（默认）通用图片上传；加 <code>multiple</code> 支持多图，多选时
-        <code>v-model</code> 为 <code>string[]</code>（场景⑨）。
+        <code>v-model</code> 为 <code>string[]</code>（场景⑩）。
       </p>
 
       <div class="usage-subtitle">二、上传函数与后端适配</div>
       <p class="hint">
-        · 头像（场景①）保留 <code>mockUpload</code> 本地 ObjectURL 预览方式；
+        · 头像（场景②）保留 <code>mockUpload</code> 本地 ObjectURL 预览方式；
         其余示例均改为「落盘」上传（<code>diskUpload → uploadFile</code> → mock 写入
         <code>src/assets/demo-upload</code> 并返回 <code>/demo-upload/xxx</code> 地址）。 不传
         <code>:upload</code> 时组件回退为本地 blob 预览。
       </p>
       <p class="hint">
-        · <b>请求字段名</b>由 <code>:upload</code> 自定义函数自行组织（如场景⑩使用
+        · <b>请求字段名</b>由 <code>:upload</code> 自定义函数自行组织（如场景⑪使用
         <code>fileData / name</code>），便于对接不同后端入参要求。
       </p>
       <p class="hint">
         · <b>响应字段名</b>通过 <code>:field-map="{ url, value, name }"</code> 映射 （如
-        <code>imgUrl→url</code>、<code>fileId→value</code>、<code>fileName→name</code>，场景⑩），
+        <code>imgUrl→url</code>、<code>fileId→value</code>、<code>fileName→name</code>，场景⑪），
         无需改动组件内部。<code>resultField</code> 可单独指定回写字段，优先级低于
         <code>fieldMap.value</code>。
       </p>
       <p class="hint">
         · 若结果对象被<b>嵌套</b>（如 <code>{ code, data: { result } }</code>），用
         <code>:response-path="'data.result'"</code> 先定位结果对象，再配合
-        <code>field-map</code> 适配（场景⑭）。
+        <code>field-map</code> 适配（场景⑮）。
+      </p>
+      <p class="hint">
+        ·
+        <b>OCR 识别信息回填</b
+        >：身份证（或任何带识别结果的场景）上传成功后，后端常一并返回识别字段。 通过
+        <code>:ocr-field="'certNo'"</code>（点号路径，如
+        <code>'data.idNumber'</code>）指定回填字段， 组件会 emit <code>@ocr</code> 并通过
+        <code>v-model:ocr</code> 回填识别文本（场景⑲： 人像面回填证件号、国徽面回填有效期）。
+        后端字段名不确定时，配合
+        <code>response-path</code> 定位结果对象后即可任意配置，无需改组件内部。
       </p>
 
       <div class="usage-subtitle">三、事件</div>
       <p class="hint">
         · <code>@change="(value, item)"</code>：<b>每次 modelValue 变化</b>时触发，value 为当前主值
-        （单选取首个、多选与 v-model 一致），item 为对应上传项（无值时为 null，场景⑯）。
+        （单选取首个、多选与 v-model 一致），item 为对应上传项（无值时为 null，场景①）。
       </p>
       <p class="hint">
         ·
         <code>@success="(value, item, result?)"</code
         >：<b>每次上传成功</b>时触发（每个文件各自一次）—— value 为回写值、item 为上传项、result
-        为<b>可选</b>的后端完整原始响应（可用于 OCR / 审核 / 指纹记录等，场景⑮）。
+        为<b>可选</b>的后端完整原始响应（可用于 OCR / 审核 / 指纹记录等，场景⑯；亦可在场景⑲
+        拿到身份证完整响应）。
+      </p>
+      <p class="hint">
+        · <code>@ocr="(value, result?)"</code>：配置 <code>ocrField</code> 且后端返回对应值时触发——
+        value 为提取到的识别文本（如证件号 / 有效期）、result
+        为<b>完整原始响应</b>，便于回填表单或做其它处理；
+        <code>v-model:ocr</code> 可双向绑定该识别文本（场景⑲）。
       </p>
       <p class="hint">
         · <code>@remove="(item)"</code> 删除文件时触发；<code>@oversize="(file)"</code> 文件超过
@@ -656,11 +882,18 @@ function onSuccess(
         <code>name</code>（提交字段名）/ <code>rules</code>（校验规则）/
         <code>error-message</code>（错误提示）/ <code>center</code>（label 居中）/
         <code>border</code>（下边框，默认 true）。本页顶部「van-field 表单回填效果」开关可统一控制
-        ①-⑰ 的 field 渲染效果（场景⑱ 为固定开启的表单提交演示）。
+        ②-⑰ 的 field 渲染效果（场景⑱ 为固定开启的表单提交演示）。
       </p>
       <p class="hint">
         · <code>upload</code> / <code>result-field</code> / <code>field-map</code> /
         <code>response-path</code>（后端对接相关，见「二」）。
+      </p>
+      <p class="hint">
+        · <code>ocr-field</code>（默认不配置）：OCR 识别信息回填字段名（点号路径，如
+        <code>'certNo'</code> /
+        <code>'data.idNumber'</code>）。配置后，上传成功且后端返回该字段值时，组件 emit
+        <code>@ocr</code> 并通过 <code>v-model:ocr</code> 回填识别文本（场景⑲）。
+        后端返回结构不确定时配合 <code>response-path</code> 即可任意适配。
       </p>
     </div>
   </div>
@@ -682,6 +915,33 @@ function onSuccess(
   font-weight: 600;
   color: #323233;
   margin-bottom: 12px;
+}
+/* ⑰ change 回显：标题行 + 清空按钮 两端对齐 */
+.log-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.log-head .section-title {
+  margin-bottom: 0;
+}
+/* 实时操作日志：固定高度可滚动，最新在上 */
+.log-box {
+  max-height: 160px;
+  overflow-y: auto;
+  background: #f7f8fa;
+  border: 1px solid #ebedf0;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.log-line {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #646566;
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
 }
 /* 使用说明内的分组小标题 */
 .usage-subtitle {
@@ -757,5 +1017,19 @@ function onSuccess(
 /* 表单回填示例：提交按钮间距 */
 .form-actions {
   margin-top: 12px;
+}
+/* 统一模拟数据：等宽字体展示 JSON */
+.mock-pre {
+  background: #f7f8fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #323233;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 </style>

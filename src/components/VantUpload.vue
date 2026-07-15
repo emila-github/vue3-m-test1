@@ -15,7 +15,7 @@
  *   type       — 'image' | 'avatar' | 'idcard' | 'invoice' | 'document'，默认 'image'
  *   variant    — idcard 专用：'front' | 'back'
  *   compact    — idcard 专用：true 时使用 150×95 固定小宽度 UI（手动配置）；默认 false（自适应全宽）
- *   showSample — idcard 专用：点击上传前是否先弹出「身份证上传示例」引导弹窗（参考 VantIdCardUploadField）。默认 false（不弹，直接选图）
+ *   showSample — idcard 专用：点击上传前是否先弹出「身份证上传示例」引导弹窗。默认 false（不弹，直接选图）
  *   compressBeforeUpload — 上传前若超过 maxSize，先压缩再上传。默认 false（不压缩，超限直接拒绝）；需手动配置开启
  *   compressQuality      — compressBeforeUpload 开启时的 JPEG 压缩起始质量（0-1，默认 0.8）
  *   compressMaxEdge      — compressBeforeUpload 开启时压缩后最长边像素上限（默认 1920，超过则等比缩小）
@@ -33,6 +33,11 @@
  *                  value 后端返回「回写值」的字段名（默认 resultField / 'url'）
  *                  name  后端返回「文件名」的字段名（可选，用于回显）
  *   responsePath — 结果对象在响应中的路径（点号分隔，如 'data.result'），为空表示直接在返回值上取字段
+ *   ocrField   — ★ OCR 识别信息回填字段名（点号路径，如 'certNo' / 'data.idNumber'）。
+ *                仅当配置该字段且上传成功返回对应值时，组件会 emit('ocr') 并通过 v-model:ocr 回填识别文本。
+ *                例如身份证人像面传 'certNo'（回填证件号）、国徽面传 'validPeriod'（回填有效期）；
+ *                后端返回结构不确定时，配合 responsePath 定位结果对象后即可任意配置，无需改动组件内部。
+ *   ocr        — OCR 识别文本（v-model:ocr）：上传成功后回填的识别值，未配置 ocrField 时始终为空串
  *   disabled / readonly / required
  *   field      — 是否在原始上传 UI「下方」额外渲染一行 van-field 表单行（用于 van-form 内与其他 van-field 保持统一 UI 并提交回填数据）。
  *                 默认 false（不显示该行，原始 UI 独立渲染）；需手动开启。开启后：label 改由该 van-field 渲染（原 UI 上方不再重复显示），
@@ -52,6 +57,10 @@
  *                                                  value 为该文件回写值（it.value），item 为对应 UploadItem，
  *                                                  result 为后端<b>完整原始响应</b>（含 url / fileName / base64 等，
  *                                                  无上传函数时为 null），可用于 OCR / 审核等额外处理
+ *   ocr(value, result?)                         — 仅当配置了 ocrField 且后端返回对应值时触发；
+ *                                                  value 为提取到的 OCR 识别文本（如证件号 / 有效期），
+ *                                                  result 为后端<b>完整原始响应</b>，便于做其它处理或回填表单
+ *   update:ocr(value)                           — v-model:ocr 双向绑定：回填的 OCR 识别文本（无识别时为空串）
  *   remove(item)                                — 删除某个已上传文件时触发
  *   oversize(file)                              — 文件超过 maxSize 限制且未压缩 / 压缩后仍超限时触发（beforeRead 内）
  */
@@ -110,7 +119,7 @@ const props = withDefaults(
     required?: boolean
     /** idcard 专用：true 使用 150×95 固定小宽度 UI（手动配置）；默认 false 为自适应全宽 */
     compact?: boolean
-    /** idcard 专用：点击上传前是否先弹出「身份证上传示例」引导弹窗（参考 VantIdCardUploadField）。默认 false（不弹，直接选图） */
+    /** idcard 专用：点击上传前是否先弹出「身份证上传示例」引导弹窗。默认 false（不弹，直接选图） */
     showSample?: boolean
     /** 上传前若超过 maxSize，先压缩再上传。默认 false（不压缩，超限直接拒绝）；需手动配置开启 */
     compressBeforeUpload?: boolean
@@ -132,6 +141,11 @@ const props = withDefaults(
     border?: boolean
     /** field=true 时是否隐藏原始区域自带的上传/添加按钮（仅保留 van-field 相机入口触发上传）。默认 false（保留原按钮，原按钮与相机入口并存） */
     hideUploadWhenField?: boolean
+    /** OCR 识别信息回填字段名（点号路径，如 'certNo' / 'data.idNumber'）。配置后上传成功且该字段有值时，
+     *   组件 emit('ocr') 并通过 v-model:ocr 回填识别文本（如身份证人像面 'certNo' / 国徽面 'validPeriod'） */
+    ocrField?: string
+    /** OCR 识别文本（v-model:ocr）：上传成功后回填的识别值，未配置 ocrField 时始终为空串 */
+    ocr?: string
   }>(),
   {
     modelValue: '',
@@ -163,6 +177,8 @@ const props = withDefaults(
     center: false,
     border: true,
     hideUploadWhenField: false,
+    ocrField: undefined,
+    ocr: '',
   },
 )
 
@@ -173,6 +189,10 @@ const emit = defineEmits<{
   change: [value: string, item: UploadItem | null]
   /** 单次上传成功后触发（每文件一次），value 为回写值 it.value，item 为对应项，result 为后端完整原始响应（可为 null） */
   success: [value: string, item: UploadItem, result?: Record<string, any> | null]
+  /** 配置了 ocrField 且后端返回对应值时触发，value 为识别文本，result 为后端完整原始响应（可为 null） */
+  ocr: [value: string, result?: Record<string, any> | null]
+  /** v-model:ocr 双向绑定：回填的 OCR 识别文本（无识别时为空串） */
+  'update:ocr': [value: string]
   /** 删除某文件时触发 */
   remove: [item: UploadItem]
   /** 文件超过 maxSize 限制时触发 */
@@ -237,6 +257,8 @@ const fieldWrapperProps = computed(() =>
 // field=true 时下方 van-field 表单行的回填值：van-field 的 modelValue 仅接受 string|number，
 // 故数组（多选/证件/票据）统一序列化为 JSON 字符串承载（仍可被 van-form 收集）。
 const fieldFormValue = computed<string | number>(() => {
+  // field + ocrField：表单回填值优先取 OCR 识别文本（如证件号 / 签发机关），便于直接提交识别结果
+  if (props.ocrField && props.ocr) return props.ocr
   const val = props.modelValue
   if (val == null) return ''
   if (Array.isArray(val)) return val.length ? JSON.stringify(val) : ''
@@ -256,7 +278,22 @@ const showRemainingHint = computed(
 )
 // field=true 且开启 hideUploadWhenField：隐藏原始区域自带的上传/添加按钮，仅保留 van-field 相机入口
 const hideOriginUpload = computed(() => props.field && props.hideUploadWhenField)
+// OCR 识别结果展示：仅当配置 ocrField 且上传成功回填了识别文本时才展示
+// 前缀文案按 type/variant 自适应（身份证正反面区分证件号 / 有效期），其余类型统一为「识别结果」
+// OCR 识别结果提示文案：按 ocrField 字段名自适应（身份证正反面区分证件号 / 有效期 / 签发机关）
+const OCR_FIELD_LABELS: Record<string, string> = {
+  certNo: '识别证件号',
+  validPeriod: '识别有效期',
+  issueOrg: '识别签发机关',
+}
+const ocrLabel = computed(() => {
+  if (!props.ocrField) return ''
+  return OCR_FIELD_LABELS[props.ocrField] || '识别结果'
+})
+const ocrText = computed(() => props.ocr || '')
 const fieldDisplayText = computed(() => {
+  // field + ocrField：优先展示 OCR 识别文本（如证件号 / 签发机关），而非原始文件地址
+  if (props.ocrField && props.ocr) return props.ocr
   const val = props.modelValue
   if (props.multiple) {
     const arr = Array.isArray(val) ? val : []
@@ -422,6 +459,12 @@ function resolveContainer(raw: Record<string, any> | null): Record<string, any> 
   return props.responsePath.split('.').reduce<any>((o, k) => (o == null ? o : o[k]), raw) || raw
 }
 
+// 按点号路径读取嵌套字段（如 'data.idNumber'），任意层为 null/undefined 返回 undefined
+function getByPath(obj: Record<string, any> | null | undefined, path: string): any {
+  if (!obj || !path) return undefined
+  return path.split('.').reduce<any>((o, k) => (o == null ? o : o[k]), obj)
+}
+
 // 释放 blob: 预览地址，避免内存泄漏
 function revokeIfBlob(url?: string) {
   if (url && url.startsWith('blob:')) URL.revokeObjectURL(url)
@@ -447,13 +490,20 @@ function applyUploadResult(it: UploadItem, result: Record<string, any> | null, f
   it.message = ''
 }
 
-// 统一上传处理：图片类与证件类共用，成功后 emit response / success 并同步 modelValue
+// 统一上传处理：图片类与证件类共用，成功后 emit response / success / ocr 并同步 modelValue
 async function runUpload(it: UploadItem) {
   try {
     const result = props.upload ? await props.upload(it.file as File) : null
     applyUploadResult(it, result, it.file as File)
     if (result) {
       emit('success', it.value ?? '', it, result)
+      // OCR 识别信息回填：仅当配置了 ocrField 且后端返回了对应值时
+      if (props.ocrField) {
+        const raw = getByPath(resolveContainer(result), props.ocrField)
+        const text = raw == null ? '' : String(raw)
+        emit('update:ocr', text)
+        if (text) emit('ocr', text, result)
+      }
     }
   } catch {
     it.status = 'failed'
@@ -523,6 +573,7 @@ function removeItem(it: UploadItem) {
   revokeIfBlob(it.url) // 释放预览地址，避免内存泄漏
   const idx = fileList.value.indexOf(it)
   if (idx >= 0) fileList.value.splice(idx, 1)
+  if (props.ocrField) emit('update:ocr', '') // 删除已上传文件时同步清空 OCR 回填
   emit('remove', it)
   syncModel()
 }
@@ -568,6 +619,7 @@ function docIcon(it: UploadItem): string {
         type === 'avatar' ? 'is-round' : '',
         idcardCompact ? 'idcard-compact' : '',
         showSample && type === 'idcard' ? 'has-sample' : '',
+        hideOriginUpload ? 'is-origin-hidden' : '',
       ]"
       @delete="syncModel"
     >
@@ -710,8 +762,15 @@ function docIcon(it: UploadItem): string {
       </ul>
     </div>
 
+    <!-- OCR 识别结果回填提示：仅当配置 ocrField 且上传成功返回对应值时显示 -->
+    <div v-if="ocrField && ocrText" class="vuf-ocr">
+      <van-icon name="certificate" class="vuf-ocr__icon" />
+      <span class="vuf-ocr__label">{{ ocrLabel }}：</span>
+      <span class="vuf-ocr__value">{{ ocrText }}</span>
+    </div>
+
     <!-- 表单回填 van-field：默认不显示，开启 field 后在原始 UI 下方渲染一行，
-         与 van-form 内其他 van-field 保持统一 UI；右侧相机图标复用同一套上传逻辑回填数据（参考 VantIdCardUploadField） -->
+         与 van-form 内其他 van-field 保持统一 UI；右侧相机图标复用同一套上传逻辑回填数据 -->
     <van-field
       v-if="field"
       v-bind="fieldWrapperProps"
@@ -750,7 +809,7 @@ function docIcon(it: UploadItem): string {
       </template>
     </van-field>
 
-    <!-- 身份证上传示例引导弹窗（idcard + show-sample，参考 VantIdCardUploadField） -->
+    <!-- 身份证上传示例引导弹窗（idcard + show-sample） -->
     <van-dialog
       v-model:show="sampleVisible"
       title="身份证上传示例"
@@ -831,7 +890,7 @@ function docIcon(it: UploadItem): string {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-/* 右侧相机图标按钮区（与 VantIdCardUploadField 一致） */
+/* 右侧相机图标按钮区 */
 .vuf-form-field__actions {
   display: flex;
   align-items: center;
@@ -846,6 +905,35 @@ function docIcon(it: UploadItem): string {
 .vuf-form-field__camera.is-disabled {
   color: var(--van-gray-5);
   cursor: not-allowed;
+}
+
+/* ===== OCR 识别结果回填提示 ===== */
+.vuf-ocr {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--van-primary-color) 6%, #fff);
+  border: 1px solid color-mix(in srgb, var(--van-primary-color) 18%, #fff);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #323233;
+}
+.vuf-ocr__icon {
+  color: var(--van-primary-color);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.vuf-ocr__label {
+  color: #646566;
+  flex-shrink: 0;
+}
+.vuf-ocr__value {
+  color: var(--van-primary-color);
+  font-weight: 600;
+  word-break: break-all;
 }
 
 /* ===== 头像圆形 ===== */
@@ -1043,6 +1131,11 @@ function docIcon(it: UploadItem): string {
 }
 .vuf-uploader--idcard {
   /* padding-bottom: 16px; */
+}
+/* hide-upload-when-field：仅保留内置 van-field 相机入口，整体收起原始上传区（含其固定尺寸占位空格），
+   组件仍挂载，chooseFile() 仍可程序化唤起隐藏的 file input 选图 */
+.vuf-uploader.is-origin-hidden {
+  display: none !important;
 }
 /* show-sample：van-uploader 的透明 input 覆盖在卡片上方会直接唤起选图，
    关掉它的 pointer-events 让点击落到卡片占位（@click.stop 弹示例），
@@ -1329,7 +1422,7 @@ function docIcon(it: UploadItem): string {
   color: #ee0a24;
 }
 
-/* ===== 身份证上传示例引导弹窗（参考 VantIdCardUploadField） ===== */
+/* ===== 身份证上传示例引导弹窗 ===== */
 .vuf-sample-dialog :deep(.van-dialog__header) {
   font-size: 17px;
   font-weight: 600;
