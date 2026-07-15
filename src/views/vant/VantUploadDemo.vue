@@ -1,12 +1,14 @@
 <script setup lang="ts">
 /**
  * VantUpload 示例：头像 / 身份证人像面 / 身份证国徽面 / 证件上传（自定义 UI）
+ * 示例按 ①-⑳ 顺序排列，下方 script 与 template 一一对应，方便快速复制单个示例。
  */
 import { ref, reactive, computed } from 'vue'
 import VantUpload from '@/components/VantUpload.vue'
 import { uploadFile, uploadFileAlt, type UploadParams } from '@/api/modules/demo-upload'
 import { idCardUpload, mockIdCardOcr } from '@/api/modules/demo-idcard'
 
+// ===================== 公共上传函数（各示例共用，无需在每个示例内重复）=====================
 // 模拟上传接口：延迟后返回本地预览 URL（真实项目替换为 :upload="apiUpload"）
 function mockUpload(file: File): Promise<{ url: string }> {
   return new Promise((resolve) => {
@@ -34,7 +36,7 @@ async function diskUpload(
   return uploadFile({ fileName: file.name || 'file', base64, type })
 }
 
-// 各场景绑定具体 type
+// 各场景绑定具体 type（多个示例共用，集中定义）
 const uploadIdFront = (file: File) => diskUpload(file, 'idcard')
 const uploadIdBack = (file: File) => diskUpload(file, 'idcard')
 const uploadDoc = (file: File) => diskUpload(file, 'file')
@@ -59,30 +61,108 @@ async function uploadNested(file: File): Promise<Record<string, any>> {
   return { code: 200, data: { result: res } }
 }
 
-// 各类已上传值
+// ===================== 统一开关 =====================
+// 是否对所有示例（②-⑰）开启 van-field 表单回填效果（默认关闭）
+const fieldOn = ref(false)
+// field 开启时，是否隐藏各示例原始上传/添加按钮（仅保留 van-field 相机入口）。默认关闭（保留原按钮）
+const hideUploadWhenFieldOn = ref(false)
+
+// ===================== ① change 事件回显（操作实时记录）=====================
+// 累加为可滚动的实时操作日志（最新在上，带时间戳，可清空）
+const log = ref<string[]>([])
+function onChange(type: string, url: string) {
+  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+  const msg = url ? url.slice(0, 40) + '…' : '（已移除）'
+  log.value = [`[${time}] ${type}：${msg}`, ...log.value].slice(0, 50)
+}
+function clearLog() {
+  log.value = []
+}
+
+// ===================== ② 头像上传（圆形）=====================
 const avatar = ref('')
-const idBack = ref('')
-// 身份证 + 上传示例弹窗（show-sample）独立值：人像面 / 国徽面各自独立
-const idSample = ref('')
-const idSampleBack = ref('')
-// compact 小宽度示例：独立的人像面值（与同行示例解耦）
-const idFrontCompact = ref('')
+
+// ===================== ③ 身份证正反面（默认全宽自适应）=====================
 // 默认全宽示例：独立的正反面值（与 compact 示例解耦）
 const idFrontFull = ref('')
 const idBackFull = ref('')
+
+// ===================== ④ 身份证正反面（compact 小宽度）=====================
+// compact 小宽度示例：独立的人像面值（与同行示例解耦）
+const idFrontCompact = ref('')
+const idBack = ref('')
+
+// ===================== ⑤ 身份证（带上传示例引导弹窗 · show-sample）=====================
+// 身份证 + 上传示例弹窗（show-sample）独立值：人像面 / 国徽面各自独立
+const idSample = ref('')
+const idSampleBack = ref('')
+
+// ===================== ⑥ 发票 / 票据图片（卡片 UI · 单张）=====================
+const invoiceSingle = ref('')
+
+// ===================== ⑦ 发票 / 票据图片（卡片 UI · 多张）=====================
+const invoiceMulti = ref<string[]>([])
+
+// ===================== ⑧ 证件上传（自定义 UI · 单选）=====================
 const certSingle = ref('')
+
+// ===================== ⑨ 证件上传（自定义 UI · 多选）=====================
 const certMulti = ref<string[]>([])
+
+// ===================== ⑩ 多图片上传（多选）=====================
 const images = ref<string[]>([])
+
+// ===================== ⑪ 异名后端字段映射（fieldMap）=====================
 // 异名后端回写值（取后端 fileId）
 const altValue = ref('')
-// 其它文件类型回写值
+
+// ===================== ⑫ Excel / 表格上传 =====================
 const excelValue = ref('')
+
+// ===================== ⑬ 视频上传 =====================
 const videoValue = ref('')
+
+// ===================== ⑭ 全类型文件（压缩包 / Word / 任意）=====================
 const anyValue = ref('')
+
+// ===================== ⑮ 嵌套响应字段路径（responsePath）=====================
 // 嵌套响应（responsePath）回写值
 const nestedValue = ref('')
 
-// ⑲ 身份证 OCR 识别回填：调用合并接口（按 side 返回 url + 识别字段），
+// ===================== ⑯ success 事件（回写值 + 完整响应 + 逐文件成功）=====================
+const successValue = ref<string[]>([])
+const fullResp = ref<Record<string, any> | null | undefined>(null)
+const otherProcess = ref('')
+const successLog = ref('')
+// success 事件：每次上传成功时触发（每文件一次），回调 (value, item, result?)。
+// 用第三参 result 拿完整后端响应做其它处理（OCR / 审核 / 指纹记录等），
+// 同时用 value / item 做逐文件成功回显，组件回写值仍正常生效。
+function onSuccess(
+  value: string,
+  item: Record<string, any>,
+  res: Record<string, any> | null | undefined,
+) {
+  fullResp.value = res
+  const name = (res?.fileName as string) || (item?.name as string) || 'file'
+  const baseLen = typeof res?.base64 === 'string' ? res.base64.length : 0
+  otherProcess.value = `回写值=${value ? value.slice(0, 30) + '…' : '（空）'}；已对完整响应做其它处理：fileName=${name}、base64 长度=${baseLen}`
+  successLog.value = `成功回写值=${value ? value.slice(0, 40) + '…' : '（空）'}，名称=${item?.name || ''}`
+}
+
+// ===================== ⑰ 超限自动压缩（compress-before-upload · 默认关闭）=====================
+// 超限压缩示例：独立回写值（maxSize 设小以便演示压缩）
+const compressValue = ref('')
+
+// ===================== ⑱ 表单内 van-field 回填提交（field · 默认关闭）=====================
+// 表单内 van-field 回填提交：独立回写值，配合 van-form 提交
+const formFieldValue = ref('')
+const formSubmitLog = ref('')
+function onSubmit(values: Record<string, any>) {
+  formSubmitLog.value = JSON.stringify(values, null, 2)
+}
+
+// ===================== ⑲ 身份证 OCR 识别回填（控件 field 展示证件号 / 签发机关）=====================
+// 身份证 OCR 识别回填：调用合并接口（按 side 返回 url + 识别字段），
 // 由组件 ocrField 提取对应字段回填；@success 透传完整响应供其它处理
 async function uploadIdCardOcr(file: File, side: 'front' | 'back') {
   const base64 = await fileToBase64(file)
@@ -142,55 +222,11 @@ function resetOcrForm() {
   })
   ocrFormSubmitLog.value = ''
 }
+
+// ===================== ⑳ 统一身份证模拟数据（mockIdCardOcr）=====================
 // 统一身份证模拟数据（前端安全，供单测 / 预填 / 离线演示，结构与后端一致）
 const idCardMockFront = mockIdCardOcr('front')
 const idCardMockBack = mockIdCardOcr('back')
-// success 事件示例：回写值 / 完整后端响应 / 逐文件成功信息（合并原⑬⑭）
-const successValue = ref<string[]>([])
-const fullResp = ref<Record<string, any> | null | undefined>(null)
-const otherProcess = ref('')
-const successLog = ref('')
-// 发票/票据图片上传
-const invoiceSingle = ref('')
-const invoiceMulti = ref<string[]>([])
-// 超限压缩示例：独立回写值（maxSize 设小以便演示压缩）
-const compressValue = ref('')
-// 统一开关：是否对所有示例（②-⑰）开启 van-field 表单回填效果（默认关闭）
-const fieldOn = ref(false)
-// 统一开关：field 开启时，是否隐藏各示例原始上传/添加按钮（仅保留 van-field 相机入口）。默认关闭（保留原按钮）
-const hideUploadWhenFieldOn = ref(false)
-// ⑱ 表单内 van-field 回填提交：独立回写值，配合 van-form 提交
-const formFieldValue = ref('')
-const formSubmitLog = ref('')
-function onSubmit(values: Record<string, any>) {
-  formSubmitLog.value = JSON.stringify(values, null, 2)
-}
-
-// change 回显：累加为可滚动的实时操作日志（最新在上，带时间戳，可清空）
-const log = ref<string[]>([])
-function onChange(type: string, url: string) {
-  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
-  const msg = url ? url.slice(0, 40) + '…' : '（已移除）'
-  log.value = [`[${time}] ${type}：${msg}`, ...log.value].slice(0, 50)
-}
-function clearLog() {
-  log.value = []
-}
-
-// success 事件：每次上传成功时触发（每文件一次），回调 (value, item, result?)。
-// 合并演示：用第三参 result 拿完整后端响应做其它处理（OCR / 审核 / 指纹记录等），
-// 同时用 value / item 做逐文件成功回显，组件回写值仍正常生效。
-function onSuccess(
-  value: string,
-  item: Record<string, any>,
-  res: Record<string, any> | null | undefined,
-) {
-  fullResp.value = res
-  const name = (res?.fileName as string) || (item?.name as string) || 'file'
-  const baseLen = typeof res?.base64 === 'string' ? res.base64.length : 0
-  otherProcess.value = `回写值=${value ? value.slice(0, 30) + '…' : '（空）'}；已对完整响应做其它处理：fileName=${name}、base64 长度=${baseLen}`
-  successLog.value = `成功回写值=${value ? value.slice(0, 40) + '…' : '（空）'}，名称=${item?.name || ''}`
-}
 </script>
 
 <template>
@@ -219,6 +255,7 @@ function onSuccess(
       <van-switch v-model="hideUploadWhenFieldOn" class="field-toggle__switch" />
     </div>
 
+    <!-- ① change 事件回显（操作实时记录）-->
     <div class="card">
       <div class="log-head">
         <div class="section-title">① change 事件回显（操作实时记录）</div>
@@ -232,6 +269,7 @@ function onSuccess(
       </div>
     </div>
 
+    <!-- ② 头像上传（圆形）-->
     <div class="card">
       <div class="section-title">② 头像上传（圆形）</div>
       <VantUpload
@@ -245,6 +283,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ③ 身份证正反面（默认全宽自适应）-->
     <div class="card">
       <div class="section-title">③ 身份证正反面（默认全宽自适应）</div>
       <p class="hint">
@@ -274,6 +313,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ④ 身份证正反面（compact 小宽度）-->
     <div class="card">
       <div class="section-title">④ 身份证正反面（compact 小宽度）</div>
       <p class="hint">
@@ -309,6 +349,7 @@ function onSuccess(
       </div>
     </div>
 
+    <!-- ⑤ 身份证（带上传示例引导弹窗 · show-sample）-->
     <div class="card">
       <div class="section-title">
         ⑤ 身份证（带上传示例引导弹窗 · show-sample · 人像面 / 国徽面）
@@ -345,6 +386,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑥ 发票 / 票据图片（卡片 UI · 单张）-->
     <div class="card">
       <div class="section-title">⑥ 发票 / 票据图片（卡片 UI · 单张）</div>
       <p class="hint">
@@ -366,6 +408,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑦ 发票 / 票据图片（卡片 UI · 多张）-->
     <div class="card">
       <div class="section-title">⑦ 发票 / 票据图片（卡片 UI · 多张）</div>
       <p class="hint">
@@ -388,6 +431,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑧ 证件上传（自定义 UI · 单选）-->
     <div class="card">
       <div class="section-title">⑧ 证件上传（自定义 UI · 单选）</div>
       <p class="hint">支持图片 / PDF，自定义文件列表展示名称、大小与进度。</p>
@@ -403,6 +447,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑨ 证件上传（自定义 UI · 多选）-->
     <div class="card">
       <div class="section-title">⑨ 证件上传（自定义 UI · 多选）</div>
       <p class="hint">multiple 模式，最多 5 个。</p>
@@ -420,6 +465,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑩ 多图片上传（多选）-->
     <div class="card">
       <div class="section-title">⑩ 多图片上传（多选）</div>
       <p class="hint">type="image" + multiple，最多 9 张，缩略图尺寸与占位保持一致。</p>
@@ -435,6 +481,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑪ 异名后端字段映射（fieldMap）-->
     <div class="card">
       <div class="section-title">⑪ 异名后端字段映射（fieldMap）</div>
       <p class="hint">
@@ -458,6 +505,7 @@ function onSuccess(
       <p class="hint">回写 modelValue（取后端 fileId）：{{ altValue || '（暂无）' }}</p>
     </div>
 
+    <!-- ⑫ Excel / 表格上传-->
     <div class="card">
       <div class="section-title">⑫ Excel / 表格上传</div>
       <p class="hint">
@@ -478,6 +526,7 @@ function onSuccess(
       <p class="hint">回写值：{{ excelValue || '（暂无）' }}</p>
     </div>
 
+    <!-- ⑬ 视频上传-->
     <div class="card">
       <div class="section-title">⑬ 视频上传</div>
       <p class="hint">
@@ -499,6 +548,7 @@ function onSuccess(
       <p class="hint">回写值：{{ videoValue || '（暂无）' }}</p>
     </div>
 
+    <!-- ⑭ 全类型文件（压缩包 / Word / 任意）-->
     <div class="card">
       <div class="section-title">⑭ 全类型文件（压缩包 / Word / 任意）</div>
       <p class="hint">
@@ -520,6 +570,7 @@ function onSuccess(
       <p class="hint">回写值：{{ anyValue || '（暂无）' }}</p>
     </div>
 
+    <!-- ⑮ 嵌套响应字段路径（responsePath）-->
     <div class="card">
       <div class="section-title">⑮ 嵌套响应字段路径（responsePath）</div>
       <p class="hint">
@@ -542,6 +593,7 @@ function onSuccess(
       <p class="hint">回写 modelValue（取后端 fileId）：{{ nestedValue || '（暂无）' }}</p>
     </div>
 
+    <!-- ⑯ success 事件（回写值 + 完整响应 + 逐文件成功）-->
     <div class="card">
       <div class="section-title">⑯ success 事件（回写值 + 完整响应 + 逐文件成功）</div>
       <p class="hint">
@@ -572,6 +624,7 @@ function onSuccess(
       </p>
     </div>
 
+    <!-- ⑰ 超限自动压缩（compress-before-upload · 默认关闭）-->
     <div class="card">
       <div class="section-title">⑰ 超限自动压缩（compress-before-upload · 默认关闭）</div>
       <p class="hint">
@@ -596,6 +649,7 @@ function onSuccess(
       />
     </div>
 
+    <!-- ⑱ 表单内 van-field 回填提交（field · 默认关闭）-->
     <div class="card">
       <div class="section-title">⑱ 表单内 van-field 回填提交（field · 默认关闭）</div>
       <p class="hint">
@@ -627,6 +681,7 @@ function onSuccess(
       <p class="hint" v-if="formSubmitLog">提交结果：{{ formSubmitLog }}</p>
     </div>
 
+    <!-- ⑲ 身份证 OCR 识别回填（控件 field 展示证件号 / 签发机关）-->
     <div class="card">
       <div class="section-title">⑲ 身份证 OCR 识别回填（控件 field 展示证件号 / 签发机关）</div>
       <p class="hint">
@@ -746,6 +801,7 @@ function onSuccess(
       </p>
     </div>
 
+    <!-- ⑳ 统一身份证模拟数据（mockIdCardOcr）-->
     <div class="card">
       <div class="section-title">⑳ 统一身份证模拟数据（mockIdCardOcr）</div>
       <p class="hint">
@@ -759,6 +815,7 @@ function onSuccess(
       <pre class="mock-pre">back = {{ JSON.stringify(idCardMockBack, null, 2) }}</pre>
     </div>
 
+    <!-- 使用说明 -->
     <div class="card">
       <div class="section-title">使用说明</div>
 
