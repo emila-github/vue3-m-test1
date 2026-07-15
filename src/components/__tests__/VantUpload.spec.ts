@@ -933,7 +933,12 @@ describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
       code: 200,
       data: { result: { idNumber: '440301199003070812' } },
     }))
-    const wrapper = shallow({ type: 'idcard', variant: 'front', ocrField: 'data.result.idNumber', upload })
+    const wrapper = shallow({
+      type: 'idcard',
+      variant: 'front',
+      ocrField: 'data.result.idNumber',
+      upload,
+    })
     const item: any = { file: file('x.png', 100), status: 'uploading' }
     ;(wrapper.vm as any).afterRead([item])
     await flushPromises()

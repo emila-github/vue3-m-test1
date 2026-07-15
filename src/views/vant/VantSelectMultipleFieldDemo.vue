@@ -3,50 +3,7 @@ import { ref, reactive } from 'vue'
 import VantSelectMultipleField from '@/components/VantSelectMultipleField.vue'
 import type { NormalizedOption } from '@/components/VantSelectMultipleField.vue'
 
-// 1) 字符串数组
-const extra = ref<string[]>(['玻璃', '自燃'])
-const extraOptions = ['玻璃破碎险', '自燃损失险', '涉水险', '划痕险', '不计免赔', '车上人员']
-
-// 2) 默认对象数组 { text, value }
-const city = ref<string[]>([])
-const cityOptions = [
-  { text: '北京', value: 'bj' },
-  { text: '上海', value: 'sh' },
-  { text: '广州', value: 'gz' },
-  { text: '深圳', value: 'sz' },
-]
-
-// 3) 自定义字段（valueKey / labelKey）
-const channel = ref<string[]>([])
-const channelOptions = [
-  { id: 'agent', name: '保险代理人' },
-  { id: 'online', name: '官网直营' },
-  { id: 'phone', name: '电话投保' },
-  { id: 'app', name: '手机 App' },
-]
-
-// 4) 完全自定义 format 函数
-const raw = ref<Array<string | number>>([])
-const rawOptions = [
-  { code: 'A', label: '方案 A（基础版）' },
-  { code: 'B', label: '方案 B（标准版）' },
-  { code: 'C', label: '方案 C（尊享版）' },
-]
-
-// 5) 可清空
-const clearableVal = ref<string[]>(['玻璃破碎险'])
-
-// 6) 限制最多可选数量（max=2）
-const limited = ref<string[]>([])
-
-// 7) 禁用 / 只读
-const disabledVal = ref<string[]>(['划痕险'])
-const readonlyVal = ref<string[]>(['涉水险'])
-
-// 8) 必填 + 图标
-const requiredVal = ref<string[]>([])
-
-// change 事件回显
+// ① change 事件回显（置顶，操作实时记录）
 const log = reactive<{ value: Array<string | number>; text: string }>({
   value: [],
   text: '',
@@ -55,6 +12,49 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
   log.value = value
   log.text = options.map((o) => o.text).join('、')
 }
+
+// ② 字符串数组
+const extra = ref<string[]>(['玻璃', '自燃'])
+const extraOptions = ['玻璃破碎险', '自燃损失险', '涉水险', '划痕险', '不计免赔', '车上人员']
+
+// ③ 默认对象数组 { text, value }
+const city = ref<string[]>([])
+const cityOptions = [
+  { text: '北京', value: 'bj' },
+  { text: '上海', value: 'sh' },
+  { text: '广州', value: 'gz' },
+  { text: '深圳', value: 'sz' },
+]
+
+// ④ 自定义字段（valueKey / labelKey）
+const channel = ref<string[]>([])
+const channelOptions = [
+  { id: 'agent', name: '保险代理人' },
+  { id: 'online', name: '官网直营' },
+  { id: 'phone', name: '电话投保' },
+  { id: 'app', name: '手机 App' },
+]
+
+// ⑤ 完全自定义 format 函数
+const raw = ref<Array<string | number>>([])
+const rawOptions = [
+  { code: 'A', label: '方案 A（基础版）' },
+  { code: 'B', label: '方案 B（标准版）' },
+  { code: 'C', label: '方案 C（尊享版）' },
+]
+
+// ⑥ 可清空
+const clearableVal = ref<string[]>(['玻璃破碎险'])
+
+// ⑦ 限制最多可选数量（max=2）
+const limited = ref<string[]>([])
+
+// ⑧ 禁用 / 只读
+const disabledVal = ref<string[]>(['划痕险'])
+const readonlyVal = ref<string[]>(['涉水险'])
+
+// ⑨ 必填 + 图标
+const requiredVal = ref<string[]>([])
 </script>
 
 <template>
@@ -66,7 +66,19 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       @click-left="$router.back()"
     />
 
-    <div class="section-title">① 字符串数组</div>
+    <!-- ① change 事件回显（操作实时记录，置顶）-->
+    <div class="section-title">① change 事件回显</div>
+    <div class="card">
+      <p class="hint">
+        最近一次 change：<br />
+        值 = <code>{{ log.value.join(', ') || '（空）' }}</code
+        ><br />
+        文本 = <code>{{ log.text || '（空）' }}</code>
+      </p>
+    </div>
+
+    <!-- ② 字符串数组-->
+    <div class="section-title">② 字符串数组</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="extra"
@@ -83,7 +95,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       </p>
     </div>
 
-    <div class="section-title">② 默认对象数组 { text, value }</div>
+    <!-- ③ 默认对象数组 { text, value }-->
+    <div class="section-title">③ 默认对象数组 { text, value }</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="city"
@@ -98,7 +111,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       </p>
     </div>
 
-    <div class="section-title">③ 自定义字段（value-key / label-key）</div>
+    <!-- ④ 自定义字段（value-key / label-key）-->
+    <div class="section-title">④ 自定义字段（value-key / label-key）</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="channel"
@@ -115,7 +129,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       </p>
     </div>
 
-    <div class="section-title">④ 完全自定义（format 函数）</div>
+    <!-- ⑤ 完全自定义（format 函数）-->
+    <div class="section-title">⑤ 完全自定义（format 函数）</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="raw"
@@ -131,7 +146,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       </p>
     </div>
 
-    <div class="section-title">⑤ 可清空（clearable）</div>
+    <!-- ⑥ 可清空（clearable）-->
+    <div class="section-title">⑥ 可清空（clearable）</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="clearableVal"
@@ -143,7 +159,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       <p class="hint">右侧出现清除图标，点击即清空全部。</p>
     </div>
 
-    <div class="section-title">⑥ 限制最多可选（max=2）</div>
+    <!-- ⑦ 限制最多可选（max=2）-->
+    <div class="section-title">⑦ 限制最多可选（max=2）</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="limited"
@@ -156,7 +173,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       <p class="hint">达到上限后其余项自动禁用，顶部显示「已选 x / 2」。</p>
     </div>
 
-    <div class="section-title">⑦ 禁用 / 只读</div>
+    <!-- ⑧ 禁用 / 只读-->
+    <div class="section-title">⑧ 禁用 / 只读</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="disabledVal"
@@ -172,7 +190,8 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
       />
     </div>
 
-    <div class="section-title">⑧ 必填 + 图标</div>
+    <!-- ⑨ 必填 + 图标-->
+    <div class="section-title">⑨ 必填 + 图标</div>
     <div class="card">
       <VantSelectMultipleField
         v-model="requiredVal"
@@ -184,16 +203,6 @@ function onChange(value: Array<string | number>, options: NormalizedOption[]) {
         required
         clearable
       />
-    </div>
-
-    <div class="section-title">⑨ change 事件回显</div>
-    <div class="card">
-      <p class="hint">
-        最近一次 change：<br />
-        值 = <code>{{ log.value.join(', ') || '（空）' }}</code
-        ><br />
-        文本 = <code>{{ log.text || '（空）' }}</code>
-      </p>
     </div>
   </div>
 </template>

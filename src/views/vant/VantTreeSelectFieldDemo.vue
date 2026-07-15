@@ -6,7 +6,16 @@
 import { ref } from 'vue'
 import VantTreeSelectField from '../../components/VantTreeSelectField.vue'
 
-// ① 默认树结构（省 / 市 / 区）
+// ① change 事件回显（置顶，操作实时记录：值与完整路径）
+const lastValue = ref('')
+const lastPath = ref('')
+
+function onChange(value: string | number, path: any[]) {
+  lastValue.value = String(value)
+  lastPath.value = path.map((n) => n.text ?? n.name).join(' / ')
+}
+
+// ② 默认树结构（省 / 市 / 区）
 const region = ref('')
 const regionTree = [
   {
@@ -48,7 +57,7 @@ const regionTree = [
   },
 ]
 
-// ② 自定义字段（valueKey / labelKey / childrenKey）
+// ③ 自定义字段（valueKey / labelKey / childrenKey）
 const org = ref('')
 const orgTree = [
   {
@@ -72,24 +81,15 @@ const orgTree = [
   },
 ]
 
-// ③ 可清空
+// ④ 可清空
 const clearableVal = ref('hz')
 
-// ④ 禁用 / 只读
+// ⑤ 禁用 / 只读
 const disabledVal = ref('xh')
 const readonlyVal = ref('bj')
 
-// ⑤ 必填 + 图标
+// ⑥ 必填 + 图标
 const requiredVal = ref('')
-
-// ⑥ change 回显（值与完整路径）
-const lastValue = ref('')
-const lastPath = ref('')
-
-function onChange(value: string | number, path: any[]) {
-  lastValue.value = String(value)
-  lastPath.value = path.map((n) => n.text ?? n.name).join(' / ')
-}
 
 // ⑦ 自定义分隔符
 const sepVal = ref('')
@@ -136,7 +136,19 @@ const parentVal = ref('')
     />
 
     <div class="container">
-      <div class="section-title">① 默认树结构（省 / 市 / 区，单选叶子）</div>
+      <!-- ① change 事件回显（操作实时记录，置顶）-->
+      <div class="section-title">① change 事件回显（值 + 完整路径）</div>
+      <div class="card">
+        <p class="hint">
+          选中值：<code>{{ lastValue || '（未选择）' }}</code>
+        </p>
+        <p class="hint">
+          完整路径：<code>{{ lastPath || '（未选择）' }}</code>
+        </p>
+      </div>
+
+      <!-- ② 默认树结构（省 / 市 / 区，单选叶子）-->
+      <div class="section-title">② 默认树结构（省 / 市 / 区，单选叶子）</div>
       <div class="card">
         <VantTreeSelectField
           v-model="region"
@@ -151,7 +163,8 @@ const parentVal = ref('')
         </p>
       </div>
 
-      <div class="section-title">② 自定义字段（valueKey / labelKey / childrenKey）</div>
+      <!-- ③ 自定义字段（valueKey / labelKey / childrenKey）-->
+      <div class="section-title">③ 自定义字段（valueKey / labelKey / childrenKey）</div>
       <div class="card">
         <VantTreeSelectField
           v-model="org"
@@ -169,7 +182,8 @@ const parentVal = ref('')
         </p>
       </div>
 
-      <div class="section-title">③ 可清空（clearable）</div>
+      <!-- ④ 可清空（clearable）-->
+      <div class="section-title">④ 可清空（clearable）</div>
       <div class="card">
         <VantTreeSelectField
           v-model="clearableVal"
@@ -185,7 +199,8 @@ const parentVal = ref('')
         </p>
       </div>
 
-      <div class="section-title">④ 禁用 / 只读</div>
+      <!-- ⑤ 禁用 / 只读-->
+      <div class="section-title">⑤ 禁用 / 只读</div>
       <div class="card">
         <VantTreeSelectField
           v-model="disabledVal"
@@ -206,7 +221,8 @@ const parentVal = ref('')
         </p>
       </div>
 
-      <div class="section-title">⑤ 必填 + 图标（required + left-icon）</div>
+      <!-- ⑥ 必填 + 图标（required + left-icon）-->
+      <div class="section-title">⑥ 必填 + 图标（required + left-icon）</div>
       <div class="card">
         <VantTreeSelectField
           v-model="requiredVal"
@@ -223,16 +239,7 @@ const parentVal = ref('')
         </p>
       </div>
 
-      <div class="section-title">⑥ change 事件回显（值 + 完整路径）</div>
-      <div class="card">
-        <p class="hint">
-          选中值：<code>{{ lastValue || '（未选择）' }}</code>
-        </p>
-        <p class="hint">
-          完整路径：<code>{{ lastPath || '（未选择）' }}</code>
-        </p>
-      </div>
-
+      <!-- ⑦ 自定义路径分隔符（separator）-->
       <div class="section-title">⑦ 自定义路径分隔符（separator）</div>
       <div class="card">
         <VantTreeSelectField
@@ -249,6 +256,7 @@ const parentVal = ref('')
         </p>
       </div>
 
+      <!-- ⑧ 树型深度控制（max-depth=2，最多可选到「市」）-->
       <div class="section-title">⑧ 树型深度控制（max-depth=2，最多可选到「市」）</div>
       <div class="card">
         <VantTreeSelectField
@@ -266,6 +274,7 @@ const parentVal = ref('')
         </p>
       </div>
 
+      <!-- ⑨ 深度不一致时浅叶节点可选（北京/上海可直接选）-->
       <div class="section-title">⑨ 深度不一致时浅叶节点可选（北京/上海可直接选）</div>
       <div class="card">
         <VantTreeSelectField
@@ -282,6 +291,7 @@ const parentVal = ref('')
         </p>
       </div>
 
+      <!-- ⑩ 父节点可选（select-parent）-->
       <div class="section-title">⑩ 父节点可选（select-parent）</div>
       <div class="card">
         <VantTreeSelectField

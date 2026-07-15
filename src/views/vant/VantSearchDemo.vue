@@ -91,6 +91,7 @@ const kwReadonly = ref('众安在线财产保险')
     />
 
     <div class="container">
+      <!-- ① 基础动态搜索（默认防抖 300ms）-->
       <div class="section-title">① 基础动态搜索（默认防抖 300ms）</div>
       <div class="card">
         <VantSearch
@@ -105,6 +106,7 @@ const kwReadonly = ref('众安在线财产保险')
         </p>
       </div>
 
+      <!-- ② 自定义字段（label-key="name" value-key="id"）-->
       <div class="section-title">② 自定义字段（label-key="name" value-key="id"）</div>
       <div class="card">
         <VantSearch
@@ -121,6 +123,7 @@ const kwReadonly = ref('众安在线财产保险')
         </p>
       </div>
 
+      <!-- ③ 防抖 500ms + 最少输入 2 字-->
       <div class="section-title">③ 防抖 500ms + 最少输入 2 字</div>
       <div class="card">
         <VantSearch
@@ -137,12 +140,14 @@ const kwReadonly = ref('众安在线财产保险')
         </p>
       </div>
 
+      <!-- ④ 禁用 / 只读-->
       <div class="section-title">④ 禁用 / 只读</div>
       <div class="card">
         <VantSearch v-model="kwDisabled" :fetch="mockFetch" disabled />
         <VantSearch v-model="kwReadonly" :fetch="mockFetch" readonly />
       </div>
 
+      <!-- 使用说明 -->
       <div class="section-title">使用说明</div>
       <div class="card">
         <p class="hint">

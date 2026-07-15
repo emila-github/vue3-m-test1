@@ -3,11 +3,21 @@ import { ref, reactive } from 'vue'
 import VantSearchField from '@/components/VantSearchField.vue'
 import type { NormalizedOption } from '@/components/VantSearchField.vue'
 
-// 1) 字符串数组（本地过滤，最简单）
+// ① change 事件回显（置顶，操作实时记录）
+const log = reactive<{ value: string | number | null; text: string }>({
+  value: '',
+  text: '',
+})
+function onChange(value: string | number, option: NormalizedOption | null) {
+  log.value = value
+  log.text = option?.text ?? ''
+}
+
+// ② 字符串数组（本地过滤，最简单）
 const brand = ref('')
 const brandOptions = ['宝马', '奔驰', '奥迪', '丰田', '本田', '大众', '比亚迪', '蔚来']
 
-// 2) Vant 默认对象数组 { text, value }（本地过滤）
+// ③ Vant 默认对象数组 { text, value }（本地过滤）
 const city = ref('')
 const cityOptions = [
   { text: '北京', value: 'bj' },
@@ -16,7 +26,7 @@ const cityOptions = [
   { text: '深圳', value: 'sz' },
 ]
 
-// 3) 自定义字段（valueKey / labelKey）+ 远程联想搜索
+// ④ 自定义字段（valueKey / labelKey）+ 远程联想搜索
 const channel = ref('')
 const channelOptions = [
   { id: 'agent', name: '保险代理人' },
@@ -33,7 +43,7 @@ function fetchChannel(kw: string): Promise<Record<string, any>[]> {
   })
 }
 
-// 4) 完全自定义 format 函数 + 远程联想搜索
+// ⑤ 完全自定义 format 函数 + 远程联想搜索
 const raw = ref<number | string>('')
 const rawOptions = [
   { code: 'A', label: '方案 A（基础版）' },
@@ -49,25 +59,15 @@ function fetchRaw(kw: string): Promise<Record<string, any>[]> {
   })
 }
 
-// 5) 可清空
+// ⑥ 可清空
 const clearableVal = ref('宝马')
 
-// 6) 禁用 / 只读
+// ⑦ 禁用 / 只读
 const disabledVal = ref('只读预填值')
 const readonlyVal = ref('已锁定值')
 
-// 7) 必填 + 图标
+// ⑧ 必填 + 图标
 const requiredVal = ref('')
-
-// 当前选中回显（演示 change 事件）
-const log = reactive<{ value: string | number | null; text: string }>({
-  value: '',
-  text: '',
-})
-function onChange(value: string | number, option: NormalizedOption | null) {
-  log.value = value
-  log.text = option?.text ?? ''
-}
 </script>
 
 <template>
@@ -79,7 +79,18 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       @click-left="$router.back()"
     />
 
-    <div class="section-title">① 字符串数组（本地过滤，最简单）</div>
+    <!-- ① change 事件回显（操作实时记录，置顶）-->
+    <div class="section-title">① change 事件回显</div>
+    <div class="card">
+      <p class="hint">
+        最近一次 change：<br />
+        值 = <code>{{ log.value || '（空）' }}</code> ，文本 =
+        <code>{{ log.text || '（空）' }}</code>
+      </p>
+    </div>
+
+    <!-- ② 字符串数组（本地过滤，最简单）-->
+    <div class="section-title">② 字符串数组（本地过滤，最简单）</div>
     <div class="card">
       <VantSearchField
         v-model="brand"
@@ -96,7 +107,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">② 默认对象数组 { text, value }（本地过滤）</div>
+    <!-- ③ 默认对象数组 { text, value }（本地过滤）-->
+    <div class="section-title">③ 默认对象数组 { text, value }（本地过滤）</div>
     <div class="card">
       <VantSearchField
         v-model="city"
@@ -112,7 +124,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">③ 自定义字段（value-key / label-key）+ 远程搜索</div>
+    <!-- ④ 自定义字段（value-key / label-key）+ 远程搜索-->
+    <div class="section-title">④ 自定义字段（value-key / label-key）+ 远程搜索</div>
     <div class="card">
       <VantSearchField
         v-model="channel"
@@ -130,7 +143,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">④ 完全自定义（format 函数）+ 远程搜索</div>
+    <!-- ⑤ 完全自定义（format 函数）+ 远程搜索-->
+    <div class="section-title">⑤ 完全自定义（format 函数）+ 远程搜索</div>
     <div class="card">
       <VantSearchField
         v-model="raw"
@@ -147,7 +161,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">⑤ 可清空（clearable）</div>
+    <!-- ⑥ 可清空（clearable）-->
+    <div class="section-title">⑥ 可清空（clearable）</div>
     <div class="card">
       <VantSearchField
         v-model="clearableVal"
@@ -161,13 +176,15 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       <p class="hint">右侧出现清除图标，点击即清空。</p>
     </div>
 
-    <div class="section-title">⑥ 禁用 / 只读</div>
+    <!-- ⑦ 禁用 / 只读-->
+    <div class="section-title">⑦ 禁用 / 只读</div>
     <div class="card">
       <VantSearchField v-model="disabledVal" :options="brandOptions" label="禁用" disabled />
       <VantSearchField v-model="readonlyVal" :options="brandOptions" label="只读" readonly />
     </div>
 
-    <div class="section-title">⑦ 必填 + 图标</div>
+    <!-- ⑧ 必填 + 图标-->
+    <div class="section-title">⑧ 必填 + 图标</div>
     <div class="card">
       <VantSearchField
         v-model="requiredVal"
@@ -180,15 +197,6 @@ function onChange(value: string | number, option: NormalizedOption | null) {
         clearable
         @change="onChange"
       />
-    </div>
-
-    <div class="section-title">⑧ change 事件回显</div>
-    <div class="card">
-      <p class="hint">
-        最近一次 change：<br />
-        值 = <code>{{ log.value || '（空）' }}</code> ，文本 =
-        <code>{{ log.text || '（空）' }}</code>
-      </p>
     </div>
 
     <div class="section-title">使用说明</div>
