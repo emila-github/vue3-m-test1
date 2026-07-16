@@ -16,6 +16,7 @@ import permissionRoutes from './permission'
 import uploadRoutes from './demo-upload'
 import renewalRoutes from './demo-renewal'
 import idcardRoutes from './demo-idcard'
+import claimRoutes from './demo-claim'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -35,6 +36,7 @@ const allRoutes: MockRoute[] = [
   ...uploadRoutes,
   ...renewalRoutes,
   ...idcardRoutes,
+  ...claimRoutes,
 ]
 
 // ===== 匹配并返回响应 =====

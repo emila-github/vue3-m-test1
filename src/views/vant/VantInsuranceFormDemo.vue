@@ -22,7 +22,7 @@
  *   - 「模拟编辑回填」：加载一组模拟数据，演示组件 v-model 回填能力
  */
 import { reactive, ref } from 'vue'
-import { showToast } from 'vant'
+import { showToast, showLoadingToast, closeToast } from 'vant'
 import VantSelectField from '../../components/VantSelectField.vue'
 import VantSelectMultipleField from '../../components/VantSelectMultipleField.vue'
 import VantTimePickerField from '../../components/VantTimePickerField.vue'
@@ -33,6 +33,7 @@ import VantSearchField from '../../components/VantSearchField.vue'
 import VantCheckinField from '../../components/VantCheckinField.vue'
 import VantUpload from '../../components/VantUpload.vue'
 import type { CheckinResult } from '../../components/VantCheckin.vue'
+import { getClaimDetail, createClaim, updateClaim, type Claim } from '../../api'
 
 const tmapKey = ref(import.meta.env.VITE_TMAP_KEY || '')
 
@@ -78,6 +79,11 @@ function blankForm() {
 const form = reactive(blankForm())
 
 const mode = ref<'add' | 'edit'>('add')
+// 编辑态下记录当前报案单 id（提交时用于 PUT 更新）；新增态为 null
+const editId = ref<number | null>(null)
+// 提交 / 回填加载态
+const submitting = ref(false)
+const loading = ref(false)
 
 // ============== 选项数据 ==============
 const relationships = [
@@ -155,19 +161,11 @@ const hospitalOptions = [
   '浙江大学附属第一医院',
 ]
 
-// ============== 模拟图片（离线 data URI，避免依赖网络） ==============
-function svgImg(label: string, bg: string): string {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200'>
-    <rect width='100%' height='100%' fill='${bg}'/>
-    <text x='50%' y='50%' fill='#fff' font-size='20' text-anchor='middle' dominant-baseline='middle'>${label}</text>
-  </svg>`
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
-}
-
 // ============== 状态切换：新增 / 编辑回填 ==============
 function resetToAdd() {
   Object.assign(form, blankForm())
   mode.value = 'add'
+  editId.value = null
   showToast('已重置为「新增」状态')
 }
 
@@ -175,58 +173,70 @@ function resetToAdd() {
 function clearForm() {
   Object.assign(form, blankForm())
   mode.value = 'add'
+  editId.value = null
   showToast('表单已清空')
 }
 
-function loadEdit() {
-  Object.assign(form, {
-    reporterName: '张三',
-    phone: '13800138000',
-    gender: 'male',
-    idCard: '110101199003071234',
-    relationship: 'self',
-    policyNo: 'PICC2026-000123',
-    insurer: '中国人保财险',
-    insuranceType: 'auto',
-    extraCoverage: ['glass', 'nolicense'],
-    effectiveDate: '2026-01-01',
-    accidentCause: 'collision',
-    accidentDate: '2026-07-16',
-    accidentTime: '14:30',
-    region: 'xh',
-    hospital: '北京协和医院',
-    accidentType: ['traffic', 'car'],
-    isHospitalized: true,
-    injuredCount: 2,
-    severity: 4,
-    lossItems: ['vehicle', 'medical'],
-    description: '车辆在路口与前方车辆发生追尾，造成两车受损及人员轻伤，已报警并送医治疗。',
-    agree: true,
-    checkin: {
-      lat: 39.98412,
-      lng: 116.30748,
-      address: '北京市朝阳区建国路 88 号 SOHO 现代城',
-      timestamp: '2026-07-16T14:30:00+08:00',
-      time: '2026-07-16 14:30:00',
-      isFirst: true,
-      firstTime: '2026-07-16 14:30:00',
-    },
-    idCardFront: svgImg('身份证人像面', '#4096ff'),
-    idCardBack: svgImg('身份证国徽面', '#fa8c16'),
-    driverLicense: svgImg('驾驶证', '#07c160'),
-    medicalRecord: svgImg('病历资料', '#7232dd'),
-    invoice: [svgImg('医疗发票 1', '#1989fa'), svgImg('医疗发票 2', '#1989fa')],
-  })
-  mode.value = 'edit'
-  showToast('已加载「编辑」回填数据')
+/**
+ * 编辑回填：调用后端 mock 接口 GET /api/demo/claim?id=1 拉取报案单详情，
+ * 再把返回数据写入 form，实现「读取数据回填」。
+ */
+async function loadEdit() {
+  if (loading.value) return
+  loading.value = true
+  showLoadingToast({ message: '加载中...', forbidClick: true, duration: 0 })
+  try {
+    const detail = await getClaimDetail(1)
+    // 后端返回字段与表单模型一一对应，逐项回填（checkin 为定位打卡结构）
+    Object.assign(form, {
+      ...blankForm(),
+      ...detail,
+      checkin: (detail.checkin as CheckinResult | null) ?? null,
+    })
+    editId.value = detail.id ?? 1
+    mode.value = 'edit'
+    closeToast()
+    showToast('已加载「编辑」回填数据')
+  } catch (e) {
+    closeToast()
+    console.error('[报案单回填失败]', e)
+    showToast('加载失败，请重试')
+  } finally {
+    loading.value = false
+  }
 }
 
 // ============== 提交 / 校验 ==============
-function onSubmit() {
-  showToast('提交成功，数据见控制台')
-  // 仅原生 van-field / VantUpload(field) / VantCheckinField 会进入 values，
-  // 其余自定义 Field 组件请直接读取 form 对象
-  console.log('[保险报案表单]', JSON.parse(JSON.stringify(form)))
+/**
+ * 提交报案：新增走 POST，编辑走 PUT（带 id）。
+ * 仅原生 van-field / VantUpload(field) / VantCheckinField 会进入 van-form values，
+ * 这里统一提交整个 form 对象（含各自定义 Field 组件的 v-model 值）。
+ */
+async function onSubmit() {
+  if (submitting.value) return
+  submitting.value = true
+  showLoadingToast({ message: '提交中...', forbidClick: true, duration: 0 })
+  try {
+    const payload = JSON.parse(JSON.stringify(form)) as Claim
+    let res: Claim
+    if (mode.value === 'edit' && editId.value != null) {
+      res = await updateClaim({ ...payload, id: editId.value })
+    } else {
+      res = await createClaim(payload)
+    }
+    // 提交成功后切换为编辑态并记录后端返回的 id（便于后续再次提交走更新）
+    editId.value = res.id ?? editId.value
+    mode.value = 'edit'
+    closeToast()
+    showToast(mode.value === 'edit' ? '报案更新成功' : '报案提交成功')
+    console.log('[保险报案表单] 提交返回', res)
+  } catch (e) {
+    closeToast()
+    console.error('[报案提交失败]', e)
+    showToast('提交失败，请重试')
+  } finally {
+    submitting.value = false
+  }
 }
 function onFailed() {
   showToast('请检查并完善必填项')
@@ -249,8 +259,13 @@ function onFailed() {
       <van-button size="small" :type="mode === 'add' ? 'primary' : 'default'" @click="resetToAdd">
         新增报案
       </van-button>
-      <van-button size="small" :type="mode === 'edit' ? 'warning' : 'default'" @click="loadEdit">
-        模拟编辑回填
+      <van-button
+        size="small"
+        :type="mode === 'edit' ? 'warning' : 'default'"
+        :loading="loading"
+        @click="loadEdit"
+      >
+        编辑回填（接口）
       </van-button>
     </div>
 
@@ -484,7 +499,9 @@ function onFailed() {
 
       <div class="form-actions">
         <van-button type="default" block @click="clearForm">清空</van-button>
-        <van-button type="primary" block native-type="submit">提交报案</van-button>
+        <van-button type="primary" block native-type="submit" :loading="submitting">
+          {{ mode === 'edit' ? '更新报案' : '提交报案' }}
+        </van-button>
       </div>
     </van-form>
   </div>
