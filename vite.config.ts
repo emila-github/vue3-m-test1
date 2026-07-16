@@ -5,7 +5,11 @@ import vue from '@vitejs/plugin-vue'
 import VueRouter from 'vue-router/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver, ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers'
+import {
+  AntDesignVueResolver,
+  ElementPlusResolver,
+  VantResolver,
+} from 'unplugin-vue-components/resolvers'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { mockPlugin } from './src/mock'
@@ -54,7 +58,9 @@ export default defineConfig(({ mode, command }) => {
     // 覆盖为相对路径，让 Axios 请求走 Vite 代理，解决跨域
     if (isDev && (env.VITE_API_BASE_URL || '').match(/^(https?:)?\/\//)) {
       defineEnv['import.meta.env.VITE_API_BASE_URL'] = JSON.stringify(proxyConfig.prefix)
-      console.log(`[vite] dev: override VITE_API_BASE_URL → "${proxyConfig.prefix}" (relative, uses proxy)`)
+      console.log(
+        `[vite] dev: override VITE_API_BASE_URL → "${proxyConfig.prefix}" (relative, uses proxy)`,
+      )
     }
   }
 
@@ -69,7 +75,11 @@ export default defineConfig(({ mode, command }) => {
       vue(),
       vueJsx(),
       Components({
-        resolvers: [AntDesignVueResolver({ importStyle: false }), ElementPlusResolver(), VantResolver()],
+        resolvers: [
+          AntDesignVueResolver({ importStyle: false }),
+          ElementPlusResolver(),
+          VantResolver(),
+        ],
       }),
       vueDevTools(),
       visualizer({
@@ -89,6 +99,7 @@ export default defineConfig(({ mode, command }) => {
     // 有后端时启用
     server: {
       host: '0.0.0.0', // 允许通过本机 IP 访问
+
       ...(isMock ? {} : { proxy }),
     },
   }

@@ -92,6 +92,18 @@ const manualRoutes = [
     component: () => import('../views/vant/VantPermissionDemo.vue'),
     meta: { title: '权限指令' },
   },
+  {
+    path: '/vant/vant-checkin-demo',
+    name: 'vant-checkin-demo',
+    component: () => import('../views/vant/VantCheckinDemo.vue'),
+    meta: { title: '外出定位打卡' },
+  },
+  {
+    path: '/vant/vant-checkin-field-demo',
+    name: 'vant-checkin-field-demo',
+    component: () => import('../views/vant/VantCheckinFieldDemo.vue'),
+    meta: { title: '表单内打卡' },
+  },
 ]
 
 const router = createRouter({
