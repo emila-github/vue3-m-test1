@@ -33,9 +33,55 @@ import VantSearchField from '../../components/VantSearchField.vue'
 import VantCheckinField from '../../components/VantCheckinField.vue'
 import VantUpload from '../../components/VantUpload.vue'
 import type { CheckinResult } from '../../components/VantCheckin.vue'
-import { getClaimDetail, createClaim, updateClaim, type Claim } from '../../api'
+import {
+  getClaimDetail,
+  createClaim,
+  updateClaim,
+  uploadFile,
+  type Claim,
+  type UploadParams,
+} from '../../api'
 
 const tmapKey = ref(import.meta.env.VITE_TMAP_KEY || '')
+
+// ============== 上传 / 预览地址处理 ==============
+// 本地根目录（文件静态服务根）：mock 下 /demo-upload 挂在 dev server origin 下，
+// 故用 window.location.origin 作为拼接基准，把上传返回的「相对地址」转成可预览的绝对地址。
+const ASSET_BASE = window.location.origin
+
+/**
+ * 把（可能相对的）上传地址解析为可预览的绝对地址：
+ *  - 已为绝对地址（含协议 / data: / blob:）原样返回，避免重复拼接
+ *  - 相对地址（如 /demo-upload/xxx.png）拼接本地根目录后返回
+ */
+function resolveAssetUrl(url?: string | null): string {
+  if (!url) return ''
+  if (/^(https?:)?\/\//.test(url) || url.startsWith('data:') || url.startsWith('blob:')) return url
+  return ASSET_BASE + (url.startsWith('/') ? '' : '/') + url
+}
+
+/** File 读为 base64 data URI（上传接口要求 base64 入参） */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+/**
+ * 生成「上传经办函数」供 VantUpload 的 :upload 使用：
+ *   选图 → 读 base64 → 调用后端 demo-upload.ts 上传接口 → 返回拼接本地根目录后的预览地址。
+ * VantUpload 会把返回的 url 既作为预览图地址、也作为回写值（modelValue）。
+ */
+function makeUploader(type: UploadParams['type'] = 'image') {
+  return async (file: File): Promise<Record<string, any>> => {
+    const base64 = await fileToBase64(file)
+    const res = await uploadFile({ fileName: file.name, base64, type })
+    return { ...res, url: resolveAssetUrl(res.url) }
+  }
+}
 
 // ============== 表单数据模型 ==============
 function blankForm() {
@@ -193,6 +239,13 @@ async function loadEdit() {
       ...detail,
       checkin: (detail.checkin as CheckinResult | null) ?? null,
     })
+    // 图片字段：后端返回的是「上传相对地址」（如 /demo-upload/xxx.png），
+    // 拼接本地根目录得到可预览绝对地址后回写，通知 VantUpload 组件预览
+    form.idCardFront = resolveAssetUrl(detail.idCardFront)
+    form.idCardBack = resolveAssetUrl(detail.idCardBack)
+    form.driverLicense = resolveAssetUrl(detail.driverLicense)
+    form.medicalRecord = resolveAssetUrl(detail.medicalRecord)
+    form.invoice = (detail.invoice || []).map((u: string) => resolveAssetUrl(u))
     editId.value = detail.id ?? 1
     mode.value = 'edit'
     closeToast()
@@ -442,6 +495,7 @@ function onFailed() {
           v-model="form.idCardFront"
           type="idcard"
           variant="front"
+          :upload="makeUploader('idcard')"
           field
           name="idCardFront"
           label="身份证（人像面）"
@@ -452,6 +506,7 @@ function onFailed() {
           v-model="form.idCardBack"
           type="idcard"
           variant="back"
+          :upload="makeUploader('idcard')"
           field
           name="idCardBack"
           label="身份证（国徽面）"
@@ -461,6 +516,7 @@ function onFailed() {
         <VantUpload
           v-model="form.driverLicense"
           type="image"
+          :upload="makeUploader('image')"
           field
           name="driverLicense"
           label="驾驶证"
@@ -470,6 +526,7 @@ function onFailed() {
         <VantUpload
           v-model="form.medicalRecord"
           type="image"
+          :upload="makeUploader('image')"
           field
           name="medicalRecord"
           label="病历资料"
@@ -477,6 +534,7 @@ function onFailed() {
         <VantUpload
           v-model="form.invoice"
           type="invoice"
+          :upload="makeUploader('image')"
           field
           multiple
           :max-count="3"

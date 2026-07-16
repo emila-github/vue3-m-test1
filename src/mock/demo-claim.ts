@@ -6,10 +6,38 @@
  *   POST /demo/claim   — 新增报案单
  *   PUT  /demo/claim   — 编辑报案单
  *
- * 说明：图片字段（身份证 / 驾驶证 / 病历 / 发票）在服务端以离线 SVG data URI 返回，
- *       避免依赖网络与静态资源，前端拿到后可直接预览。
+ * 说明：图片字段（身份证 / 驾驶证 / 病历 / 发票）在服务端以「相对访问地址」返回，
+ *       例如 /demo-upload/seed-idcard-front.svg，由 mock 静态服务（见 mock/index.ts）映射到
+ *       src/assets/demo-upload/ 目录下的实体文件。前端拿到相对地址后，拼接本地根目录
+ *       （window.location.origin）得到可预览的绝对地址。
+ *       这些种子图片由 ensureSeedImage() 在首次加载时写入磁盘（若文件已存在则不覆盖），
+ *       也可在 src/assets/demo-upload/ 下预先放置同名实体文件。
  */
+import fs from 'node:fs'
+import path from 'node:path'
 import type { MockRoute } from './types'
+
+// 上传文件目录（与 demo-upload.ts 保持一致，便于直接复用其 /demo-upload 静态服务）
+const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
+
+/** 确保上传目录存在 */
+function ensureUploadDir() {
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+}
+
+/**
+ * 生成占位 SVG 图片并写入磁盘（仅当文件不存在时），返回相对访问地址 /demo-upload/xxx.svg
+ * 这样「编辑回填」时前端拿到的就是与上传返回格式一致的相对地址，可直接拼接本地根目录预览。
+ */
+function ensureSeedImage(filename: string, label: string, bg: string): string {
+  ensureUploadDir()
+  const filePath = path.join(UPLOAD_DIR, filename)
+  if (!fs.existsSync(filePath)) {
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200'><rect width='100%' height='100%' fill='${bg}'/><text x='50%' y='50%' fill='#fff' font-size='20' text-anchor='middle' dominant-baseline='middle'>${label}</text></svg>`
+    fs.writeFileSync(filePath, svg)
+  }
+  return `/demo-upload/${filename}`
+}
 
 // ==================== 数据模型 ====================
 interface Claim {
@@ -49,15 +77,6 @@ interface Claim {
   invoice: string[]
 }
 
-// ==================== 离线占位图（服务端生成 SVG data URI） ====================
-function svgImg(label: string, bg: string): string {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200'>
-    <rect width='100%' height='100%' fill='${bg}'/>
-    <text x='50%' y='50%' fill='#fff' font-size='20' text-anchor='middle' dominant-baseline='middle'>${label}</text>
-  </svg>`
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
-}
-
 // ==================== 种子数据（id=1，供编辑回填演示） ====================
 let SEQ = 1000
 
@@ -95,11 +114,14 @@ function seedClaim(): Claim {
       isFirst: true,
       firstTime: '2026-07-16 14:30:00',
     },
-    idCardFront: svgImg('身份证人像面', '#4096ff'),
-    idCardBack: svgImg('身份证国徽面', '#fa8c16'),
-    driverLicense: svgImg('驾驶证', '#07c160'),
-    medicalRecord: svgImg('病历资料', '#7232dd'),
-    invoice: [svgImg('医疗发票 1', '#1989fa'), svgImg('医疗发票 2', '#1989fa')],
+    idCardFront: ensureSeedImage('seed-idcard-front.svg', '身份证人像面', '#4096ff'),
+    idCardBack: ensureSeedImage('seed-idcard-back.svg', '身份证国徽面', '#fa8c16'),
+    driverLicense: ensureSeedImage('seed-driver-license.svg', '驾驶证', '#07c160'),
+    medicalRecord: ensureSeedImage('seed-medical-record.svg', '病历资料', '#7232dd'),
+    invoice: [
+      ensureSeedImage('seed-invoice-1.svg', '医疗发票 1', '#1989fa'),
+      ensureSeedImage('seed-invoice-2.svg', '医疗发票 2', '#1989fa'),
+    ],
   }
 }
 
