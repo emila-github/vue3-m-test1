@@ -977,6 +977,29 @@ function docIcon(it: UploadItem): string {
   word-break: break-all;
 }
 
+/* ===== 缩略图右上角删除按钮（统一以 invoice 类型样式为准） ===== */
+/* 图片 / 头像 / 身份证：van-uploader 自带删除按钮覆盖为与 invoice 一致的暗色方块；
+   并重置 Vant 默认的绝对定位 + scale 缩放，让 cross 图标在背景内居中且大小与 invoice 一致 */
+.vuf-uploader :deep(.van-uploader__preview-delete) {
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 0 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vuf-uploader :deep(.van-uploader__preview-delete-icon) {
+  position: static;
+  top: auto;
+  right: auto;
+  transform: none;
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  color: #fff;
+}
+
 /* ===== 头像圆形 ===== */
 .vuf-uploader.is-round :deep(.van-uploader__preview-image),
 .vuf-uploader.is-round :deep(.van-uploader__upload) {
@@ -1455,12 +1478,20 @@ function docIcon(it: UploadItem): string {
   flex-shrink: 0;
 }
 .vuf-doc-del {
-  font-size: 16px;
-  color: #c8c9cc;
+  width: 20px;
+  height: 20px;
+  border-radius: 0 0 0 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  cursor: pointer;
 }
 .vuf-doc-del:active {
-  color: #ee0a24;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 /* ===== 身份证上传示例引导弹窗 ===== */
