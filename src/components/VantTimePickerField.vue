@@ -26,6 +26,10 @@ const props = withDefaults(
     /** 选择模式，默认 time */
     type?: TimePickerType
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 非 time 模式下的输出格式（默认 YYYY-MM-DD / YYYY-MM） */
@@ -52,6 +56,8 @@ const props = withDefaults(
     modelValue: '',
     type: 'time',
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     format: '',
@@ -151,6 +157,8 @@ function onClear() {
   <van-field
     :model-value="displayText"
     :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
     :placeholder="placeholder"
     :left-icon="leftIcon"
     :required="required"
@@ -160,9 +168,9 @@ function onClear() {
     class="vant-time-picker"
     @click="open"
   >
-    <template v-if="showClear" #right-icon>
-      <van-icon name="clear" class="vant-time-picker__clear" @click.stop="onClear" />
-    </template>
+      <template v-if="showClear" #right-icon>
+        <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
+      </template>
   </van-field>
 
   <van-popup v-model:show="show" position="bottom" round>
@@ -195,8 +203,21 @@ function onClear() {
 .vant-time-picker :deep(.van-field__control) {
   color: #1a1a1a;
 }
-.vant-time-picker__clear {
-  color: #8a8a8a;
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-time-picker :deep(.van-field__right-icon),
+.vant-time-picker :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+.vant-time-picker .vant-field-clear-icon {
+  display: block;
   font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-time-picker .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

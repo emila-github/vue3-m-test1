@@ -38,6 +38,10 @@ const props = withDefaults(
     /** 本地静态选项：无 fetch 时按关键词过滤 */
     options?: OptionItem[]
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 自定义对象中取值字段（默认 value） */
@@ -63,6 +67,8 @@ const props = withDefaults(
     fetch: undefined,
     options: () => [],
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     valueKey: 'value',
@@ -224,6 +230,8 @@ onUnmounted(() => clearTimeout(timer))
   <van-field
     :model-value="displayText"
     :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
     :placeholder="placeholder"
     :left-icon="leftIcon"
     :required="required"
@@ -233,9 +241,9 @@ onUnmounted(() => clearTimeout(timer))
     class="vant-search-field"
     @click="open"
   >
-    <template v-if="showClear" #right-icon>
-      <van-icon name="clear" class="vant-search-field__clear" @click.stop="onClear" />
-    </template>
+      <template v-if="showClear" #right-icon>
+        <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
+      </template>
   </van-field>
 
   <van-popup v-model:show="show" position="bottom" round class="vant-search-field__popup">
@@ -290,10 +298,6 @@ onUnmounted(() => clearTimeout(timer))
 <style scoped>
 .vant-search-field :deep(.van-field__control) {
   color: #1a1a1a;
-}
-.vant-search-field__clear {
-  color: #8a8a8a;
-  font-size: 16px;
 }
 
 .vant-search-field__popup {
@@ -358,5 +362,22 @@ onUnmounted(() => clearTimeout(timer))
 }
 .vant-search-field__state--error {
   color: #ee0a24;
+}
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-search-field :deep(.van-field__right-icon),
+.vant-search-field :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+.vant-search-field .vant-field-clear-icon {
+  display: block;
+  font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-search-field .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

@@ -6,6 +6,14 @@ const router = useRouter()
 
 const stages = ref([
   {
+    id: 'insurance-form',
+    title: '保险报案综合表单',
+    desc: '组合全部 VantXXXField + VantUpload(field) + VantCheckinField 的保险报案页，含新增 / 编辑回填',
+    path: '/vant/vant-insurance-form-demo',
+    icon: '📋',
+    color: '#ee0a24',
+  },
+  {
     id: 'select',
     title: '通用下拉单选组件 VantSelectField',
     desc: '可配置数据格式（字符串/对象/自定义字段/format），演示清空、禁用、只读、必填等用法',
@@ -149,7 +157,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 13 个）</h2>
+      <h2>组件演示（共 14 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

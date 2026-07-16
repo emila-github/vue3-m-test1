@@ -29,6 +29,10 @@ const props = withDefaults(
     title?: string
     /** 字段标签 */
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     /** van-form 校验所需的字段名 */
     name?: string
     /** 透传给 van-field 的校验规则（默认不验证） */
@@ -49,6 +53,8 @@ const props = withDefaults(
     useWxLocation: true,
     title: '外出定位打卡',
     label: '外出打卡',
+    labelAlign: 'left',
+    inputAlign: 'left',
     name: 'checkin',
     rules: () => [],
     placeholder: '点击右侧图标打卡',
@@ -79,28 +85,31 @@ function onCheckin(r: CheckinResult) {
 </script>
 
 <template>
-  <van-cell-group inset>
-    <van-field
-      :model-value="modelValue?.address || ''"
-      :label="label"
-      :name="name"
-      :rules="rules"
-      :placeholder="placeholder"
-      :required="required"
-      :border="border"
-      readonly
-    >
-      <template #button>
-        <div
-          class="vcf-checkin"
-          :class="{ 'is-disabled': disabled, 'is-checked': !!modelValue }"
-          @click="open"
-        >
-          <van-icon name="map-marked" size="22" class="vcf-checkin__camera" />
-        </div>
-      </template>
-    </van-field>
-  </van-cell-group>
+  <!-- 不自带 van-cell-group：由外部 van-cell-group 负责外框，避免双重 inset 缩进
+       与 VantSelectField / VantUpload(field) 等裸 van-field 保持一致对齐 -->
+  <van-field
+    class="vcf-field"
+    :model-value="modelValue?.address || ''"
+    :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
+    :name="name"
+    :rules="rules"
+    :placeholder="placeholder"
+    :required="required"
+    :border="border"
+    readonly
+  >
+    <template #button>
+      <div
+        class="vcf-checkin"
+        :class="{ 'is-disabled': disabled, 'is-checked': !!modelValue }"
+        @click="open"
+      >
+        <van-icon name="map-marked" size="22" class="vcf-checkin__camera" />
+      </div>
+    </template>
+  </van-field>
 
   <van-popup
     v-model:show="show"
@@ -124,12 +133,17 @@ function onCheckin(r: CheckinResult) {
 </template>
 
 <style scoped>
+/* 右侧打卡图标与 label / 值文本严格垂直居中对齐（参考 VantUpload 相机图标位置） */
+.vcf-field :deep(.van-field__body) {
+  align-items: center;
+}
 /* 地址字段右侧打卡入口：地图图标，带闪动提示可点击 */
+/* 结构与 VantUpload 的 .vuf-form-field__actions 一致：右侧插槽 flex 居中、不收缩、可点击 */
 .vcf-checkin {
   display: flex;
   align-items: center;
-  cursor: pointer;
   flex-shrink: 0;
+  cursor: pointer;
 }
 .vcf-checkin.is-disabled {
   cursor: not-allowed;

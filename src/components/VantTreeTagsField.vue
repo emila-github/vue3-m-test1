@@ -34,6 +34,10 @@ const props = withDefaults(
     /** 树型数据，节点含 children 字段表示下级 */
     options?: TreeNode[]
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 自定义对象中取值字段（默认 value） */
@@ -60,6 +64,8 @@ const props = withDefaults(
     modelValue: () => [],
     options: () => [],
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     valueKey: 'value',
@@ -249,6 +255,8 @@ function clearTemp() {
     <van-field
       :model-value="displayText"
       :label="label"
+      :label-align="labelAlign"
+      :input-align="inputAlign"
       :placeholder="placeholder"
       :left-icon="leftIcon"
       :required="required"
@@ -259,9 +267,13 @@ function clearTemp() {
       @click="open"
     >
       <template v-if="showClear" #right-icon>
-        <span class="vant-tree-tags__clear" role="button" aria-label="清空" @click.stop="onClear">
-          <van-icon name="clear" />
-        </span>
+        <van-icon
+          name="clear"
+          class="vant-field-clear-icon"
+          role="button"
+          aria-label="清空"
+          @click.stop="onClear"
+        />
       </template>
     </van-field>
 
@@ -326,19 +338,6 @@ function clearTemp() {
 <style scoped>
 .vant-tree-tags__field :deep(.van-field__control) {
   color: #1a1a1a;
-}
-.vant-tree-tags__clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #8a8a8a;
-  font-size: 16px;
-  padding: 4px 2px 4px 6px;
-  margin-right: 2px;
-  cursor: pointer;
-}
-.vant-tree-tags__clear:active {
-  color: #323233;
 }
 .vant-tree-tags__tags {
   display: flex;
@@ -414,5 +413,22 @@ function clearTemp() {
 .tree-footer__btns {
   display: flex;
   gap: 10px;
+}
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-tree-tags__field :deep(.van-field__right-icon),
+.vant-tree-tags__field :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+.vant-tree-tags__field .vant-field-clear-icon {
+  display: block;
+  font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-tree-tags__field .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

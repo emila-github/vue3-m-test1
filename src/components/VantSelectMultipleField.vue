@@ -28,6 +28,10 @@ const props = withDefaults(
     modelValue?: Array<string | number>
     options?: OptionItem[]
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 自定义对象中取值字段（默认 value） */
@@ -48,6 +52,8 @@ const props = withDefaults(
     modelValue: () => [],
     options: () => [],
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     valueKey: 'value',
@@ -130,6 +136,8 @@ function onToggle(value: string | number) {
   <van-field
     :model-value="displayText"
     :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
     :placeholder="placeholder"
     :left-icon="leftIcon"
     :required="required"
@@ -139,9 +147,9 @@ function onToggle(value: string | number) {
     class="vant-select-multiple"
     @click="open"
   >
-    <template v-if="showClear" #right-icon>
-      <van-icon name="clear" class="vant-select-multiple__clear" @click.stop="onClear" />
-    </template>
+      <template v-if="showClear" #right-icon>
+        <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
+      </template>
   </van-field>
 
   <van-popup v-model:show="show" position="bottom" round class="vsm-popup">
@@ -177,10 +185,6 @@ function onToggle(value: string | number) {
 .vant-select-multiple :deep(.van-field__control) {
   color: #1a1a1a;
 }
-.vant-select-multiple__clear {
-  color: #8a8a8a;
-  font-size: 16px;
-}
 .vsm-popup {
   max-height: 70vh;
   display: flex;
@@ -215,5 +219,22 @@ function onToggle(value: string | number) {
 .vsm-list {
   flex: 1;
   overflow-y: auto;
+}
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-select-multiple :deep(.van-field__right-icon),
+.vant-select-multiple :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+.vant-select-multiple .vant-field-clear-icon {
+  display: block;
+  font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-select-multiple .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

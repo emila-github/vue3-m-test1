@@ -91,6 +91,8 @@ interface UploadItem {
   status?: 'uploading' | 'done' | 'failed'
   message?: string
   file?: File
+  /** 显式标记为图片，供 van-uploader 的 isImageFile 判定（data URI / 无扩展名 URL 时能正确渲染 <img> 预览） */
+  isImage?: boolean
 }
 
 const props = withDefaults(
@@ -299,7 +301,20 @@ const fieldDisplayText = computed(() => {
     const arr = Array.isArray(val) ? val : []
     return arr.length ? `已上传 ${arr.length} 个文件` : '未上传文件'
   }
-  return val ? nameFromUrl(String(val)) || String(val) : '未上传文件'
+  if (!val) return '未上传文件'
+  const str = String(val)
+  // data URI 占位图 / blob URL：不显示原始长串，按类型展示友好文案
+  if (str.startsWith('data:') || str.startsWith('blob:')) {
+      const typeLabels: Record<string, string> = {
+        idcard: props.variant === 'front' ? '已上传人像面' : '已上传国徽面',
+      avatar: '已上传头像',
+      image: '已上传图片',
+      invoice: '已上传发票',
+      document: '已上传附件',
+    }
+    return typeLabels[props.type] || '已上传文件'
+  }
+  return nameFromUrl(str) || str
 })
 // field 表单行右侧相机图标：复用同一套上传逻辑（图片类走 van-uploader 选图，证件/发票类走隐藏 input）
 function triggerUpload() {
@@ -320,7 +335,17 @@ function nameFromUrl(url: string): string {
 }
 function toItems(val: string | string[]): UploadItem[] {
   const arr = Array.isArray(val) ? val : val ? [val] : []
-  return arr.map((url) => ({ url, value: url, name: nameFromUrl(url), status: 'done' }))
+  // 图片类（image / avatar / idcard）回填时显式标记 isImage=true：
+  // van-uploader 的 isImageFile 会先读 item.isImage，从而让无扩展名的 data URI 也走 <img> 预览，
+  // 否则会被误判为「文件」只显示图标+文件名（不显示图片）。invoice/document 走自定义渲染，无需此标记。
+  const isImageType = ['image', 'avatar', 'idcard'].includes(props.type)
+  return arr.map((url) => ({
+    url,
+    value: url,
+    name: nameFromUrl(url),
+    status: 'done',
+    isImage: isImageType,
+  }))
 }
 watch(
   () => props.modelValue,
@@ -878,17 +903,33 @@ function docIcon(it: UploadItem): string {
 .vuf-form-field {
   /* margin-top: 10px; */
 }
+/* 确保 body 层也不会被子内容撑开（与 VantCheckinField .vcf-field 对齐） */
+.vuf-form-field :deep(.van-field__body) {
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+}
 /* van-cell 作为父级最后一个子元素时底边框会被隐藏（.van-cell:last-child:after{display:none}），
    证件/图片/发票等无示例弹窗的类型里 van-field 恰为末位节点，故 border=true 时强制显示底边框 */
 .vuf-form-field--show-border::after {
   display: block !important;
 }
+/* 值文本区域：单行、可横向滚动查看（参考 VantCheckinField 长地址的处理），
+   用 flex:1 + min-width:0 约束在字段内，避免被超长内容（如 data URI / 文件名）撑变形。
+   隐藏滚动条但保留触摸/拖动横滑能力，保持 UI 清爽。 */
 .vuf-form-field__value {
+  display: block;
+  flex: 1;
+  min-width: 0;
   font-size: 13px;
   color: #323233;
-  overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.vuf-form-field__value::-webkit-scrollbar {
+  display: none;
 }
 /* 右侧相机图标按钮区 */
 .vuf-form-field__actions {

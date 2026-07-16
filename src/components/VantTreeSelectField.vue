@@ -29,6 +29,10 @@ const props = withDefaults(
     /** 树型数据，节点含 children 字段表示下级 */
     options?: TreeNode[]
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 自定义对象中取值字段（默认 value） */
@@ -53,6 +57,8 @@ const props = withDefaults(
     modelValue: '',
     options: () => [],
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     valueKey: 'value',
@@ -190,6 +196,8 @@ function onClear() {
   <van-field
     :model-value="displayText"
     :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
     :placeholder="placeholder"
     :left-icon="leftIcon"
     :required="required"
@@ -199,9 +207,9 @@ function onClear() {
     class="vant-tree-select"
     @click="open"
   >
-    <template v-if="showClear" #right-icon>
-      <van-icon name="clear" class="vant-tree-select__clear" @click.stop="onClear" />
-    </template>
+      <template v-if="showClear" #right-icon>
+        <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
+      </template>
   </van-field>
 
   <van-popup v-model:show="show" position="bottom" round>
@@ -220,8 +228,21 @@ function onClear() {
 .vant-tree-select :deep(.van-field__control) {
   color: #1a1a1a;
 }
-.vant-tree-select__clear {
-  color: #8a8a8a;
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-tree-select :deep(.van-field__right-icon),
+.vant-tree-select :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+.vant-tree-select .vant-field-clear-icon {
+  display: block;
   font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-tree-select .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

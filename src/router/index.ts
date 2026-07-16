@@ -104,6 +104,12 @@ const manualRoutes = [
     component: () => import('../views/vant/VantCheckinFieldDemo.vue'),
     meta: { title: '表单内打卡' },
   },
+  {
+    path: '/vant/vant-insurance-form-demo',
+    name: 'vant-insurance-form-demo',
+    component: () => import('../views/vant/VantInsuranceFormDemo.vue'),
+    meta: { title: '保险报案表单' },
+  },
 ]
 
 const router = createRouter({
