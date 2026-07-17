@@ -21,8 +21,12 @@ import type { PageParams, PageResult } from '@/api/types'
 
 /** CRUD 接口集合（create/update/remove 缺省则该操作不可用） */
 export interface CrudApi<T, F, Q> {
-  /** 列表查询 */
-  list: (params: Q & PageParams) => Promise<PageResult<T>>
+  /** 列表查询。支持三种返回结构：
+   *   - 分页（标准）：PageResult<T> = { list, total, page, pageSize }
+   *   - 不分页：T[]（数组直接返回到 data，不带分页结构）
+   *   - 自定义字段：Record<string, any>（配合 responseMap 指定 list/total 等字段名）
+   */
+  list: (params: Q & PageParams) => Promise<PageResult<T> | T[] | Record<string, any>>
   /** 新增 */
   create?: (data: F) => Promise<any>
   /** 编辑（表单自带 id） */
@@ -50,6 +54,14 @@ export interface UseCrudListOptions<T, F, Q> {
   permissionActions?: Partial<Record<CrudAction, string>>
   /** 是否启用操作日志，默认 false */
   enableLog?: boolean
+  /** 列表响应字段映射（适配不同后端字段命名）。
+   *  缺省 list='list' total='total' page='page' pageSize='pageSize'。
+   *  例：后端返回 { records, totalCount } 时配 { list: 'records', total: 'totalCount' } */
+  responseMap?: { list?: string; total?: string; page?: string; pageSize?: string }
+  /** 请求分页参数名映射（适配不同后端命名）。
+   *  缺省 page='page' pageSize='pageSize'。
+   *  例：后端要求 current/size 时配 { page: 'current', pageSize: 'size' } */
+  requestMap?: { page?: string; pageSize?: string }
 }
 
 export function useCrudList<T extends { id: number }, F, Q extends Record<string, any>>(
@@ -197,19 +209,50 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
   // ==================== 列表加载 ====================
   async function fetchList(reset = false) {
     try {
-      const params = { ...query, page: page.value, pageSize } as Q & PageParams
+      // 请求分页参数名映射（适配后端入参命名，如 current/size）
+      const pageKey = options.requestMap?.page ?? 'page'
+      const sizeKey = options.requestMap?.pageSize ?? 'pageSize'
+      const params = { ...query, [pageKey]: page.value, [sizeKey]: pageSize } as Record<string, any>
       // 查询时过滤空值属性再发送后端
-      const cleaned = omitEmptyParams(params) as Q & PageParams
-      const result = await options.api.list(cleaned)
+      const cleaned = omitEmptyParams(params) as Record<string, any>
+
+      // 兼容三种列表返回结构：
+      //   - 分页（标准）：PageResult<T> = { list, total, page, pageSize }
+      //   - 不分页：T[]（数组直接返回到 data）
+      //   - 自定义字段：对象（配合 responseMap 指定 list/total 等字段名）
+      const raw = (await options.api.list(cleaned as Q & PageParams)) as
+        | PageResult<T>
+        | T[]
+        | Record<string, any>
+
+      // 解析列表数组：数组直返 或 按 responseMap.list 取字段（缺省 'list'）
+      const listKey = options.responseMap?.list ?? 'list'
+      const resultList: T[] = Array.isArray(raw) ? raw : ((raw as Record<string, any>)?.[listKey] ?? [])
+
       if (reset) {
-        list.value = result.list as T[]
+        list.value = resultList
       } else {
-        list.value = [...list.value, ...result.list] as T[]
+        list.value = [...list.value, ...resultList]
       }
-      if (result.list.length < pageSize) {
+
+      if (Array.isArray(raw)) {
+        // 不分页：返回值为数组，一次性加载完成
         finished.value = true
       } else {
-        page.value++
+        // 响应字段映射（适配后端命名，如 total→totalCount / pageSize→pageSize）
+        const obj = raw as Record<string, any>
+        const totalKey = options.responseMap?.total ?? 'total'
+        const respSizeKey = options.responseMap?.pageSize ?? 'pageSize'
+        const total = Number(obj?.[totalKey] ?? 0)
+        const respPageSize = Number(obj?.[respSizeKey] ?? pageSize)
+        // 已加载数量达到 total，或 本页数据不足一页（取后端 pageSize）→ 加载完成
+        if (total > 0 && list.value.length >= total) {
+          finished.value = true
+        } else if (resultList.length < respPageSize) {
+          finished.value = true
+        } else {
+          page.value++
+        }
       }
     } catch {
       finished.value = true

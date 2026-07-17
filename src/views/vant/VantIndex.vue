@@ -94,6 +94,22 @@ const stages = ref([
     color: '#07c160',
   },
   {
+    id: 'list-nopage',
+    title: 'VantList 不分页数据',
+    desc: '同一 VantList 组件演示「不分页」：mock 把全量数组直接放进 data，useCrudList 识别数组即 finished',
+    path: '/vant/vant-list-nopage-demo',
+    icon: '📃',
+    color: '#1989fa',
+  },
+  {
+    id: 'list-map',
+    title: 'VantList 字段映射',
+    desc: '同一 VantList 配置 responseMap / requestMap，对接返回 records/totalCount、入参 current/size 的异构后端',
+    path: '/vant/vant-list-map-demo',
+    icon: '🗺️',
+    color: '#ff976a',
+  },
+  {
     id: 'permission',
     title: '权限指令 v-permission 家族',
     desc: 'v-permission / v-permission-all / v-permission-none 三种全局指令，配合角色切换实时显隐',
@@ -157,7 +173,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 14 个）</h2>
+      <h2>组件演示（共 16 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

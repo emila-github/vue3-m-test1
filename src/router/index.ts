@@ -87,6 +87,18 @@ const manualRoutes = [
     meta: { title: 'VantList' },
   },
   {
+    path: '/vant/vant-list-nopage-demo',
+    name: 'vant-list-nopage-demo',
+    component: () => import('../views/vant/VantListNoPageDemo.vue'),
+    meta: { title: 'VantList 不分页' },
+  },
+  {
+    path: '/vant/vant-list-map-demo',
+    name: 'vant-list-map-demo',
+    component: () => import('../views/vant/VantListMapDemo.vue'),
+    meta: { title: 'VantList 字段映射' },
+  },
+  {
     path: '/vant/vant-permission-demo',
     name: 'vant-permission-demo',
     component: () => import('../views/vant/VantPermissionDemo.vue'),

@@ -11,7 +11,7 @@
  *      van-slider / van-rate / van-cell-group
  *
  * 全部条件通过 VantList 的 #filters 插槽绑定到 query，查询/更多查询/增删改/扩展操作/权限
- * 均由通用 VantList + useCrudList 承载；数据模型与接口集中在 @/api/modules/demo-renewal，
+ * 均由通用 VantList + useCrudList 承载；数据模型与接口统一从 @/api 引入，
  * 请求经 /api 前缀由 @/mock/demo-renewal 拦截（内存 Mock，无需真实后端）。
  */
 import { ref } from 'vue'
@@ -20,7 +20,7 @@ import VantList from '@/components/VantList.vue'
 import type { ListAction } from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
 
-// ==================== 数据模型与接口（统一来自 @/api/modules/demo-renewal） ====================
+// ==================== 数据模型与接口（统一来自 @/api） ====================
 import {
   type Renewal,
   type RenewalForm,
@@ -39,9 +39,8 @@ import {
   deleteRenewal,
   searchInsurers,
   verifyApplicant,
-} from '@/api/modules/demo-renewal'
-// 通用文件上传：写入 src/assets/demo-upload，返回 /demo-upload/xxx 预览地址（demo 前缀，避免与正式项目冲突）
-import { uploadFile } from '@/api/modules/demo-upload'
+  uploadFile,
+} from '@/api'
 
 // API 集合：直接指向真实接口函数（请求经 /api 由 mock 拦截）
 const api: CrudApi<Renewal, RenewalForm, RenewalQuery> = {

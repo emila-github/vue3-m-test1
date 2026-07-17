@@ -11,7 +11,7 @@ vi.mock('vant', () => ({
 import { showImagePreview } from 'vant'
 
 import VantUpload from '../VantUpload.vue'
-import { mockIdCardUploadResponse } from '@/api/modules/demo-idcard'
+import { mockIdCardUploadResponse } from '@/api'
 
 /** van 组件桩：van-uploader 需渲染 default 插槽（身份证卡片在其内部） */
 const vantStubs = {
