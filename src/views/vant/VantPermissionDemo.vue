@@ -185,6 +185,23 @@ function visibleNone(codes: string | string[]): boolean {
       切换角色后，指令内部 <code>watch</code> 权限集合变化，按钮会自动重新显隐。
     </p>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>三个全局指令（基于 usePermission 单例）</b><br />
+        <code>v-permission="'car:delete'"</code>：拥有任意一个权限即可见（OR）<br />
+        <code>v-permission-all="['car:edit','car:audit']"</code>：必须全部拥有才可见（AND）<br />
+        <code>v-permission-none="'car:view'"</code>：拥有任意一个就隐藏（无任何权限才可见）<br />
+        值为空 / undefined / '' 时视为「不限制，始终可见」。数组表示多个权限码。
+      </p>
+      <p class="hint">
+        指令在 <code>main.ts</code> 注册；权限加载或角色切换后通过 watch 自动重算显隐，
+        避免「权限晚于渲染到达」导致按钮残留。
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -269,5 +286,35 @@ function visibleNone(codes: string | string[]): boolean {
   background: #ebf3ff;
   padding: 0 4px;
   border-radius: 4px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding: 0 0 24px;
+}
+.usage-page .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323233;
+  margin: 18px 12px 8px;
+}
+.usage-page .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.usage-page .hint {
+  font-size: 12px;
+  color: #969799;
+  margin: 8px 4px 12px;
+  line-height: 1.6;
+}
+.usage-page .hint code {
+  color: #07c160;
+  background: #f2f3f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  word-break: break-all;
 }
 </style>

@@ -189,6 +189,29 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
       </div>
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantCheckin :map-key="tmapKey" @checkin="onCheckin" /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        mapKey：腾讯地图 Key（缺省读 VITE_TMAP_KEY）<br />
+        autoLocate：进入是否自动定位（默认 true）<br />
+        mode：'once' 仅一次 / 'multiple' 可多次（默认 once）<br />
+        useWxLocation：微信内走 wx.getLocation（默认 true）<br />
+        wxConfigLoader：企业微信后端下发 JS-SDK 签名
+      </p>
+      <p class="hint">
+        <b>事件</b><br />
+        checkin(result) · locate(pos) · locateError(err) · update:modelValue<br />
+        <b>结果类型 CheckinResult</b>：{ lat, lng, address, timestamp, time, isFirst }
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -235,5 +258,10 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
 }
 .form-btn {
   padding: 12px 16px 4px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

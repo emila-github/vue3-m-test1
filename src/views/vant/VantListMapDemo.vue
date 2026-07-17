@@ -121,6 +121,22 @@ const actions = [{ key: 'score', name: '查看绩效', icon: 'chart-trending-o' 
       </van-cell-group>
     </template>
   </VantList>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        复用同一个 <code>VantList</code> 演示「字段映射」：通过 <code>responseMap</code> /
+        <code>requestMap</code> 适配返回 <code>{ records, totalCount }</code>、入参
+        <code>{ current, size }</code> 的异构后端。
+      </p>
+      <p class="hint">
+        <b>例</b><br />
+        <code>:response-map="{ list: 'records', total: 'totalCount' }"</code><br />
+        <code>:request-map="{ page: 'current', pageSize: 'size' }"</code>
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -145,5 +161,35 @@ const actions = [{ key: 'score', name: '查看绩效', icon: 'chart-trending-o' 
 }
 .r-sep {
   color: #dcdee0;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding: 0 0 24px;
+}
+.usage-page .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323233;
+  margin: 18px 12px 8px;
+}
+.usage-page .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.usage-page .hint {
+  font-size: 12px;
+  color: #969799;
+  margin: 8px 4px 12px;
+  line-height: 1.6;
+}
+.usage-page .hint code {
+  color: #07c160;
+  background: #f2f3f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  word-break: break-all;
 }
 </style>

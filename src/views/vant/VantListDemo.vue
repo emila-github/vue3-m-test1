@@ -508,6 +508,30 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
       </van-cell-group>
     </template>
   </VantList>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantList :api="api" permission-prefix="renewal"&gt;</code><br />
+        <code>&nbsp;&nbsp;&lt;template #item="{ item }"&gt;...&lt;/template&gt;</code><br />
+        <code>&lt;/VantList&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        api：CrudApi 集合（list 必填，create/update/remove 缺省则对应功能不可用）<br />
+        permissionPrefix / permissionActions：权限前缀与自定义操作码<br />
+        showSearch / showAdd / keywordKey / filters / actions<br />
+        rowPermission(item)：行级自定义权限（与角色权限做「与」）<br />
+        responseMap / requestMap：适配异构后端字段命名
+      </p>
+      <p class="hint">
+        <b>插槽</b>：#item #filters #form #detail #row-actions ｜ <b>事件</b>：create / edit /
+        detail / action
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -586,5 +610,35 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 8px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding: 0 0 24px;
+}
+.usage-page .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323233;
+  margin: 18px 12px 8px;
+}
+.usage-page .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.usage-page .hint {
+  font-size: 12px;
+  color: #969799;
+  margin: 8px 4px 12px;
+  line-height: 1.6;
+}
+.usage-page .hint code {
+  color: #07c160;
+  background: #f2f3f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  word-break: break-all;
 }
 </style>

@@ -489,6 +489,25 @@ const interestTree = [
       </div>
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantTreeTagsField v-model="tags" :options="tree" label="地区" /&gt;</code><br />
+        <code>&lt;VantTreeTagsField v-model="tags" :options="tree" show-path /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：同 VantTreeSelectField 树型数据<br />
+        showPath：标签显示完整路径 · selectParent：false 时仅叶子可勾选<br />
+        max：最多可选数量 · valueKey / labelKey / childrenKey / separator<br />
+        clearable / disabled / readonly / required
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue（数组） · change(value[], nodes[])</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -545,5 +564,10 @@ const interestTree = [
 .echo-empty {
   color: #969799;
   font-size: 12px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

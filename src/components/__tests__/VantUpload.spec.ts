@@ -133,11 +133,11 @@ describe('工具函数', () => {
   it('toItems 由 modelValue 还原文件项（单选 / 多选 / 空）', () => {
     const vm = shallow({}).vm as any
     expect(vm.toItems('http://a')).toEqual([
-      { url: 'http://a', value: 'http://a', name: 'a', status: 'done' },
+      { url: 'http://a', value: 'http://a', name: 'a', status: 'done', isImage: true },
     ])
     expect(vm.toItems(['http://a', 'http://b'])).toEqual([
-      { url: 'http://a', value: 'http://a', name: 'a', status: 'done' },
-      { url: 'http://b', value: 'http://b', name: 'b', status: 'done' },
+      { url: 'http://a', value: 'http://a', name: 'a', status: 'done', isImage: true },
+      { url: 'http://b', value: 'http://b', name: 'b', status: 'done', isImage: true },
     ])
     expect(vm.toItems('')).toEqual([])
   })

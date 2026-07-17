@@ -203,6 +203,29 @@ const requiredVal = ref<string>('')
       </div>
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantCalendarField v-model="date" label="日期" title="选择日期" /&gt;</code><br />
+        <code>&lt;VantCalendarField v-model="range" type="range" label="区间" /&gt;</code><br />
+        <code>&lt;VantCalendarField v-model="days" type="multiple" label="日期" /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        type：single 单选 / range 区间 / multiple 多选（默认 single）<br />
+        minDate / maxDate / defaultDate：可选与默认定位日期（Date 或 'YYYY-MM-DD'）<br />
+        showConfirm：false 时点选即确定；minDays / maxDays：区间天数限制<br />
+        clearable / disabled / readonly / required / leftIcon
+      </p>
+      <p class="hint">
+        <b>事件</b><br />
+        update:modelValue（字符串 / 数组）· change(value, raw)
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -259,5 +282,10 @@ const requiredVal = ref<string>('')
 .echo-empty {
   color: #969799;
   font-size: 12px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

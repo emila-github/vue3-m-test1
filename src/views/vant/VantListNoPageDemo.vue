@@ -178,6 +178,21 @@ const actions = [{ key: 'call', name: '拨打电话', icon: 'phone-o' }]
       </van-cell-group>
     </template>
   </VantList>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        复用同一个 <code>VantList</code> 演示「不分页」：mock 直接把全量数组放进
+        <code>data</code>，<code>useCrudList</code> 识别到返回值为数组即视为已加载完成（finished）。
+      </p>
+      <p class="hint">
+        <b>关键</b>：api.list 返回 <code>T[]</code> 而非
+        <code>{ list, total }</code> 即可启用不分页模式， 无需额外配置。其余 Props / 插槽与 VantList
+        完全一致。
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -229,5 +244,35 @@ const actions = [{ key: 'call', name: '拨打电话', icon: 'phone-o' }]
   font-size: 14px;
   color: #323233;
   min-width: 76px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding: 0 0 24px;
+}
+.usage-page .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323233;
+  margin: 18px 12px 8px;
+}
+.usage-page .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.usage-page .hint {
+  font-size: 12px;
+  color: #969799;
+  margin: 8px 4px 12px;
+  line-height: 1.6;
+}
+.usage-page .hint code {
+  color: #07c160;
+  background: #f2f3f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  word-break: break-all;
 }
 </style>

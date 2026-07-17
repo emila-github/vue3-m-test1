@@ -177,6 +177,27 @@ const requiredVal = ref('')
       />
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantSelectField v-model="form.brand" :options="options" label="品牌" /&gt;</code
+        ><br />
+        <code
+          >&lt;VantSelectField v-model="x" :options="raw" :format="o =&gt; ({ text: o.label, value:
+          o.code })" /&gt;</code
+        >
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：字符串[] / {text,value}[] / 自定义对象（配 valueKey/labelKey 或 format）<br />
+        clearable / disabled / readonly / required / leftIcon
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue · change(value, option)</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -208,5 +229,10 @@ const requiredVal = ref('')
   padding: 1px 6px;
   border-radius: 3px;
   color: #1989fa;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

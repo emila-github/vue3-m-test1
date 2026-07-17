@@ -205,6 +205,26 @@ const requiredVal = ref<string[]>([])
       />
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code
+          >&lt;VantSelectMultipleField v-model="form.extras" :options="options" label="附加险种"
+          /&gt;</code
+        >
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：同 VantSelectField 数据格式<br />
+        max：最多可选数量（0 不限制）<br />
+        clearable / disabled / readonly / required / leftIcon
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue（数组） · change(value[], options[])</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -236,5 +256,10 @@ const requiredVal = ref<string[]>([])
   padding: 1px 6px;
   border-radius: 3px;
   color: #1989fa;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

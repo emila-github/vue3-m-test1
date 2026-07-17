@@ -310,6 +310,28 @@ const parentVal = ref('')
       </div>
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantTreeSelectField v-model="region" :options="tree" label="地区" /&gt;</code
+        ><br />
+        <code>&lt;VantTreeSelectField v-model="area" :options="tree" :max-depth="2" /&gt;</code
+        ><br />
+        <code>&lt;VantTreeSelectField v-model="area" :options="tree" select-parent /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：树型数据（children 表示下级）<br />
+        valueKey / labelKey / childrenKey：字段映射（默认 value/text/children）<br />
+        maxDepth：最大可选层级 · selectParent：父节点可直接选中<br />
+        separator 路径分隔符（默认 ' / '）· clearable / disabled / readonly / required
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue · change(value, path[])</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -343,5 +365,10 @@ const parentVal = ref('')
   padding: 1px 6px;
   border-radius: 4px;
   word-break: break-all;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

@@ -563,6 +563,18 @@ function onFailed() {
       </div>
     </van-form>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        综合表单示例：组合使用全部 <code>VantXxxField</code> + <code>VantUpload(field)</code> +
+        <code>VantCheckinField</code>，演示保险报案页的新增 / 编辑回填。<br />
+        各字段组件的 Props / 事件说明见对应独立 Demo（VantSelectFieldDemo、VantTreeTagsFieldDemo
+        等）。
+      </p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -596,5 +608,35 @@ function onFailed() {
 }
 .ins-form :deep(.van-field__clear-icon):active {
   color: #323233;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding: 0 0 24px;
+}
+.usage-page .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #323233;
+  margin: 18px 12px 8px;
+}
+.usage-page .card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.usage-page .hint {
+  font-size: 12px;
+  color: #969799;
+  margin: 8px 4px 12px;
+  line-height: 1.6;
+}
+.usage-page .hint code {
+  color: #07c160;
+  background: #f2f3f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  word-break: break-all;
 }
 </style>

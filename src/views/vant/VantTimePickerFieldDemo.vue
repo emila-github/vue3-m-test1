@@ -154,6 +154,25 @@ const requiredVal = ref('')
       />
     </div>
   </div>
+
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantTimePickerField v-model="t" type="time" label="起保时间" /&gt;</code><br />
+        <code>&lt;VantTimePickerField v-model="day" type="date" label="投保日期" /&gt;</code><br />
+        <code>&lt;VantTimePickerField v-model="ym" type="year-month" label="账期" /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        type：time（HH:mm）/ date（YYYY-MM-DD）/ year-month（YYYY-MM）<br />
+        format：自定义输出格式 · minDate / maxDate · minHour / maxHour / minMinute / maxMinute<br />
+        clearable / disabled / readonly / required
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue · change(value)</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -185,5 +204,10 @@ const requiredVal = ref('')
   padding: 1px 6px;
   border-radius: 3px;
   color: #1989fa;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>
