@@ -13,12 +13,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import permissionRoutes from './permission'
-import uploadRoutes from './demo-upload'
-import renewalRoutes from './demo-renewal'
-import idcardRoutes from './demo-idcard'
-import claimRoutes from './demo-claim'
-import customerRoutes from './demo-customer'
-import mapRoutes from './demo-map'
+import demoUploadRoutes from './demo-upload'
+import demoRenewalRoutes from './demo-renewal'
+import demoIdcardRoutes from './demo-idcard'
+import demoClaimRoutes from './demo-claim'
+import demoCustomerRoutes from './demo-customer'
+import demoMapRoutes from './demo-map'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -35,12 +35,12 @@ const MIME_MAP: Record<string, string> = {
 // ===== 合并所有 mock 路由（新增文件后在这里加 import 并展开） =====
 const allRoutes: MockRoute[] = [
   ...permissionRoutes,
-  ...uploadRoutes,
-  ...renewalRoutes,
-  ...idcardRoutes,
-  ...claimRoutes,
-  ...customerRoutes,
-  ...mapRoutes,
+  ...demoUploadRoutes,
+  ...demoRenewalRoutes,
+  ...demoIdcardRoutes,
+  ...demoClaimRoutes,
+  ...demoCustomerRoutes,
+  ...demoMapRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
