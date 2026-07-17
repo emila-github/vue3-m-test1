@@ -305,8 +305,8 @@ const fieldDisplayText = computed(() => {
   const str = String(val)
   // data URI 占位图 / blob URL：不显示原始长串，按类型展示友好文案
   if (str.startsWith('data:') || str.startsWith('blob:')) {
-      const typeLabels: Record<string, string> = {
-        idcard: props.variant === 'front' ? '已上传人像面' : '已上传国徽面',
+    const typeLabels: Record<string, string> = {
+      idcard: props.variant === 'front' ? '已上传人像面' : '已上传国徽面',
       avatar: '已上传头像',
       image: '已上传图片',
       invoice: '已上传发票',
@@ -1004,6 +1004,15 @@ function docIcon(it: UploadItem): string {
 .vuf-uploader.is-round :deep(.van-uploader__preview-image),
 .vuf-uploader.is-round :deep(.van-uploader__upload) {
   border-radius: 50%;
+  overflow: hidden;
+}
+
+/* 非圆形类型（image / idcard）：PICC 主题把预览图圆角设为 --van-uploader-border-radius（12px），
+   而方形删除按钮落在预览盒锐角顶角，其右上角会超出圆角「未被隐藏」。
+   让预览盒与图片同圆角并对子元素 overflow:hidden，即可把删除按钮超出圆角的部分裁掉
+   （与 invoice 单元格一致）。注意：圆形头像不能加 overflow:hidden，否则会把圆形裁成 12px 圆角方块。 */
+.vuf-uploader:not(.is-round) :deep(.van-uploader__preview) {
+  border-radius: var(--van-uploader-border-radius);
   overflow: hidden;
 }
 .vuf-avatar-add {
