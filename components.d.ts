@@ -12,7 +12,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -20,7 +19,6 @@ declare module 'vue' {
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     VanActionSheet: typeof import('vant/es')['ActionSheet']
     VanBadge: typeof import('vant/es')['Badge']
     VanButton: typeof import('vant/es')['Button']
@@ -65,13 +63,11 @@ declare module 'vue' {
     VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
     VantUpload: typeof import('./src/components/VantUpload.vue')['default']
     VanUploader: typeof import('vant/es')['Uploader']
-    WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
 
 // For TSX support
 declare global {
-  const HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
   const IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
   const IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
   const IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -79,7 +75,6 @@ declare global {
   const IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']
-  const TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
   const VanActionSheet: typeof import('vant/es')['ActionSheet']
   const VanBadge: typeof import('vant/es')['Badge']
   const VanButton: typeof import('vant/es')['Button']
@@ -124,5 +119,4 @@ declare global {
   const VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
   const VantUpload: typeof import('./src/components/VantUpload.vue')['default']
   const VanUploader: typeof import('vant/es')['Uploader']
-  const WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
 }
