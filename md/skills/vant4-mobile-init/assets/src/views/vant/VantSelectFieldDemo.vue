@@ -3,47 +3,7 @@ import { ref, reactive } from 'vue'
 import VantSelectField from '@/components/VantSelectField.vue'
 import type { NormalizedOption } from '@/components/VantSelectField.vue'
 
-// 1) 字符串数组
-const brand = ref('')
-const brandOptions = ['宝马', '奔驰', '奥迪', '丰田', '本田', '大众', '比亚迪', '蔚来']
-
-// 2) Vant 默认对象数组 { text, value }
-const city = ref('')
-const cityOptions = [
-  { text: '北京', value: 'bj' },
-  { text: '上海', value: 'sh' },
-  { text: '广州', value: 'gz' },
-  { text: '深圳', value: 'sz' },
-]
-
-// 3) 自定义字段（valueKey / labelKey）
-const channel = ref('')
-const channelOptions = [
-  { id: 'agent', name: '保险代理人' },
-  { id: 'online', name: '官网直营' },
-  { id: 'phone', name: '电话投保' },
-  { id: 'app', name: '手机 App' },
-]
-
-// 4) 完全自定义 format 函数
-const raw = ref<number | string>('')
-const rawOptions = [
-  { code: 'A', label: '方案 A（基础版）' },
-  { code: 'B', label: '方案 B（标准版）' },
-  { code: 'C', label: '方案 C（尊享版）' },
-]
-
-// 5) 可清空
-const clearableVal = ref('宝马')
-
-// 6) 禁用 / 只读
-const disabledVal = ref('只读预填值')
-const readonlyVal = ref('已锁定值')
-
-// 7) 必填 + 图标
-const requiredVal = ref('')
-
-// 当前选中回显（演示 change 事件）
+// ① change 事件回显（置顶，操作实时记录）
 const log = reactive<{ value: string | number | null; text: string }>({
   value: '',
   text: '',
@@ -52,6 +12,46 @@ function onChange(value: string | number, option: NormalizedOption | null) {
   log.value = value
   log.text = option?.text ?? ''
 }
+
+// ② 字符串数组
+const brand = ref('')
+const brandOptions = ['宝马', '奔驰', '奥迪', '丰田', '本田', '大众', '比亚迪', '蔚来']
+
+// ③ Vant 默认对象数组 { text, value }
+const city = ref('')
+const cityOptions = [
+  { text: '北京', value: 'bj' },
+  { text: '上海', value: 'sh' },
+  { text: '广州', value: 'gz' },
+  { text: '深圳', value: 'sz' },
+]
+
+// ④ 自定义字段（valueKey / labelKey）
+const channel = ref('')
+const channelOptions = [
+  { id: 'agent', name: '保险代理人' },
+  { id: 'online', name: '官网直营' },
+  { id: 'phone', name: '电话投保' },
+  { id: 'app', name: '手机 App' },
+]
+
+// ⑤ 完全自定义 format 函数
+const raw = ref<number | string>('')
+const rawOptions = [
+  { code: 'A', label: '方案 A（基础版）' },
+  { code: 'B', label: '方案 B（标准版）' },
+  { code: 'C', label: '方案 C（尊享版）' },
+]
+
+// ⑥ 可清空
+const clearableVal = ref('宝马')
+
+// ⑦ 禁用 / 只读
+const disabledVal = ref('只读预填值')
+const readonlyVal = ref('已锁定值')
+
+// ⑧ 必填 + 图标
+const requiredVal = ref('')
 </script>
 
 <template>
@@ -63,7 +63,18 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       @click-left="$router.back()"
     />
 
-    <div class="section-title">① 字符串数组（最简单）</div>
+    <!-- ① change 事件回显（操作实时记录，置顶）-->
+    <div class="section-title">① change 事件回显</div>
+    <div class="card">
+      <p class="hint">
+        最近一次 change：<br />
+        值 = <code>{{ log.value || '（空）' }}</code> ，文本 =
+        <code>{{ log.text || '（空）' }}</code>
+      </p>
+    </div>
+
+    <!-- ② 字符串数组（最简单）-->
+    <div class="section-title">② 字符串数组（最简单）</div>
     <div class="card">
       <VantSelectField
         v-model="brand"
@@ -80,7 +91,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">② 默认对象数组 { text, value }</div>
+    <!-- ③ 默认对象数组 { text, value }-->
+    <div class="section-title">③ 默认对象数组 { text, value }</div>
     <div class="card">
       <VantSelectField
         v-model="city"
@@ -95,7 +107,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">③ 自定义字段（value-key / label-key）</div>
+    <!-- ④ 自定义字段（value-key / label-key）-->
+    <div class="section-title">④ 自定义字段（value-key / label-key）</div>
     <div class="card">
       <VantSelectField
         v-model="channel"
@@ -112,7 +125,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">④ 完全自定义（format 函数）</div>
+    <!-- ⑤ 完全自定义（format 函数）-->
+    <div class="section-title">⑤ 完全自定义（format 函数）</div>
     <div class="card">
       <VantSelectField
         v-model="raw"
@@ -128,7 +142,8 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       </p>
     </div>
 
-    <div class="section-title">⑤ 可清空（clearable）</div>
+    <!-- ⑥ 可清空（clearable）-->
+    <div class="section-title">⑥ 可清空（clearable）</div>
     <div class="card">
       <VantSelectField
         v-model="clearableVal"
@@ -140,13 +155,15 @@ function onChange(value: string | number, option: NormalizedOption | null) {
       <p class="hint">右侧出现清除图标，点击即清空。</p>
     </div>
 
-    <div class="section-title">⑥ 禁用 / 只读</div>
+    <!-- ⑦ 禁用 / 只读-->
+    <div class="section-title">⑦ 禁用 / 只读</div>
     <div class="card">
       <VantSelectField v-model="disabledVal" :options="brandOptions" label="禁用" disabled />
       <VantSelectField v-model="readonlyVal" :options="brandOptions" label="只读" readonly />
     </div>
 
-    <div class="section-title">⑦ 必填 + 图标</div>
+    <!-- ⑧ 必填 + 图标-->
+    <div class="section-title">⑧ 必填 + 图标</div>
     <div class="card">
       <VantSelectField
         v-model="requiredVal"
@@ -159,14 +176,26 @@ function onChange(value: string | number, option: NormalizedOption | null) {
         clearable
       />
     </div>
+  </div>
 
-    <div class="section-title">⑧ change 事件回显</div>
-    <div class="card">
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
       <p class="hint">
-        最近一次 change：<br />
-        值 = <code>{{ log.value || '（空）' }}</code> ，文本 =
-        <code>{{ log.text || '（空）' }}</code>
+        <b>基础用法</b><br />
+        <code>&lt;VantSelectField v-model="form.brand" :options="options" label="品牌" /&gt;</code
+        ><br />
+        <code
+          >&lt;VantSelectField v-model="x" :options="raw" :format="o =&gt; ({ text: o.label, value:
+          o.code })" /&gt;</code
+        >
       </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：字符串[] / {text,value}[] / 自定义对象（配 valueKey/labelKey 或 format）<br />
+        clearable / disabled / readonly / required / leftIcon
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue · change(value, option)</p>
     </div>
   </div>
 </template>
@@ -200,5 +229,10 @@ function onChange(value: string | number, option: NormalizedOption | null) {
   padding: 1px 6px;
   border-radius: 3px;
   color: #1989fa;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

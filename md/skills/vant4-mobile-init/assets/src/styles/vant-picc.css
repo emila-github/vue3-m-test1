@@ -462,10 +462,18 @@ html.picc-skin {
 /* Notify 同样基于 Popup 渲染，元素同时带 van-popup 类，其彩色底会被 .van-popup 的白色
    背景规则（按 CSS 加载顺序）覆盖成白底。用 .van-notify.van-notify--xxx（0,2,0）提升优先级，
    强制按类型使用对应彩色底；变量在皮肤开启时取 PICC 色、关闭时取 Vant 默认色，两者都生效。 */
-.van-notify.van-notify--primary { background: var(--van-notify-primary-background, #d71920); }
-.van-notify.van-notify--success { background: var(--van-notify-success-background, #18a058); }
-.van-notify.van-notify--danger  { background: var(--van-notify-danger-background, #d71920); }
-.van-notify.van-notify--warning { background: var(--van-notify-warning-background, #f59e0b); }
+.van-notify.van-notify--primary {
+  background: var(--van-notify-primary-background, #d71920);
+}
+.van-notify.van-notify--success {
+  background: var(--van-notify-success-background, #18a058);
+}
+.van-notify.van-notify--danger {
+  background: var(--van-notify-danger-background, #d71920);
+}
+.van-notify.van-notify--warning {
+  background: var(--van-notify-warning-background, #f59e0b);
+}
 
 /* --- Loading / Spinner --- */
 html.picc-skin {
@@ -537,14 +545,18 @@ html.picc-skin {
 /* ===================== 4. PICC 特色增强样式 ===================== */
 
 /* --- 主 CTA 按钮增强阴影（参考截图中按钮的立体感） --- */
-html.picc-skin .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(.van-button--mini) {
+html.picc-skin
+  .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(.van-button--mini) {
   box-shadow: 0 4px 14px rgba(215, 25, 32, 0.35);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
   font-weight: 500;
 }
-html.picc-skin .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(.van-button--mini):active {
+html.picc-skin
+  .van-button--primary:not(.van-button--disabled):not(.van-button--small):not(
+    .van-button--mini
+  ):active {
   transform: scale(0.97);
   box-shadow: 0 2px 8px rgba(215, 25, 32, 0.25);
 }

@@ -28,6 +28,10 @@ const props = withDefaults(
     modelValue?: string | number | null
     options?: OptionItem[]
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 自定义对象中取值字段（默认 value） */
@@ -46,6 +50,8 @@ const props = withDefaults(
     modelValue: '',
     options: () => [],
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择',
     valueKey: 'value',
@@ -117,6 +123,8 @@ function onClear() {
   <van-field
     :model-value="displayText"
     :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
     :placeholder="placeholder"
     :left-icon="leftIcon"
     :required="required"
@@ -127,7 +135,7 @@ function onClear() {
     @click="open"
   >
     <template v-if="showClear" #right-icon>
-      <van-icon name="clear" class="vant-select__clear" @click.stop="onClear" />
+      <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
     </template>
   </van-field>
 
@@ -146,8 +154,23 @@ function onClear() {
 .vant-select :deep(.van-field__control) {
   color: #1a1a1a;
 }
-.vant-select__clear {
-  color: #8a8a8a;
+
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+/* 强制清空图标容器与箭头容器均 flex 居中，避免偏上/偏下 */
+.vant-select :deep(.van-field__right-icon),
+.vant-select :deep(.van-cell__right-icon) {
+  display: flex;
+  align-items: center;
+}
+/* 与 Vant 原生 right-icon 图标同渲染方式（display:block + 继承行高），保证字形垂直居中 */
+.vant-select .vant-field-clear-icon {
+  display: block;
   font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-select .vant-field-clear-icon:active {
+  color: #323233;
 }
 </style>

@@ -17,36 +17,10 @@ const todayStr = fmt(today)
 const maxStr = fmt(new Date(today.getTime() + 30 * 24 * 3600 * 1000))
 const defaultStr = fmt(new Date(today.getTime() - 3 * 24 * 3600 * 1000))
 
-// ① 单选
-const single = ref<string>('')
-
-// ② 区间
-const range = ref<string[]>([])
-
-// ③ 多选
-const multiple = ref<string[]>([])
-
-// ④ 限制可选范围
-const limited = ref<string>('')
-
-// ⑤ 默认选中（打开定位到 defaultStr）
-const withDefault = ref<string>('')
-
-// ⑥ 快速选择（点选即确定）
-const quick = ref<string>('')
-
-// ⑦ 禁用 / 只读
-const disabledVal = ref<string>(todayStr)
-const readonlyVal = ref<string>(todayStr)
-
-// ⑧ 必填 + 图标
-const requiredVal = ref<string>('')
-
-// ⑨ change 回显（自动滚动到末尾）
+// ① change 事件回显（置顶，操作实时记录，自动滚动到末尾）
 const lastList = ref<string[]>([])
 const lastCount = ref(0)
 const echoBox = ref<HTMLElement>()
-
 function scrollToEnd() {
   const el = echoBox.value
   if (el) el.scrollTop = el.scrollHeight
@@ -57,6 +31,31 @@ function onChange(value: any, raw: unknown) {
   lastCount.value = arr.length
   nextTick(scrollToEnd)
 }
+
+// ② 单选
+const single = ref<string>('')
+
+// ③ 区间
+const range = ref<string[]>([])
+
+// ④ 多选
+const multiple = ref<string[]>([])
+
+// ⑤ 限制可选范围
+const limited = ref<string>('')
+
+// ⑥ 默认选中（打开定位到 defaultStr）
+const withDefault = ref<string>('')
+
+// ⑦ 快速选择（点选即确定）
+const quick = ref<string>('')
+
+// ⑧ 禁用 / 只读
+const disabledVal = ref<string>(todayStr)
+const readonlyVal = ref<string>(todayStr)
+
+// ⑨ 必填 + 图标
+const requiredVal = ref<string>('')
 </script>
 
 <template>
@@ -69,7 +68,20 @@ function onChange(value: any, raw: unknown) {
     />
 
     <div class="container">
-      <div class="section-title">① 单选日期（single）</div>
+      <!-- ① change 事件回显（操作实时记录，置顶）-->
+      <div class="section-title">① change 事件回显（自动滚动到末尾）</div>
+      <div class="card">
+        <p class="hint">
+          数量：<code>{{ lastCount }}</code>
+        </p>
+        <div ref="echoBox" class="echo-box">
+          <code v-for="(v, i) in lastList" :key="i" class="echo-item">{{ v }}</code>
+          <span v-if="!lastList.length" class="echo-empty">（未选择）</span>
+        </div>
+      </div>
+
+      <!-- ② 单选日期（single）-->
+      <div class="section-title">② 单选日期（single）</div>
       <div class="card">
         <VantCalendarField
           v-model="single"
@@ -83,7 +95,8 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">② 日期区间（range）</div>
+      <!-- ③ 日期区间（range）-->
+      <div class="section-title">③ 日期区间（range）</div>
       <div class="card">
         <VantCalendarField
           v-model="range"
@@ -98,7 +111,8 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">③ 多选日期（multiple）</div>
+      <!-- ④ 多选日期（multiple）-->
+      <div class="section-title">④ 多选日期（multiple）</div>
       <div class="card">
         <VantCalendarField
           v-model="multiple"
@@ -113,7 +127,8 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">④ 限制可选范围（min ~ max 30 天）</div>
+      <!-- ⑤ 限制可选范围（min ~ max 30 天）-->
+      <div class="section-title">⑤ 限制可选范围（min ~ max 30 天）</div>
       <div class="card">
         <VantCalendarField
           v-model="limited"
@@ -130,7 +145,8 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">⑤ 默认选中 / 打开定位（default-date）</div>
+      <!-- ⑥ 默认选中 / 打开定位（default-date）-->
+      <div class="section-title">⑥ 默认选中 / 打开定位（default-date）</div>
       <div class="card">
         <VantCalendarField
           v-model="withDefault"
@@ -146,7 +162,8 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">⑥ 快速选择（show-confirm=false，点选即确定）</div>
+      <!-- ⑦ 快速选择（show-confirm=false，点选即确定）-->
+      <div class="section-title">⑦ 快速选择（show-confirm=false，点选即确定）</div>
       <div class="card">
         <VantCalendarField
           v-model="quick"
@@ -161,13 +178,15 @@ function onChange(value: any, raw: unknown) {
         </p>
       </div>
 
-      <div class="section-title">⑦ 禁用 / 只读</div>
+      <!-- ⑧ 禁用 / 只读-->
+      <div class="section-title">⑧ 禁用 / 只读</div>
       <div class="card">
         <VantCalendarField v-model="disabledVal" label="禁用" title="选择日期" disabled />
         <VantCalendarField v-model="readonlyVal" label="只读" title="选择日期" readonly />
       </div>
 
-      <div class="section-title">⑧ 必填 + 图标（required + left-icon）</div>
+      <!-- ⑨ 必填 + 图标（required + left-icon）-->
+      <div class="section-title">⑨ 必填 + 图标（required + left-icon）</div>
       <div class="card">
         <VantCalendarField
           v-model="requiredVal"
@@ -182,17 +201,29 @@ function onChange(value: any, raw: unknown) {
           已选：<code>{{ requiredVal || '（空）' }}</code>
         </p>
       </div>
+    </div>
+  </div>
 
-      <div class="section-title">⑨ change 事件回显（自动滚动到末尾）</div>
-      <div class="card">
-        <p class="hint">
-          数量：<code>{{ lastCount }}</code>
-        </p>
-        <div ref="echoBox" class="echo-box">
-          <code v-for="(v, i) in lastList" :key="i" class="echo-item">{{ v }}</code>
-          <span v-if="!lastList.length" class="echo-empty">（未选择）</span>
-        </div>
-      </div>
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantCalendarField v-model="date" label="日期" title="选择日期" /&gt;</code><br />
+        <code>&lt;VantCalendarField v-model="range" type="range" label="区间" /&gt;</code><br />
+        <code>&lt;VantCalendarField v-model="days" type="multiple" label="日期" /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        type：single 单选 / range 区间 / multiple 多选（默认 single）<br />
+        minDate / maxDate / defaultDate：可选与默认定位日期（Date 或 'YYYY-MM-DD'）<br />
+        showConfirm：false 时点选即确定；minDays / maxDays：区间天数限制<br />
+        clearable / disabled / readonly / required / leftIcon
+      </p>
+      <p class="hint">
+        <b>事件</b><br />
+        update:modelValue（字符串 / 数组）· change(value, raw)
+      </p>
     </div>
   </div>
 </template>
@@ -251,5 +282,10 @@ function onChange(value: any, raw: unknown) {
 .echo-empty {
   color: #969799;
   font-size: 12px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

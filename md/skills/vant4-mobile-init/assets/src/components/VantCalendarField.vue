@@ -37,6 +37,10 @@ const props = withDefaults(
     /** 选择模式：single 单选 / range 区间 / multiple 多选 */
     type?: 'single' | 'range' | 'multiple'
     label?: string
+    /** label 文本对齐方式（透传 van-field label-align）：left / center / right */
+    labelAlign?: 'left' | 'center' | 'right'
+    /** 值文本对齐方式（透传 van-field input-align）：left / center / right */
+    inputAlign?: 'left' | 'center' | 'right'
     placeholder?: string
     title?: string
     /** 最小可选日期（Date 或 'YYYY-MM-DD'） */
@@ -68,6 +72,8 @@ const props = withDefaults(
     modelValue: '',
     type: 'single',
     label: '',
+    labelAlign: 'left',
+    inputAlign: 'left',
     placeholder: '请选择',
     title: '请选择日期',
     minDate: undefined,
@@ -201,6 +207,8 @@ function onClear() {
     <van-field
       :model-value="displayText"
       :label="label"
+      :label-align="labelAlign"
+      :input-align="inputAlign"
       :placeholder="placeholder"
       :left-icon="leftIcon"
       :required="required"
@@ -211,9 +219,13 @@ function onClear() {
       @click="open"
     >
       <template v-if="showClear" #right-icon>
-        <span class="vant-calendar__clear" role="button" aria-label="清空" @click.stop="onClear">
-          <van-icon name="clear" />
-        </span>
+        <van-icon
+          name="clear"
+          class="vant-field-clear-icon"
+          role="button"
+          aria-label="清空"
+          @click.stop="onClear"
+        />
       </template>
     </van-field>
 
@@ -270,19 +282,20 @@ function onClear() {
   line-height: 24px;
 }
 
-/* x 清空按钮：inline-flex 居中，不加多余 padding 避免自身高度超标 */
-.vant-calendar__clear {
-  display: inline-flex;
+/* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
+.vant-calendar__field :deep(.van-field__right-icon),
+.vant-calendar__field :deep(.van-cell__right-icon) {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  color: #8a8a8a;
-  font-size: 16px;
-  padding: 2px 4px;
-  margin-right: 2px;
-  cursor: pointer;
-  flex-shrink: 0;
 }
-.vant-calendar__clear:active {
+.vant-calendar__field .vant-field-clear-icon {
+  display: block;
+  font-size: 16px;
+  line-height: inherit;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+.vant-calendar__field .vant-field-clear-icon:active {
   color: #323233;
 }
 </style>

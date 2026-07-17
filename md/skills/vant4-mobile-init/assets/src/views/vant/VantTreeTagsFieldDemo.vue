@@ -6,7 +6,23 @@
 import { ref, nextTick } from 'vue'
 import VantTreeTagsField from '../../components/VantTreeTagsField.vue'
 
-// ① 默认树多选打标签（省 / 市 / 区）—— 扩充为多个省，便于测试多选
+// ① change 事件回显（置顶，操作实时记录）
+const lastList = ref<Array<string | number>>([])
+const lastCount = ref(0)
+const echoBox = ref<HTMLElement>()
+
+function scrollToEnd() {
+  const el = echoBox.value
+  if (el) el.scrollTop = el.scrollHeight
+}
+
+function onChange(value: Array<string | number>) {
+  lastList.value = [...value]
+  lastCount.value = value.length
+  nextTick(scrollToEnd)
+}
+
+// ② 默认树多选打标签（省 / 市 / 区）—— 扩充为多个省，便于测试多选
 const regions = ref<string[]>([])
 const regionTree = [
   {
@@ -160,7 +176,7 @@ const regionTree = [
   },
 ]
 
-// ② 自定义字段（valueKey / labelKey / childrenKey）
+// ③ 自定义字段（valueKey / labelKey / childrenKey）
 const orgs = ref<string[]>([])
 const orgTree = [
   {
@@ -199,37 +215,21 @@ const orgTree = [
   },
 ]
 
-// ③ 标签显示完整路径（show-path）
+// ④ 标签显示完整路径（show-path）
 const pathTags = ref<string[]>([])
 
-// ④ 最多可选数量（max=3）
+// ⑤ 最多可选数量（max=3）
 const limited = ref<string[]>([])
 
-// ⑤ 可清空
+// ⑥ 可清空
 const clearableVal = ref<string[]>(['hz', 'xh'])
 
-// ⑥ 禁用 / 只读
+// ⑦ 禁用 / 只读
 const disabledVal = ref<string[]>(['zj'])
 const readonlyVal = ref<string[]>(['hz'])
 
-// ⑦ 必填 + 图标
+// ⑧ 必填 + 图标
 const requiredVal = ref<string[]>([])
-
-// ⑪ change 回显
-const lastList = ref<Array<string | number>>([])
-const lastCount = ref(0)
-const echoBox = ref<HTMLElement>()
-
-function scrollToEnd() {
-  const el = echoBox.value
-  if (el) el.scrollTop = el.scrollHeight
-}
-
-function onChange(value: Array<string | number>) {
-  lastList.value = [...value]
-  lastCount.value = value.length
-  nextTick(scrollToEnd)
-}
 
 // ⑨ 父级不可选（select-parent=false，只能选叶子）
 const parentOnly = ref<string[]>([])
@@ -312,7 +312,20 @@ const interestTree = [
     />
 
     <div class="container">
-      <div class="section-title">① 默认树多选打标签（省 / 市 / 区，可多选）</div>
+      <!-- ① change 事件回显（操作实时记录，置顶）-->
+      <div class="section-title">① change 事件回显</div>
+      <div class="card">
+        <p class="hint">
+          数量：<code>{{ lastCount }}</code>
+        </p>
+        <div ref="echoBox" class="echo-box">
+          <code v-for="(v, i) in lastList" :key="i" class="echo-item">{{ v }}</code>
+          <span v-if="!lastList.length" class="echo-empty">（未选择）</span>
+        </div>
+      </div>
+
+      <!-- ② 默认树多选打标签（省 / 市 / 区，可多选）-->
+      <div class="section-title">② 默认树多选打标签（省 / 市 / 区，可多选）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="regions"
@@ -327,7 +340,8 @@ const interestTree = [
         </p>
       </div>
 
-      <div class="section-title">② 自定义字段（valueKey / labelKey / childrenKey）</div>
+      <!-- ③ 自定义字段（valueKey / labelKey / childrenKey）-->
+      <div class="section-title">③ 自定义字段（valueKey / labelKey / childrenKey）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="orgs"
@@ -345,7 +359,8 @@ const interestTree = [
         </p>
       </div>
 
-      <div class="section-title">③ 标签显示完整路径（show-path）</div>
+      <!-- ④ 标签显示完整路径（show-path）-->
+      <div class="section-title">④ 标签显示完整路径（show-path）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="pathTags"
@@ -362,7 +377,8 @@ const interestTree = [
         </p>
       </div>
 
-      <div class="section-title">④ 最多可选数量（max=3）</div>
+      <!-- ⑤ 最多可选数量（max=3）-->
+      <div class="section-title">⑤ 最多可选数量（max=3）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="limited"
@@ -378,7 +394,8 @@ const interestTree = [
         </p>
       </div>
 
-      <div class="section-title">⑤ 可清空（clearable）</div>
+      <!-- ⑥ 可清空（clearable）-->
+      <div class="section-title">⑥ 可清空（clearable）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="clearableVal"
@@ -394,7 +411,8 @@ const interestTree = [
         </p>
       </div>
 
-      <div class="section-title">⑥ 禁用 / 只读</div>
+      <!-- ⑦ 禁用 / 只读-->
+      <div class="section-title">⑦ 禁用 / 只读</div>
       <div class="card">
         <VantTreeTagsField
           v-model="disabledVal"
@@ -412,7 +430,8 @@ const interestTree = [
         />
       </div>
 
-      <div class="section-title">⑦ 必填 + 图标（required + left-icon）</div>
+      <!-- ⑧ 必填 + 图标（required + left-icon）-->
+      <div class="section-title">⑧ 必填 + 图标（required + left-icon）</div>
       <div class="card">
         <VantTreeTagsField
           v-model="requiredVal"
@@ -429,6 +448,7 @@ const interestTree = [
         </p>
       </div>
 
+      <!-- ⑨ 父级不可选（select-parent=false，只能选叶子）-->
       <div class="section-title">⑨ 父级不可选（select-parent=false，只能选叶子）</div>
       <div class="card">
         <VantTreeTagsField
@@ -446,6 +466,7 @@ const interestTree = [
         </p>
       </div>
 
+      <!-- ⑩ 大数据量多选（测试标签换行 / 滚动）-->
       <div class="section-title">⑩ 大数据量多选（测试标签换行 / 滚动）</div>
       <div class="card">
         <VantTreeTagsField
@@ -466,17 +487,25 @@ const interestTree = [
           >（试试选 10 个以上，观察标签换行与回显）
         </p>
       </div>
+    </div>
+  </div>
 
-      <div class="section-title">⑪ change 事件回显</div>
-      <div class="card">
-        <p class="hint">
-          数量：<code>{{ lastCount }}</code>
-        </p>
-        <div ref="echoBox" class="echo-box">
-          <code v-for="(v, i) in lastList" :key="i" class="echo-item">{{ v }}</code>
-          <span v-if="!lastList.length" class="echo-empty">（未选择）</span>
-        </div>
-      </div>
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
+      <p class="hint">
+        <b>基础用法</b><br />
+        <code>&lt;VantTreeTagsField v-model="tags" :options="tree" label="地区" /&gt;</code><br />
+        <code>&lt;VantTreeTagsField v-model="tags" :options="tree" show-path /&gt;</code>
+      </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        options：同 VantTreeSelectField 树型数据<br />
+        showPath：标签显示完整路径 · selectParent：false 时仅叶子可勾选<br />
+        max：最多可选数量 · valueKey / labelKey / childrenKey / separator<br />
+        clearable / disabled / readonly / required
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue（数组） · change(value[], nodes[])</p>
     </div>
   </div>
 </template>
@@ -535,5 +564,10 @@ const interestTree = [
 .echo-empty {
   color: #969799;
   font-size: 12px;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

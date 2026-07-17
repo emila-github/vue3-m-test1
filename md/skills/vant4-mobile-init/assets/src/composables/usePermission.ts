@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { getUserPermissions } from '@/api/modules/permission'
+import { getUserPermissions } from '@/api'
 
 // ===== 全局共享的权限状态（单例） =====
 const currentRole = ref('admin')

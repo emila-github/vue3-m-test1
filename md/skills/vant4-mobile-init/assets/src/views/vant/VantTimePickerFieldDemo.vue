@@ -2,30 +2,30 @@
 import { ref } from 'vue'
 import VantTimePickerField from '@/components/VantTimePickerField.vue'
 
-// ① 时间选择
+// ① change 事件回显（置顶，操作实时记录）
+const lastChange = ref('')
+function onChange(v: string) {
+  lastChange.value = v
+}
+
+// ② 时间选择
 const time = ref('09:30')
-// ② 日期选择
+// ③ 日期选择
 const date = ref('')
-// ③ 年月
+// ④ 年月
 const yearMonth = ref('')
-// ④ 可清空
+// ⑤ 可清空
 const clearableVal = ref('14:00')
-// ⑤ 范围限制（time 限制小时/分钟；date 限制日期区间）
+// ⑥ 范围限制（time 限制小时/分钟；date 限制日期区间）
 const limitedTime = ref('')
 const limitedDate = ref('')
 const minDate = new Date(2026, 0, 1)
 const maxDate = new Date(2026, 11, 31)
-// ⑥ 禁用 / 只读
+// ⑦ 禁用 / 只读
 const disabledVal = ref('08:00')
 const readonlyVal = ref('20:30')
-// ⑦ 必填 + 图标
+// ⑧ 必填 + 图标
 const requiredVal = ref('')
-// ⑧ change 回显
-const lastChange = ref('')
-
-function onChange(v: string) {
-  lastChange.value = v
-}
 </script>
 
 <template>
@@ -37,7 +37,16 @@ function onChange(v: string) {
       @click-left="$router.back()"
     />
 
-    <div class="section-title">① 时间选择（type=time）</div>
+    <!-- ① change 事件回显（操作实时记录，置顶）-->
+    <div class="section-title">① change 事件回显</div>
+    <div class="card">
+      <p class="hint">
+        最近一次 change：<code>{{ lastChange || '（空）' }}</code>
+      </p>
+    </div>
+
+    <!-- ② 时间选择（type=time）-->
+    <div class="section-title">② 时间选择（type=time）</div>
     <div class="card">
       <VantTimePickerField
         v-model="time"
@@ -53,7 +62,8 @@ function onChange(v: string) {
       </p>
     </div>
 
-    <div class="section-title">② 日期选择（type=date）</div>
+    <!-- ③ 日期选择（type=date）-->
+    <div class="section-title">③ 日期选择（type=date）</div>
     <div class="card">
       <VantTimePickerField
         v-model="date"
@@ -69,7 +79,8 @@ function onChange(v: string) {
       </p>
     </div>
 
-    <div class="section-title">③ 年月（type=year-month）</div>
+    <!-- ④ 年月（type=year-month）-->
+    <div class="section-title">④ 年月（type=year-month）</div>
     <div class="card">
       <VantTimePickerField
         v-model="yearMonth"
@@ -85,7 +96,8 @@ function onChange(v: string) {
       </p>
     </div>
 
-    <div class="section-title">④ 可清空（clearable）</div>
+    <!-- ⑤ 可清空（clearable）-->
+    <div class="section-title">⑤ 可清空（clearable）</div>
     <div class="card">
       <VantTimePickerField
         v-model="clearableVal"
@@ -97,6 +109,7 @@ function onChange(v: string) {
       <p class="hint">右侧清除图标点击即清空。</p>
     </div>
 
+    <!-- ⑥ 范围限制-->
     <div class="section-title">⑥ 范围限制</div>
     <div class="card">
       <VantTimePickerField
@@ -119,12 +132,14 @@ function onChange(v: string) {
       />
     </div>
 
+    <!-- ⑦ 禁用 / 只读-->
     <div class="section-title">⑦ 禁用 / 只读</div>
     <div class="card">
       <VantTimePickerField v-model="disabledVal" type="time" label="禁用" disabled />
       <VantTimePickerField v-model="readonlyVal" type="time" label="只读" readonly />
     </div>
 
+    <!-- ⑧ 必填 + 图标-->
     <div class="section-title">⑧ 必填 + 图标</div>
     <div class="card">
       <VantTimePickerField
@@ -138,12 +153,24 @@ function onChange(v: string) {
         clearable
       />
     </div>
+  </div>
 
-    <div class="section-title">⑨ change 事件回显</div>
-    <div class="card">
+  <div class="usage-page">
+    <div class="section-title">使用说明</div>
+    <div class="card" style="margin: 0 12px 16px">
       <p class="hint">
-        最近一次 change：<code>{{ lastChange || '（空）' }}</code>
+        <b>基础用法</b><br />
+        <code>&lt;VantTimePickerField v-model="t" type="time" label="起保时间" /&gt;</code><br />
+        <code>&lt;VantTimePickerField v-model="day" type="date" label="投保日期" /&gt;</code><br />
+        <code>&lt;VantTimePickerField v-model="ym" type="year-month" label="账期" /&gt;</code>
       </p>
+      <p class="hint">
+        <b>主要 Props</b><br />
+        type：time（HH:mm）/ date（YYYY-MM-DD）/ year-month（YYYY-MM）<br />
+        format：自定义输出格式 · minDate / maxDate · minHour / maxHour / minMinute / maxMinute<br />
+        clearable / disabled / readonly / required
+      </p>
+      <p class="hint"><b>事件</b>：update:modelValue · change(value)</p>
     </div>
   </div>
 </template>
@@ -177,5 +204,10 @@ function onChange(v: string) {
   padding: 1px 6px;
   border-radius: 3px;
   color: #1989fa;
+}
+
+.usage-page {
+  background: #f7f8fa;
+  padding-bottom: 24px;
 }
 </style>

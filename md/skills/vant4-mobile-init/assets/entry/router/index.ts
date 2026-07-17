@@ -23,7 +23,12 @@ const manualRoutes = [
   { path: '/vant/vant-search-field-demo', name: 'vant-search-field-demo', component: () => import('../views/vant/VantSearchFieldDemo.vue'), meta: { title: 'VantSearchField' } },
   { path: '/vant/vant-upload-field-demo', name: 'vant-upload-field-demo', component: () => import('../views/vant/VantUploadDemo.vue'), meta: { title: 'VantUpload' } },
   { path: '/vant/vant-list-demo', name: 'vant-list-demo', component: () => import('../views/vant/VantListDemo.vue'), meta: { title: 'VantList' } },
+  { path: '/vant/vant-list-nopage-demo', name: 'vant-list-nopage-demo', component: () => import('../views/vant/VantListNoPageDemo.vue'), meta: { title: 'VantList 不分页' } },
+  { path: '/vant/vant-list-map-demo', name: 'vant-list-map-demo', component: () => import('../views/vant/VantListMapDemo.vue'), meta: { title: 'VantList 字段映射' } },
   { path: '/vant/vant-permission-demo', name: 'vant-permission-demo', component: () => import('../views/vant/VantPermissionDemo.vue'), meta: { title: '权限指令' } },
+  { path: '/vant/vant-checkin-demo', name: 'vant-checkin-demo', component: () => import('../views/vant/VantCheckinDemo.vue'), meta: { title: '外出定位打卡' } },
+  { path: '/vant/vant-checkin-field-demo', name: 'vant-checkin-field-demo', component: () => import('../views/vant/VantCheckinFieldDemo.vue'), meta: { title: '表单内打卡' } },
+  { path: '/vant/vant-insurance-form-demo', name: 'vant-insurance-form-demo', component: () => import('../views/vant/VantInsuranceFormDemo.vue'), meta: { title: '保险报案表单' } },
 ]
 
 const router = createRouter({

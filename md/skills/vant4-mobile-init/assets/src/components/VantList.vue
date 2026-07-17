@@ -98,6 +98,18 @@ const props = withDefaults(
     moreFilterTitle?: string
     finishedText?: string
     /**
+     * 列表响应字段映射（适配不同后端字段命名）：
+     *   list / total / page / pageSize 的字段名，缺省依次为 'list' / 'total' / 'page' / 'pageSize'。
+     *   例：后端返回 { records, totalCount } 时配 { list: 'records', total: 'totalCount' }。
+     */
+    responseMap?: { list?: string; total?: string; page?: string; pageSize?: string }
+    /**
+     * 请求分页参数名映射（适配不同后端命名）：
+     *   发送给后端的 页码 / 每页大小 参数名，缺省 'page' / 'pageSize'。
+     *   例：后端要求 current/size 时配 { page: 'current', pageSize: 'size' }。
+     */
+    requestMap?: { page?: string; pageSize?: string }
+    /**
      * 行级自定义权限：在 v-permission（角色权限）基础上，再根据 item 自身的标记
      * 决定 详情/编辑/删除 是否可用。返回对象中未指定的项沿用角色权限结果。
      * 例：(item) => ({ edit: item.status !== '已续保', delete: item.editable })
@@ -132,6 +144,8 @@ const props = withDefaults(
     actions: () => [],
     moreFilterTitle: '更多查询',
     finishedText: '没有更多了',
+    responseMap: () => ({}),
+    requestMap: () => ({}),
     skeletonCount: 8,
   },
 )
@@ -154,6 +168,8 @@ const crud = useCrudList<any, any, any>({
   permissionPrefix: props.permissionPrefix,
   permissionActions: props.permissionActions,
   enableLog: props.enableLog,
+  responseMap: props.responseMap,
+  requestMap: props.requestMap,
 })
 const {
   loading,
@@ -362,91 +378,98 @@ function scrollToFirstError() {
         @click-left="onBack"
       />
 
-    <!-- 搜索栏 -->
-    <div v-if="showSearch" class="vl-search-wrap">
-      <van-search
-        v-model="query[keywordKey]"
-        :placeholder="searchPlaceholder"
-        shape="round"
-        show-action
-        @search="onSearch"
-        @clear="onSearch"
-      >
-        <template #action>
-          <span class="vl-search-action" @click="onSearch">搜索</span>
-        </template>
-      </van-search>
-    </div>
-
-    <!-- 更多查询 -->
-    <div v-if="panelFilters.length || $slots.filters" class="vl-more">
-      <div class="vl-more-bar" @click="showMoreFilter = !showMoreFilter">
-        <span>
-          <van-icon name="filter-o" size="15" />
-          {{ moreFilterTitle }}
-          <van-badge
-            v-if="activeFilterCount"
-            :content="activeFilterCount"
-            style="margin-left: 6px"
-          />
-        </span>
-        <van-icon :name="showMoreFilter ? 'arrow-up' : 'arrow-down'" size="14" color="#999" />
+      <!-- 搜索栏 -->
+      <div v-if="showSearch" class="vl-search-wrap">
+        <van-search
+          v-model="query[keywordKey]"
+          :placeholder="searchPlaceholder"
+          shape="round"
+          show-action
+          @search="onSearch"
+          @clear="onSearch"
+        >
+          <template #action>
+            <span class="vl-search-action" @click="onSearch">搜索</span>
+          </template>
+        </van-search>
       </div>
 
-      <div v-show="showMoreFilter" class="vl-more-body">
-        <!-- 自定义筛选字段（绑定 query） -->
-        <slot name="filters" :query="query" />
-
-        <div v-for="f in panelFilters" :key="f.key" class="vl-filter-row">
-          <span class="vl-filter-label">{{ f.label }}</span>
-
-          <!-- radio 单选 -->
-          <van-radio-group
-            v-if="f.type === 'radio'"
-            v-model="(query as Record<string, any>)[f.key]"
-            direction="horizontal"
-          >
-            <van-radio v-for="opt in f.options" :key="opt.value" :name="opt.value" icon-size="14px">
-              {{ opt.text }}
-            </van-radio>
-          </van-radio-group>
-
-          <!-- select 下拉（点击单元格弹出 Picker） -->
-          <div v-else-if="f.type === 'select'" class="vl-cell" @click="openSelectFilter(f)">
-            <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
-              filterDisplay(f)
-            }}</span>
-            <van-icon name="arrow" color="#c8c9cc" />
-          </div>
-
-          <!-- date 日期（点击单元格弹出 DatePicker） -->
-          <div v-else-if="f.type === 'date'" class="vl-cell" @click="openDateFilter(f)">
-            <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
-              filterDisplay(f)
-            }}</span>
-            <van-icon name="arrow" color="#c8c9cc" />
-          </div>
-
-          <!-- text / number 输入 -->
-          <van-field
-            v-else
-            v-model="(query as Record<string, any>)[f.key]"
-            :type="f.type === 'number' ? 'digit' : 'text'"
-            :placeholder="f.placeholder || `请输入${f.label}`"
-            :min="f.min"
-            :max="f.max"
-            input-align="right"
-            border
-            @blur="onSearch"
-          />
+      <!-- 更多查询 -->
+      <div v-if="panelFilters.length || $slots.filters" class="vl-more">
+        <div class="vl-more-bar" @click="showMoreFilter = !showMoreFilter">
+          <span>
+            <van-icon name="filter-o" size="15" />
+            {{ moreFilterTitle }}
+            <van-badge
+              v-if="activeFilterCount"
+              :content="activeFilterCount"
+              style="margin-left: 6px"
+            />
+          </span>
+          <van-icon :name="showMoreFilter ? 'arrow-up' : 'arrow-down'" size="14" color="#999" />
         </div>
 
-        <div class="vl-filter-actions">
-          <van-button size="small" plain type="default" @click="onMoreFilterReset">重置</van-button>
-          <van-button size="small" type="primary" @click="onMoreFilterApply">应用筛选</van-button>
+        <div v-show="showMoreFilter" class="vl-more-body">
+          <!-- 自定义筛选字段（绑定 query） -->
+          <slot name="filters" :query="query" />
+
+          <div v-for="f in panelFilters" :key="f.key" class="vl-filter-row">
+            <span class="vl-filter-label">{{ f.label }}</span>
+
+            <!-- radio 单选 -->
+            <van-radio-group
+              v-if="f.type === 'radio'"
+              v-model="(query as Record<string, any>)[f.key]"
+              direction="horizontal"
+            >
+              <van-radio
+                v-for="opt in f.options"
+                :key="opt.value"
+                :name="opt.value"
+                icon-size="14px"
+              >
+                {{ opt.text }}
+              </van-radio>
+            </van-radio-group>
+
+            <!-- select 下拉（点击单元格弹出 Picker） -->
+            <div v-else-if="f.type === 'select'" class="vl-cell" @click="openSelectFilter(f)">
+              <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
+                filterDisplay(f)
+              }}</span>
+              <van-icon name="arrow" color="#c8c9cc" />
+            </div>
+
+            <!-- date 日期（点击单元格弹出 DatePicker） -->
+            <div v-else-if="f.type === 'date'" class="vl-cell" @click="openDateFilter(f)">
+              <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
+                filterDisplay(f)
+              }}</span>
+              <van-icon name="arrow" color="#c8c9cc" />
+            </div>
+
+            <!-- text / number 输入 -->
+            <van-field
+              v-else
+              v-model="(query as Record<string, any>)[f.key]"
+              :type="f.type === 'number' ? 'digit' : 'text'"
+              :placeholder="f.placeholder || `请输入${f.label}`"
+              :min="f.min"
+              :max="f.max"
+              input-align="right"
+              border
+              @blur="onSearch"
+            />
+          </div>
+
+          <div class="vl-filter-actions">
+            <van-button size="small" plain type="default" @click="onMoreFilterReset"
+              >重置</van-button
+            >
+            <van-button size="small" type="primary" @click="onMoreFilterApply">应用筛选</van-button>
+          </div>
         </div>
       </div>
-    </div>
     </div>
 
     <!-- 列表 -->
@@ -562,22 +585,17 @@ function scrollToFirstError() {
     >
       <div class="vl-form-popup">
         <van-nav-bar :title="isEdit ? '编辑' : '新增'" left-arrow @click-left="formVisible = false">
-          <template #right>
-            <van-button type="primary" size="small" :loading="submitting" @click="onFormSubmit"
-              >提交</van-button
-            >
-          </template>
         </van-nav-bar>
         <div class="vl-form-scroll">
-        <van-form ref="formRef">
-          <slot name="form" :form="form" :is-edit="isEdit" />
-          <div class="vl-submit-bar">
-            <van-button type="primary" block round :loading="submitting" @click="onFormSubmit">
-              {{ isEdit ? '保存修改' : '提交' }}
-            </van-button>
-          </div>
-        </van-form>
-      </div>
+          <van-form ref="formRef">
+            <slot name="form" :form="form" :is-edit="isEdit" />
+            <div class="vl-submit-bar">
+              <van-button type="primary" block round :loading="submitting" @click="onFormSubmit">
+                {{ isEdit ? '保存修改' : '提交' }}
+              </van-button>
+            </div>
+          </van-form>
+        </div>
       </div>
     </van-popup>
 

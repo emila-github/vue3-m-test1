@@ -6,6 +6,46 @@ const router = useRouter()
 
 const stages = ref([
   {
+    id: 'permission',
+    title: '权限指令 v-permission 家族',
+    desc: 'v-permission / v-permission-all / v-permission-none 三种全局指令，配合角色切换实时显隐',
+    path: '/vant/vant-permission-demo',
+    icon: '🔐',
+    color: '#ee0a24',
+  },
+  {
+    id: 'insurance-form',
+    title: '保险报案综合表单',
+    desc: '组合全部 VantXXXField + VantUpload(field) + VantCheckinField 的保险报案页，含新增 / 编辑回填',
+    path: '/vant/vant-insurance-form-demo',
+    icon: '📋',
+    color: '#ee0a24',
+  },
+  {
+    id: 'list',
+    title: '通用列表控件 VantList',
+    desc: '下拉筛选/查询/更多查询 + 增删改 + 自定义扩展操作 + 权限门禁，复用 useCrudList',
+    path: '/vant/vant-list-demo',
+    icon: '📑',
+    color: '#07c160',
+  },
+  {
+    id: 'list-nopage',
+    title: 'VantList 不分页数据',
+    desc: '同一 VantList 组件演示「不分页」：mock 把全量数组直接放进 data，useCrudList 识别数组即 finished',
+    path: '/vant/vant-list-nopage-demo',
+    icon: '📃',
+    color: '#1989fa',
+  },
+  {
+    id: 'list-map',
+    title: 'VantList 字段映射',
+    desc: '同一 VantList 配置 responseMap / requestMap，对接返回 records/totalCount、入参 current/size 的异构后端',
+    path: '/vant/vant-list-map-demo',
+    icon: '🗺️',
+    color: '#ff976a',
+  },
+  {
     id: 'select',
     title: '通用下拉单选组件 VantSelectField',
     desc: '可配置数据格式（字符串/对象/自定义字段/format），演示清空、禁用、只读、必填等用法',
@@ -78,20 +118,20 @@ const stages = ref([
     color: '#1989fa',
   },
   {
-    id: 'list',
-    title: '通用列表控件 VantList',
-    desc: '下拉筛选/查询/更多查询 + 增删改 + 自定义扩展操作 + 权限门禁，复用 useCrudList',
-    path: '/vant/vant-list-demo',
-    icon: '📑',
-    color: '#07c160',
+    id: 'checkin',
+    title: '外出定位打卡组件 VantCheckin',
+    desc: '腾讯地图展示定位，返回经纬度/地址/打卡时间；微信内自动走 wx.getLocation',
+    path: '/vant/vant-checkin-demo',
+    icon: '📍',
+    color: '#1989fa',
   },
   {
-    id: 'permission',
-    title: '权限指令 v-permission 家族',
-    desc: 'v-permission / v-permission-all / v-permission-none 三种全局指令，配合角色切换实时显隐',
-    path: '/vant/vant-permission-demo',
-    icon: '🔐',
-    color: '#ee0a24',
+    id: 'checkin-field',
+    title: '表单内定位打卡组件 VantCheckinField',
+    desc: '封装为 van-field 的表单打卡项，弹层定位后 v-model 回填，支持一次/多次',
+    path: '/vant/vant-checkin-field-demo',
+    icon: '🧭',
+    color: '#00a078',
   },
 ])
 
@@ -133,7 +173,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 11 个）</h2>
+      <h2>组件演示（共 16 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"
