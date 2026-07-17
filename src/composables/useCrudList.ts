@@ -227,7 +227,9 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
 
       // 解析列表数组：数组直返 或 按 responseMap.list 取字段（缺省 'list'）
       const listKey = options.responseMap?.list ?? 'list'
-      const resultList: T[] = Array.isArray(raw) ? raw : ((raw as Record<string, any>)?.[listKey] ?? [])
+      const resultList: T[] = Array.isArray(raw)
+        ? raw
+        : ((raw as Record<string, any>)?.[listKey] ?? [])
 
       if (reset) {
         list.value = resultList

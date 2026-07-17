@@ -77,9 +77,7 @@ function onFormCheckin(r: CheckinResult) {
 }
 
 /** 经纬度合并成一行展示 */
-const coordText = computed(() =>
-  form.checkin ? `${form.checkin.lng}, ${form.checkin.lat}` : '',
-)
+const coordText = computed(() => (form.checkin ? `${form.checkin.lng}, ${form.checkin.lat}` : ''))
 
 /** 表单提交（校验通过后触发） */
 function onSubmit() {
@@ -88,14 +86,17 @@ function onSubmit() {
 
 /** 打卡模式开关：false=一次性，true=可多次 */
 const formMulti = ref(false)
-const formMode = computed<'once' | 'multiple'>(() =>
-  formMulti.value ? 'multiple' : 'once',
-)
+const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multiple' : 'once'))
 </script>
 
 <template>
   <div class="demo-page">
-    <van-nav-bar title="VantCheckin 外出定位打卡" left-text="返回" left-arrow @click-left="$router.back()" />
+    <van-nav-bar
+      title="VantCheckin 外出定位打卡"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <div class="container">
       <!-- 回显 -->
@@ -158,17 +159,13 @@ const formMode = computed<'once' | 'multiple'>(() =>
             <!-- 地址（右侧打卡按钮） -->
             <van-field :model-value="form.checkin?.address || ''" label="地址" readonly>
               <template #button>
-                <van-button size="small" type="primary" @click="openCheckin">
-                  打卡
-                </van-button>
+                <van-button size="small" type="primary" @click="openCheckin"> 打卡 </van-button>
               </template>
             </van-field>
             <van-field :model-value="form.checkin?.time || ''" label="打卡时间" readonly />
           </van-cell-group>
           <div class="form-btn">
-            <van-button round block type="primary" native-type="submit">
-              提交
-            </van-button>
+            <van-button round block type="primary" native-type="submit"> 提交 </van-button>
           </div>
         </van-form>
 

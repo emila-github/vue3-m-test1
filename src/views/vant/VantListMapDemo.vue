@@ -101,18 +101,8 @@ const actions = [{ key: 'score', name: '查看绩效', icon: 'chart-trending-o' 
     <template #form="{ form }">
       <van-cell-group inset class="picc-card">
         <van-field v-model="form.name" label="姓名" placeholder="请输入姓名" required clearable />
-        <van-field
-          v-model="form.dept"
-          label="部门"
-          placeholder="请输入部门"
-          clearable
-        />
-        <van-field
-          v-model="form.score"
-          label="绩效分"
-          type="digit"
-          placeholder="请输入绩效分"
-        />
+        <van-field v-model="form.dept" label="部门" placeholder="请输入部门" clearable />
+        <van-field v-model="form.score" label="绩效分" type="digit" placeholder="请输入绩效分" />
         <van-field v-model="form.status" label="状态" placeholder="请输入状态" clearable />
       </van-cell-group>
     </template>

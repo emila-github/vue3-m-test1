@@ -5,7 +5,13 @@
  */
 import { ref, reactive, computed } from 'vue'
 import VantUpload from '@/components/VantUpload.vue'
-import { uploadDemoFile, uploadDemoFileAlt, type DemoUploadParams, uploadDemoIdCard, mockDemoIdCardOcr } from '@/api'
+import {
+  uploadDemoFile,
+  uploadDemoFileAlt,
+  type DemoUploadParams,
+  uploadDemoIdCard,
+  mockDemoIdCardOcr,
+} from '@/api'
 
 // ===================== 公共上传函数（各示例共用，无需在每个示例内重复）=====================
 // 模拟上传接口：延迟后返回本地预览 URL（真实项目替换为 :upload="apiUpload"）

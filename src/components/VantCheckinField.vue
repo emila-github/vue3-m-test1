@@ -111,12 +111,7 @@ function onCheckin(r: CheckinResult) {
     </template>
   </van-field>
 
-  <van-popup
-    v-model:show="show"
-    position="bottom"
-    closeable
-    :style="{ height: '100%' }"
-  >
+  <van-popup v-model:show="show" position="bottom" closeable :style="{ height: '100%' }">
     <VantCheckin
       v-if="show"
       :map-key="mapKey"
@@ -171,4 +166,3 @@ function onCheckin(r: CheckinResult) {
   }
 }
 </style>
-

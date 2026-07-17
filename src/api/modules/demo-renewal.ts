@@ -77,7 +77,14 @@ export interface DemoRenewalForm {
 // ==================== 领域选项 / 树数据 ====================
 
 /** 承保公司可选项（同时供 VantSearchField / VantSearch 联想） */
-export const DEMO_INSURERS = ['人保财险', '平安产险', '太平洋产险', '国寿财险', '中华联合', '大地保险']
+export const DEMO_INSURERS = [
+  '人保财险',
+  '平安产险',
+  '太平洋产险',
+  '国寿财险',
+  '中华联合',
+  '大地保险',
+]
 
 /** 业务渠道可选项 */
 export const DEMO_CHANNELS = ['电销', '直销', '4S 店', '代理', '网销']

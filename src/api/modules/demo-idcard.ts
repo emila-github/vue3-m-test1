@@ -98,7 +98,9 @@ export async function uploadDemoIdCard(
  * POST /demo/id-card/upload-alt
  * 返回字段：imgUrl / idNumber / userName / ...
  */
-export async function uploadDemoIdCardAlt(data: DemoIdCardUploadParams): Promise<Record<string, any>> {
+export async function uploadDemoIdCardAlt(
+  data: DemoIdCardUploadParams,
+): Promise<Record<string, any>> {
   const { post } = await import('../request')
   return post<Record<string, any>>('/demo/id-card/upload-alt', data as Record<string, any>)
 }

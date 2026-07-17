@@ -282,7 +282,6 @@ function onClear() {
   line-height: 24px;
 }
 
-
 /* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
 .vant-calendar__field :deep(.van-field__right-icon),
 .vant-calendar__field :deep(.van-cell__right-icon) {

@@ -134,9 +134,9 @@ function onClear() {
     class="vant-select"
     @click="open"
   >
-      <template v-if="showClear" #right-icon>
-        <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
-      </template>
+    <template v-if="showClear" #right-icon>
+      <van-icon name="clear" class="vant-field-clear-icon" @click.stop="onClear" />
+    </template>
   </van-field>
 
   <van-popup v-model:show="show" position="bottom" round>
