@@ -22,40 +22,40 @@ import type { CrudApi } from '@/composables/useCrudList'
 
 // ==================== 数据模型与接口（统一来自 @/api） ====================
 import {
-  type Renewal,
-  type RenewalForm,
-  type RenewalQuery,
-  CHANNELS,
-  INSURANCE_TYPE_OPTIONS,
-  STATUS_OPTIONS,
-  ORG_TREE,
-  TAG_TREE,
-  ORG_NAME,
-  DEFAULT_RENEWAL_QUERY,
-  DEFAULT_RENEWAL_FORM,
-  getRenewalList,
-  createRenewal,
-  updateRenewal,
-  deleteRenewal,
-  searchInsurers,
-  verifyApplicant,
-  uploadFile,
+  type DemoRenewal,
+  type DemoRenewalForm,
+  type DemoRenewalQuery,
+  DEMO_CHANNELS,
+  DEMO_INSURANCE_TYPE_OPTIONS,
+  DEMO_STATUS_OPTIONS,
+  DEMO_ORG_TREE,
+  DEMO_TAG_TREE,
+  DEMO_ORG_NAME,
+  DEMO_DEFAULT_RENEWAL_QUERY,
+  DEMO_DEFAULT_RENEWAL_FORM,
+  getDemoRenewalList,
+  createDemoRenewal,
+  updateDemoRenewal,
+  deleteDemoRenewal,
+  searchDemoInsurers,
+  verifyDemoApplicant,
+  uploadDemoFile,
 } from '@/api'
 
 // API 集合：直接指向真实接口函数（请求经 /api 由 mock 拦截）
-const api: CrudApi<Renewal, RenewalForm, RenewalQuery> = {
-  list: getRenewalList,
-  create: createRenewal,
-  update: updateRenewal,
-  remove: deleteRenewal,
+const api: CrudApi<DemoRenewal, DemoRenewalForm, DemoRenewalQuery> = {
+  list: getDemoRenewalList,
+  create: createDemoRenewal,
+  update: updateDemoRenewal,
+  remove: deleteDemoRenewal,
 }
 
 // 初始查询条件 / 新增表单（含全部筛选字段，reset 可复位）
-const initialQuery = DEFAULT_RENEWAL_QUERY
-const initialForm = DEFAULT_RENEWAL_FORM
+const initialQuery = DEMO_DEFAULT_RENEWAL_QUERY
+const initialForm = DEMO_DEFAULT_RENEWAL_FORM
 
 // 承保公司远程联想（VantSearchField / VantSearch 的 fetch）
-const searchInsurer = searchInsurers
+const searchInsurer = searchDemoInsurers
 
 // 自定义扩展操作：跟进记录 / 导出（导出需 car:export 权限门禁演示）
 const actions: ListAction[] = [
@@ -63,7 +63,7 @@ const actions: ListAction[] = [
   { key: 'export', name: '导出保单', icon: 'down', perm: 'car:export' },
 ]
 
-function onAction(payload: { key: string; item: Renewal }) {
+function onAction(payload: { key: string; item: DemoRenewal }) {
   if (payload.key === 'follow') showToast(`已登记跟进：${payload.item.applicant}`)
   else if (payload.key === 'export') showToast(`导出保单：${payload.item.policyNo}`)
 }
@@ -109,7 +109,7 @@ async function verifyApplicantHandler(name: string) {
   }
   verifying.value = true
   try {
-    const res = await verifyApplicant(name)
+    const res = await verifyDemoApplicant(name)
     if (res?.verified) {
       applicantVerified.value = true
       lastVerifiedApplicant.value = name
@@ -154,7 +154,7 @@ function fileToBase64(file: File): Promise<string> {
 async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
   const base64 = await fileToBase64(file)
   // 走项目标准上传：写入 src/assets/demo-upload，返回 /demo-upload/xxx 预览地址
-  return uploadFile({ fileName: file.name || 'image.png', base64, type: 'image' })
+  return uploadDemoFile({ fileName: file.name || 'image.png', base64, type: 'image' })
 }
 </script>
 
@@ -216,7 +216,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectField：保源状态 -->
         <VantSelectField
           v-model="query.status"
-          :options="STATUS_OPTIONS"
+          :options="DEMO_STATUS_OPTIONS"
           label="保源状态"
           title="选择状态"
           placeholder="请选择状态"
@@ -225,7 +225,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectField：业务渠道 -->
         <VantSelectField
           v-model="query.channel"
-          :options="CHANNELS"
+          :options="DEMO_CHANNELS"
           label="业务渠道"
           title="选择渠道"
           placeholder="请选择渠道"
@@ -235,7 +235,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectMultipleField：险种多选 -->
         <VantSelectMultipleField
           v-model="query.insuranceTypes"
-          :options="INSURANCE_TYPE_OPTIONS"
+          :options="DEMO_INSURANCE_TYPE_OPTIONS"
           label="投保险种"
           title="选择险种（多选）"
           placeholder="可多选险种"
@@ -245,7 +245,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantTreeSelectField：归属机构（级联单选） -->
         <VantTreeSelectField
           v-model="query.region"
-          :options="ORG_TREE"
+          :options="DEMO_ORG_TREE"
           label="归属机构"
           title="选择机构"
           placeholder="选择归属机构"
@@ -255,7 +255,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantTreeTagsField：业务标签（树多选打标签） -->
         <VantTreeTagsField
           v-model="query.tags"
-          :options="TAG_TREE"
+          :options="DEMO_TAG_TREE"
           label="业务标签"
           title="选择标签"
           placeholder="选择业务标签"
@@ -343,7 +343,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <span class="r-sep">|</span>
         <span>{{ item.insurer }}</span>
         <span class="r-sep">|</span>
-        <span>{{ ORG_NAME[item.region] || item.region }}</span>
+        <span>{{ DEMO_ORG_NAME[item.region] || item.region }}</span>
       </div>
       <div class="r-meta">
         <span class="r-policy">{{ item.policyNo }}</span>
@@ -404,28 +404,28 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         />
         <VantTreeSelectField
           v-model="form.region"
-          :options="ORG_TREE"
+          :options="DEMO_ORG_TREE"
           label="归属机构"
           title="选择机构"
           placeholder="选择归属机构"
         />
         <VantSelectField
           v-model="form.channel"
-          :options="CHANNELS"
+          :options="DEMO_CHANNELS"
           label="业务渠道"
           title="选择渠道"
           placeholder="请选择渠道"
         />
         <VantSelectMultipleField
           v-model="form.insuranceTypes"
-          :options="INSURANCE_TYPE_OPTIONS"
+          :options="DEMO_INSURANCE_TYPE_OPTIONS"
           label="投保险种"
           title="选择险种（多选）"
           placeholder="可多选险种"
         />
         <VantTreeTagsField
           v-model="form.tags"
-          :options="TAG_TREE"
+          :options="DEMO_TAG_TREE"
           label="业务标签"
           title="选择标签"
           placeholder="选择业务标签"
@@ -492,7 +492,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <van-cell title="车牌号" :value="item.plateNo" />
         <van-cell title="保单号" :value="item.policyNo" />
         <van-cell title="承保公司" :value="item.insurer" />
-        <van-cell title="归属机构" :value="ORG_NAME[item.region] || item.region" />
+        <van-cell title="归属机构" :value="DEMO_ORG_NAME[item.region] || item.region" />
         <van-cell title="业务渠道" :value="item.channel" />
         <van-cell title="投保险种" :value="item.insuranceTypes.join('、')" />
         <van-cell title="保费" :value="`¥${item.premium}`" />

@@ -17,39 +17,39 @@ import type { ListFilter } from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
 
 import {
-  type Customer,
-  type CustomerForm,
-  type CustomerQuery,
-  CUSTOMER_TYPES,
-  CITIES,
-  DEFAULT_CUSTOMER_QUERY,
-  DEFAULT_CUSTOMER_FORM,
-  getCustomerList,
-  createCustomer,
-  updateCustomer,
-  deleteCustomer,
+  type DemoCustomer,
+  type DemoCustomerForm,
+  type DemoCustomerQuery,
+  DEMO_CUSTOMER_TYPES,
+  DEMO_CITIES,
+  DEMO_DEFAULT_CUSTOMER_QUERY,
+  DEMO_DEFAULT_CUSTOMER_FORM,
+  getDemoCustomerList,
+  createDemoCustomer,
+  updateDemoCustomer,
+  deleteDemoCustomer,
 } from '@/api'
 
 // ==================== 数据模型与接口 ====================
 // API 集合：直接指向真实接口函数（请求经 /api 由 mock 拦截）
-const api: CrudApi<Customer, CustomerForm, CustomerQuery> = {
-  list: getCustomerList,
-  create: createCustomer,
-  update: updateCustomer,
-  remove: deleteCustomer,
+const api: CrudApi<DemoCustomer, DemoCustomerForm, DemoCustomerQuery> = {
+  list: getDemoCustomerList,
+  create: createDemoCustomer,
+  update: updateDemoCustomer,
+  remove: deleteDemoCustomer,
 }
 
 // 初始查询条件 / 新增表单（reset 可复位）
-const initialQuery = DEFAULT_CUSTOMER_QUERY
-const initialForm = DEFAULT_CUSTOMER_FORM
+const initialQuery = DEMO_DEFAULT_CUSTOMER_QUERY
+const initialForm = DEMO_DEFAULT_CUSTOMER_FORM
 
 // 不分页说明：mock 直接把 list 数组放进 data，useCrudList 检测到返回值为数组即 finished，
 // 无需传大 pageSize 占位。
 
 // 声明式筛选配置（对照 VantListDemo 的 #filters 插槽，写法更简洁）
 const filters: ListFilter[] = [
-  { key: 'type', label: '客户类型', type: 'select', options: CUSTOMER_TYPES },
-  { key: 'city', label: '城市', type: 'select', options: CITIES },
+  { key: 'type', label: '客户类型', type: 'select', options: DEMO_CUSTOMER_TYPES },
+  { key: 'city', label: '城市', type: 'select', options: DEMO_CITIES },
   { key: 'levelMin', label: '客户等级≥', type: 'number', min: 0, max: 5, placeholder: '如 3' },
 ]
 
@@ -57,7 +57,7 @@ function typeColor(type: string) {
   return type === 'VIP' ? '#d71920' : type === '会员' ? '#07c160' : '#969799'
 }
 
-function onAction(payload: { key: string; item: Customer }) {
+function onAction(payload: { key: string; item: DemoCustomer }) {
   if (payload.key === 'call') showToast(`呼叫 ${payload.item.name}：${payload.item.phone}`)
 }
 
@@ -128,7 +128,7 @@ const actions = [{ key: 'call', name: '拨打电话', icon: 'phone-o' }]
         <!-- 城市：自定义下拉组件 VantSelectField（演示表单内组件接入） -->
         <VantSelectField
           v-model="form.city"
-          :options="CITIES.filter((c) => c.value)"
+          :options="DEMO_CITIES.filter((c) => c.value)"
           label="城市"
           title="选择城市"
           placeholder="请选择城市"

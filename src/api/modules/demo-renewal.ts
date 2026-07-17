@@ -4,6 +4,7 @@
  * 主题：车险续保保源（Renewal）的查询 / 新增 / 编辑 / 删除 / 详情 / 承保公司联想
  * 请求经 /api 前缀由 src/mock/demo-renewal.ts 拦截，无需真实后端。
  * 路径统一加 /demo 前缀，避免与正式项目接口冲突。
+ * 导出名统一加 Demo 前缀，避免与正式环境的接口冲突。
  */
 import { get, post, put, del } from '../request'
 import type { PageParams, PageResult } from '../types'
@@ -11,7 +12,7 @@ import type { PageParams, PageResult } from '../types'
 // ==================== 数据模型 ====================
 
 /** 保源（车险续保保源）列表项 */
-export interface Renewal {
+export interface DemoRenewal {
   id: number
   policyNo: string // 保单号
   applicant: string // 投保人
@@ -33,7 +34,7 @@ export interface Renewal {
 }
 
 /** 列表查询条件（与 VantList #filters 插槽字段一一对应） */
-export interface RenewalQuery {
+export interface DemoRenewalQuery {
   keyword?: string // 投保人 / 车牌 / 保单号 模糊
   policyNo?: string // 保单号模糊
   status?: string // 保源状态
@@ -55,7 +56,7 @@ export interface RenewalQuery {
 }
 
 /** 新增 / 编辑 表单 */
-export interface RenewalForm {
+export interface DemoRenewalForm {
   id?: number
   policyNo: string
   applicant: string
@@ -76,13 +77,13 @@ export interface RenewalForm {
 // ==================== 领域选项 / 树数据 ====================
 
 /** 承保公司可选项（同时供 VantSearchField / VantSearch 联想） */
-export const INSURERS = ['人保财险', '平安产险', '太平洋产险', '国寿财险', '中华联合', '大地保险']
+export const DEMO_INSURERS = ['人保财险', '平安产险', '太平洋产险', '国寿财险', '中华联合', '大地保险']
 
 /** 业务渠道可选项 */
-export const CHANNELS = ['电销', '直销', '4S 店', '代理', '网销']
+export const DEMO_CHANNELS = ['电销', '直销', '4S 店', '代理', '网销']
 
 /** 险种可选项（VantSelectMultipleField） */
-export const INSURANCE_TYPE_OPTIONS = [
+export const DEMO_INSURANCE_TYPE_OPTIONS = [
   { text: '交强险', value: '交强险' },
   { text: '车损险', value: '车损险' },
   { text: '第三者责任险', value: '三者险' },
@@ -92,7 +93,7 @@ export const INSURANCE_TYPE_OPTIONS = [
 ]
 
 /** 保源状态可选项（首条 value='' 表示全部，仅供查询使用） */
-export const STATUS_OPTIONS = [
+export const DEMO_STATUS_OPTIONS = [
   { text: '全部状态', value: '' },
   { text: '待跟进', value: '待跟进' },
   { text: '已联系', value: '已联系' },
@@ -101,7 +102,7 @@ export const STATUS_OPTIONS = [
 ]
 
 /** 归属机构树（VantTreeSelectField，value 为叶子节点） */
-export const ORG_TREE = [
+export const DEMO_ORG_TREE = [
   {
     text: '浙江分公司',
     value: 'zj',
@@ -122,7 +123,7 @@ export const ORG_TREE = [
 ]
 
 /** 业务标签树（VantTreeTagsField） */
-export const TAG_TREE = [
+export const DEMO_TAG_TREE = [
   {
     text: '客户价值',
     value: 'v',
@@ -142,7 +143,7 @@ export const TAG_TREE = [
 ]
 
 /** 机构 value → 中文名（列表 / 详情回显） */
-export const ORG_NAME: Record<string, string> = {
+export const DEMO_ORG_NAME: Record<string, string> = {
   'zj-hz': '杭州',
   'zj-nb': '宁波',
   'zj-wz': '温州',
@@ -151,7 +152,7 @@ export const ORG_NAME: Record<string, string> = {
 }
 
 /** 初始查询条件（reset 可复位，含全部筛选字段） */
-export const DEFAULT_RENEWAL_QUERY: RenewalQuery = {
+export const DEMO_DEFAULT_RENEWAL_QUERY: DemoRenewalQuery = {
   keyword: '',
   policyNo: '',
   status: '',
@@ -171,7 +172,7 @@ export const DEFAULT_RENEWAL_QUERY: RenewalQuery = {
 }
 
 /** 新增表单初始值 */
-export const DEFAULT_RENEWAL_FORM: RenewalForm = {
+export const DEMO_DEFAULT_RENEWAL_FORM: DemoRenewalForm = {
   applicant: '',
   plateNo: '',
   policyNo: '',
@@ -191,32 +192,32 @@ export const DEFAULT_RENEWAL_FORM: RenewalForm = {
 // ==================== API 函数 ====================
 
 /** 保源列表查询（分页 + 多条件过滤） */
-export function getRenewalList(params: RenewalQuery & PageParams) {
-  return get<PageResult<Renewal>>('/demo/renewal/list', params as Record<string, any>)
+export function getDemoRenewalList(params: DemoRenewalQuery & PageParams) {
+  return get<PageResult<DemoRenewal>>('/demo/renewal/list', params as Record<string, any>)
 }
 
 /** 保源详情 */
-export function getRenewalDetail(id: number) {
-  return get<Renewal>('/demo/renewal', { id } as Record<string, any>)
+export function getDemoRenewalDetail(id: number) {
+  return get<DemoRenewal>('/demo/renewal', { id } as Record<string, any>)
 }
 
 /** 新增保源 */
-export function createRenewal(data: RenewalForm) {
-  return post<Renewal>('/demo/renewal', data as Record<string, any>)
+export function createDemoRenewal(data: DemoRenewalForm) {
+  return post<DemoRenewal>('/demo/renewal', data as Record<string, any>)
 }
 
 /** 编辑保源（表单自带 id） */
-export function updateRenewal(data: RenewalForm) {
-  return put<Renewal>('/demo/renewal', data as Record<string, any>)
+export function updateDemoRenewal(data: DemoRenewalForm) {
+  return put<DemoRenewal>('/demo/renewal', data as Record<string, any>)
 }
 
 /** 删除保源 */
-export function deleteRenewal(id: number) {
+export function deleteDemoRenewal(id: number) {
   return del<void>('/demo/renewal', { id } as Record<string, any>)
 }
 
 /** 承保公司远程联想（VantSearchField / VantSearch 的 fetch） */
-export function searchInsurers(keyword: string) {
+export function searchDemoInsurers(keyword: string) {
   return get<Array<{ text: string; value: string }>>('/demo/renewal/insurers', {
     keyword,
   } as Record<string, any>)
@@ -226,7 +227,7 @@ export function searchInsurers(keyword: string) {
  * 投保人核验：提交前校验投保人是否已建档（演示「投保人验证」门禁）。
  * 返回 { verified, applicant? }；未建档时 verified=false，需先确认姓名或新建客户。
  */
-export function verifyApplicant(name: string) {
+export function verifyDemoApplicant(name: string) {
   return get<{ verified: boolean; applicant?: string }>('/demo/renewal/verify-applicant', {
     name,
   } as Record<string, any>)

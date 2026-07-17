@@ -4,6 +4,7 @@
  * 主题：客户名单的查询 / 新增 / 编辑 / 删除 / 详情。
  * 请求经 /api 前缀由 src/mock/demo-customer.ts 拦截（内存 Mock，无需真实后端）。
  * 列表接口「不分页」，前端通过足够大的 pageSize 让 VantList 在首次加载后 finished。
+ * 导出名统一加 Demo 前缀，避免与正式环境的接口冲突。
  */
 import { get, post, put, del } from '../request'
 import type { PageParams } from '../types'
@@ -11,7 +12,7 @@ import type { PageParams } from '../types'
 // ==================== 数据模型 ====================
 
 /** 客户列表项 */
-export interface Customer {
+export interface DemoCustomer {
   id: number
   name: string // 姓名
   phone: string // 电话
@@ -24,7 +25,7 @@ export interface Customer {
 }
 
 /** 列表查询条件 */
-export interface CustomerQuery {
+export interface DemoCustomerQuery {
   keyword?: string // 姓名 / 电话 / 公司 模糊
   type?: string // 客户类型
   city?: string // 城市
@@ -34,7 +35,7 @@ export interface CustomerQuery {
 }
 
 /** 新增 / 编辑 表单 */
-export interface CustomerForm {
+export interface DemoCustomerForm {
   id?: number
   name: string
   phone: string
@@ -48,7 +49,7 @@ export interface CustomerForm {
 
 // ==================== 领域选项 ====================
 /** 客户类型可选项（首条 value='' 表示全部，仅供查询使用） */
-export const CUSTOMER_TYPES = [
+export const DEMO_CUSTOMER_TYPES = [
   { text: '全部类型', value: '' },
   { text: '普通客户', value: '普通' },
   { text: '会员客户', value: '会员' },
@@ -56,7 +57,7 @@ export const CUSTOMER_TYPES = [
 ]
 
 /** 城市可选项 */
-export const CITIES = [
+export const DEMO_CITIES = [
   { text: '全部城市', value: '' },
   { text: '杭州', value: '杭州' },
   { text: '宁波', value: '宁波' },
@@ -66,7 +67,7 @@ export const CITIES = [
 ]
 
 /** 初始查询条件（reset 可复位） */
-export const DEFAULT_CUSTOMER_QUERY: CustomerQuery = {
+export const DEMO_DEFAULT_CUSTOMER_QUERY: DemoCustomerQuery = {
   keyword: '',
   type: '',
   city: '',
@@ -74,7 +75,7 @@ export const DEFAULT_CUSTOMER_QUERY: CustomerQuery = {
 }
 
 /** 新增表单初始值 */
-export const DEFAULT_CUSTOMER_FORM: CustomerForm = {
+export const DEMO_DEFAULT_CUSTOMER_FORM: DemoCustomerForm = {
   name: '',
   phone: '',
   company: '',
@@ -88,26 +89,26 @@ export const DEFAULT_CUSTOMER_FORM: CustomerForm = {
 // ==================== API 函数 ====================
 
 /** 客户列表查询（不分页：mock 直接把 list 数组放进 data 返回，无需分页结构） */
-export function getCustomerList(params: CustomerQuery & PageParams) {
-  return get<Customer[]>('/demo/customer/list', params as Record<string, any>)
+export function getDemoCustomerList(params: DemoCustomerQuery & PageParams) {
+  return get<DemoCustomer[]>('/demo/customer/list', params as Record<string, any>)
 }
 
 /** 客户详情 */
-export function getCustomerDetail(id: number) {
-  return get<Customer>('/demo/customer', { id } as Record<string, any>)
+export function getDemoCustomerDetail(id: number) {
+  return get<DemoCustomer>('/demo/customer', { id } as Record<string, any>)
 }
 
 /** 新增客户 */
-export function createCustomer(data: CustomerForm) {
-  return post<Customer>('/demo/customer', data as Record<string, any>)
+export function createDemoCustomer(data: DemoCustomerForm) {
+  return post<DemoCustomer>('/demo/customer', data as Record<string, any>)
 }
 
 /** 编辑客户（表单自带 id） */
-export function updateCustomer(data: CustomerForm) {
-  return put<Customer>('/demo/customer', data as Record<string, any>)
+export function updateDemoCustomer(data: DemoCustomerForm) {
+  return put<DemoCustomer>('/demo/customer', data as Record<string, any>)
 }
 
 /** 删除客户 */
-export function deleteCustomer(id: number) {
+export function deleteDemoCustomer(id: number) {
   return del<void>('/demo/customer', { id } as Record<string, any>)
 }

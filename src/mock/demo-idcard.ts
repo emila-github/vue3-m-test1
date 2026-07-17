@@ -14,7 +14,7 @@
 import type { MockRoute } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
-import { mockIdCardOcr } from '../api/modules/demo-idcard'
+import { mockDemoIdCardOcr } from '../api/modules/demo-idcard'
 
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
 
@@ -82,7 +82,7 @@ const routes: MockRoute[] = [
       // 合并接口一步到位：一次返回图片 url + 全部识别字段
       const side = body.side === 'back' ? 'back' : body.side === 'front' ? 'front' : null
       const data = side
-        ? { ...mockIdCardOcr(side), url: fileUrl }
+        ? { ...mockDemoIdCardOcr(side), url: fileUrl }
         : { url: fileUrl, ocrStatus: 'success' }
       return { code: 200, data, message: '识别成功' }
     },

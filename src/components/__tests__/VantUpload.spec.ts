@@ -11,7 +11,7 @@ vi.mock('vant', () => ({
 import { showImagePreview } from 'vant'
 
 import VantUpload from '../VantUpload.vue'
-import { mockIdCardUploadResponse } from '@/api'
+import { mockDemoIdCardUploadResponse } from '@/api'
 
 /** van 组件桩：van-uploader 需渲染 default 插槽（身份证卡片在其内部） */
 const vantStubs = {
@@ -891,7 +891,7 @@ describe('compact 预览与占位同尺寸（防上传后换行 / 抖动）', ()
 
 describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
   it('人像面：response-path=data + ocrField=certNo → 回填证件号并 emit ocr（含完整响应）', async () => {
-    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const upload = vi.fn(async () => mockDemoIdCardUploadResponse('front', 'http://x/f.png'))
     const wrapper = shallow({
       type: 'idcard',
       variant: 'front',
@@ -913,7 +913,7 @@ describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
   })
 
   it('国徽面：ocrField=validPeriod → 回填有效期', async () => {
-    const upload = vi.fn(async () => mockIdCardUploadResponse('back', 'http://x/b.png'))
+    const upload = vi.fn(async () => mockDemoIdCardUploadResponse('back', 'http://x/b.png'))
     const wrapper = shallow({
       type: 'idcard',
       variant: 'back',
@@ -946,7 +946,7 @@ describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
   })
 
   it('未配置 ocrField → 不 emit ocr / update:ocr', async () => {
-    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const upload = vi.fn(async () => mockDemoIdCardUploadResponse('front', 'http://x/f.png'))
     const wrapper = shallow({ type: 'idcard', variant: 'front', responsePath: 'data', upload })
     const item: any = { file: file('f.png', 100), status: 'uploading' }
     ;(wrapper.vm as any).afterRead([item])
@@ -956,7 +956,7 @@ describe('OCR 识别信息回填（ocrField / v-model:ocr / @ocr）', () => {
   })
 
   it('删除已上传文件 → 清空 OCR 回填（update:ocr 回写为空串）', async () => {
-    const upload = vi.fn(async () => mockIdCardUploadResponse('front', 'http://x/f.png'))
+    const upload = vi.fn(async () => mockDemoIdCardUploadResponse('front', 'http://x/f.png'))
     const wrapper = shallow({
       type: 'idcard',
       variant: 'front',

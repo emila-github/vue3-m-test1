@@ -34,12 +34,12 @@ import VantCheckinField from '../../components/VantCheckinField.vue'
 import VantUpload from '../../components/VantUpload.vue'
 import type { CheckinResult } from '../../components/VantCheckin.vue'
 import {
-  getClaimDetail,
-  createClaim,
-  updateClaim,
-  uploadFile,
-  type Claim,
-  type UploadParams,
+  getDemoClaimDetail,
+  createDemoClaim,
+  updateDemoClaim,
+  uploadDemoFile,
+  type DemoClaim,
+  type DemoUploadParams,
 } from '../../api'
 
 const tmapKey = ref(import.meta.env.VITE_TMAP_KEY || '')
@@ -75,10 +75,10 @@ function fileToBase64(file: File): Promise<string> {
  *   选图 → 读 base64 → 调用后端 demo-upload.ts 上传接口 → 返回拼接本地根目录后的预览地址。
  * VantUpload 会把返回的 url 既作为预览图地址、也作为回写值（modelValue）。
  */
-function makeUploader(type: UploadParams['type'] = 'image') {
+function makeUploader(type: DemoUploadParams['type'] = 'image') {
   return async (file: File): Promise<Record<string, any>> => {
     const base64 = await fileToBase64(file)
-    const res = await uploadFile({ fileName: file.name, base64, type })
+    const res = await uploadDemoFile({ fileName: file.name, base64, type })
     return { ...res, url: resolveAssetUrl(res.url) }
   }
 }
@@ -232,7 +232,7 @@ async function loadEdit() {
   loading.value = true
   showLoadingToast({ message: '加载中...', forbidClick: true, duration: 0 })
   try {
-    const detail = await getClaimDetail(1)
+    const detail = await getDemoClaimDetail(1)
     // 后端返回字段与表单模型一一对应，逐项回填（checkin 为定位打卡结构）
     Object.assign(form, {
       ...blankForm(),
@@ -270,12 +270,12 @@ async function onSubmit() {
   submitting.value = true
   showLoadingToast({ message: '提交中...', forbidClick: true, duration: 0 })
   try {
-    const payload = JSON.parse(JSON.stringify(form)) as Claim
-    let res: Claim
+    const payload = JSON.parse(JSON.stringify(form)) as DemoClaim
+    let res: DemoClaim
     if (mode.value === 'edit' && editId.value != null) {
-      res = await updateClaim({ ...payload, id: editId.value })
+      res = await updateDemoClaim({ ...payload, id: editId.value })
     } else {
-      res = await createClaim(payload)
+      res = await createDemoClaim(payload)
     }
     // 提交成功后切换为编辑态并记录后端返回的 id（便于后续再次提交走更新）
     editId.value = res.id ?? editId.value

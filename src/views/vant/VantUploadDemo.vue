@@ -5,7 +5,7 @@
  */
 import { ref, reactive, computed } from 'vue'
 import VantUpload from '@/components/VantUpload.vue'
-import { uploadFile, uploadFileAlt, type UploadParams, idCardUpload, mockIdCardOcr } from '@/api'
+import { uploadDemoFile, uploadDemoFileAlt, type DemoUploadParams, uploadDemoIdCard, mockDemoIdCardOcr } from '@/api'
 
 // ===================== 公共上传函数（各示例共用，无需在每个示例内重复）=====================
 // 模拟上传接口：延迟后返回本地预览 URL（真实项目替换为 :upload="apiUpload"）
@@ -25,14 +25,14 @@ function fileToBase64(file: File): Promise<string> {
   })
 }
 
-// 其余示例：统一调用 demo-upload.ts 的 uploadFile，
+// 其余示例：统一调用 demo-upload.ts 的 uploadDemoFile，
 // 由 mock 把文件写入 src/assets/demo-upload 并返回 /demo-upload/xxx 预览地址
 async function diskUpload(
   file: File,
-  type: UploadParams['type'] = 'file',
+  type: DemoUploadParams['type'] = 'file',
 ): Promise<{ url: string; fileName: string; base64: string }> {
   const base64 = await fileToBase64(file)
-  return uploadFile({ fileName: file.name || 'file', base64, type })
+  return uploadDemoFile({ fileName: file.name || 'file', base64, type })
 }
 
 // 各场景绑定具体 type（多个示例共用，集中定义）
@@ -45,7 +45,7 @@ const uploadImg = (file: File) => diskUpload(file, 'image')
 // 响应返回 imgUrl / fileId，由组件 fieldMap 映射到 url / value
 async function uploadAlt(file: File): Promise<Record<string, any>> {
   const base64 = await fileToBase64(file)
-  return uploadFileAlt({ name: file.name || 'file', fileData: base64 })
+  return uploadDemoFileAlt({ name: file.name || 'file', fileData: base64 })
 }
 // 其它文件类型：通过 diskUpload 的 kind 路由到不同的 mock 落盘接口
 const uploadExcelFile = (file: File) => diskUpload(file, 'excel')
@@ -56,7 +56,7 @@ const uploadAny = (file: File) => diskUpload(file, 'file')
 // 通过 responsePath="data.result" 定位结果对象，再用 fieldMap 适配字段名
 async function uploadNested(file: File): Promise<Record<string, any>> {
   const base64 = await fileToBase64(file)
-  const res = await uploadFileAlt({ name: file.name || 'file', fileData: base64 })
+  const res = await uploadDemoFileAlt({ name: file.name || 'file', fileData: base64 })
   return { code: 200, data: { result: res } }
 }
 
@@ -165,7 +165,7 @@ function onSubmit(values: Record<string, any>) {
 // 由组件 ocrField 提取对应字段回填；@success 透传完整响应供其它处理
 async function uploadIdCardOcr(file: File, side: 'front' | 'back') {
   const base64 = await fileToBase64(file)
-  return idCardUpload({ fileName: file.name || 'idcard', base64, side })
+  return uploadDemoIdCard({ fileName: file.name || 'idcard', base64, side })
 }
 const uploadIdCardFrontOcr = (file: File) => uploadIdCardOcr(file, 'front')
 const uploadIdCardBackOcr = (file: File) => uploadIdCardOcr(file, 'back')
@@ -222,10 +222,10 @@ function resetOcrForm() {
   ocrFormSubmitLog.value = ''
 }
 
-// ===================== ⑳ 统一身份证模拟数据（mockIdCardOcr）=====================
+// ===================== ⑳ 统一身份证模拟数据（mockDemoIdCardOcr）=====================
 // 统一身份证模拟数据（前端安全，供单测 / 预填 / 离线演示，结构与后端一致）
-const idCardMockFront = mockIdCardOcr('front')
-const idCardMockBack = mockIdCardOcr('back')
+const idCardMockFront = mockDemoIdCardOcr('front')
+const idCardMockBack = mockDemoIdCardOcr('back')
 </script>
 
 <template>
@@ -800,15 +800,15 @@ const idCardMockBack = mockIdCardOcr('back')
       </p>
     </div>
 
-    <!-- ⑳ 统一身份证模拟数据（mockIdCardOcr）-->
+    <!-- ⑳ 统一身份证模拟数据（mockDemoIdCardOcr）-->
     <div class="card">
-      <div class="section-title">⑳ 统一身份证模拟数据（mockIdCardOcr）</div>
+      <div class="section-title">⑳ 统一身份证模拟数据（mockDemoIdCardOcr）</div>
       <p class="hint">
         <code>src/api/modules/demo-idcard.ts</code> 提供<b>前端安全</b>的统一身份证 OCR
-        模拟数据生成器 <code>mockIdCardOcr(side)</code>，返回与后端一致字段（正面
+        模拟数据生成器 <code>mockDemoIdCardOcr(side)</code>，返回与后端一致字段（正面
         certNo/name/address/birth/gender/nation，反面 issueOrg/validPeriod），
         可用于单测预填、本地联调或离线演示，无需依赖 mock 服务；另提供
-        <code>mockIdCardUploadResponse(side, url)</code> 生成含图片地址的完整合并接口响应。
+        <code>mockDemoIdCardUploadResponse(side, url)</code> 生成含图片地址的完整合并接口响应。
       </p>
       <pre class="mock-pre">front = {{ JSON.stringify(idCardMockFront, null, 2) }}</pre>
       <pre class="mock-pre">back = {{ JSON.stringify(idCardMockBack, null, 2) }}</pre>
@@ -852,7 +852,7 @@ const idCardMockBack = mockIdCardOcr('back')
       <div class="usage-subtitle">二、上传函数与后端适配</div>
       <p class="hint">
         · 头像（场景②）保留 <code>mockUpload</code> 本地 ObjectURL 预览方式；
-        其余示例均改为「落盘」上传（<code>diskUpload → uploadFile</code> → mock 写入
+        其余示例均改为「落盘」上传（<code>diskUpload → uploadDemoFile</code> → mock 写入
         <code>src/assets/demo-upload</code> 并返回 <code>/demo-upload/xxx</code> 地址）。 不传
         <code>:upload</code> 时组件回退为本地 blob 预览。
       </p>

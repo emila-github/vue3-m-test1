@@ -15,29 +15,29 @@ import type { ListFilter } from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
 
 import {
-  type MapItem,
-  type MapForm,
-  type MapQuery,
-  MAP_DEPTS,
-  MAP_STATUS,
-  DEFAULT_MAP_QUERY,
-  DEFAULT_MAP_FORM,
-  getMapList,
-  createMap,
-  updateMap,
-  deleteMap,
+  type DemoMapItem,
+  type DemoMapForm,
+  type DemoMapQuery,
+  DEMO_MAP_DEPTS,
+  DEMO_MAP_STATUS,
+  DEMO_DEFAULT_MAP_QUERY,
+  DEMO_DEFAULT_MAP_FORM,
+  getDemoMapList,
+  createDemoMap,
+  updateDemoMap,
+  deleteDemoMap,
 } from '@/api'
 
 // ==================== 数据模型与接口 ====================
-const api: CrudApi<MapItem, MapForm, MapQuery> = {
-  list: getMapList,
-  create: createMap,
-  update: updateMap,
-  remove: deleteMap,
+const api: CrudApi<DemoMapItem, DemoMapForm, DemoMapQuery> = {
+  list: getDemoMapList,
+  create: createDemoMap,
+  update: updateDemoMap,
+  remove: deleteDemoMap,
 }
 
-const initialQuery = DEFAULT_MAP_QUERY
-const initialForm = DEFAULT_MAP_FORM
+const initialQuery = DEMO_DEFAULT_MAP_QUERY
+const initialForm = DEMO_DEFAULT_MAP_FORM
 
 // ==================== 字段映射（对接异构后端） ====================
 // 请求参数映射：页码 → current，每页大小 → size
@@ -47,15 +47,15 @@ const responseMap = { list: 'records', total: 'totalCount', page: 'currPage', pa
 
 // ==================== 声明式筛选 ====================
 const filters: ListFilter[] = [
-  { key: 'dept', label: '部门', type: 'select', options: MAP_DEPTS },
-  { key: 'status', label: '状态', type: 'select', options: MAP_STATUS },
+  { key: 'dept', label: '部门', type: 'select', options: DEMO_MAP_DEPTS },
+  { key: 'status', label: '状态', type: 'select', options: DEMO_MAP_STATUS },
 ]
 
 function statusColor(status: string) {
   return status === '在职' ? '#07c160' : status === '试用期' ? '#1989fa' : '#969799'
 }
 
-function onAction(payload: { key: string; item: MapItem }) {
+function onAction(payload: { key: string; item: DemoMapItem }) {
   if (payload.key === 'score') showToast(`${payload.item.name} 绩效分：${payload.item.score}`)
 }
 
