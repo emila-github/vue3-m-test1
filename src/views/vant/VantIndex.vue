@@ -6,6 +6,14 @@ const router = useRouter()
 
 const stages = ref([
   {
+    id: 'insurance-icon',
+    title: '保险行业图标 InsuranceIcon',
+    desc: '仿 PICC 截图险种解读/查保单两行的白底圆角+红色线形业务图标，含 10 个保险场景图标',
+    path: '/vant/vant-ins-icon-demo',
+    icon: '🛡️',
+    color: '#d71920',
+  },
+  {
     id: 'permission',
     title: '权限指令 v-permission 家族',
     desc: 'v-permission / v-permission-all / v-permission-none 三种全局指令，配合角色切换实时显隐',
@@ -133,6 +141,14 @@ const stages = ref([
     icon: '🧭',
     color: '#00a078',
   },
+  {
+    id: 'login',
+    title: '可配置登录组件 VantLogin',
+    desc: '验证码/密码/微信/企业微信四种登录方式，可配置启用项与默认方式，默认企业微信登录',
+    path: '/vant/vant-login-demo',
+    icon: '🔑',
+    color: '#d71920',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -173,7 +189,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 16 个）</h2>
+      <h2>组件演示（共 18 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

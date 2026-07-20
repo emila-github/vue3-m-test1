@@ -4,27 +4,69 @@ import { createRouter, createWebHistory } from 'vue-router'
 // 手写路由与约定式路由可并存，最终用 [...manualRoutes, ...routes] 合并即可。
 import { routes, handleHotUpdate } from 'vue-router/auto-routes'
 
-import HomeView from '../views/HomeView.vue'
-
 // ==================== 手写路由（业务页接入方式） ====================
 const manualRoutes = [
+  // ====== 模块总入口：业务模块选择菜单（首页）======
   {
     path: '/',
-    name: 'home',
-    component: HomeView,
+    name: 'modules',
+    component: () => import('../views/HomeView.vue'),
+    meta: { title: '业务模块' },
+  },
+  // ====== vant 模块：底部 tabbar（首页 / 我的）包裹 vant 子目录页 ======
+  {
+    path: '/vant',
+    component: () => import('../views/vant/MainLayout.vue'),
+    children: [
+      { path: '', name: 'vant-home', component: () => import('../views/vant/HomeView.vue') },
+      {
+        path: 'mine',
+        name: 'vant-mine',
+        component: () => import('../views/vant/MineView.vue'),
+        meta: { title: '我的' },
+      },
+      // Vant 组件演示入口（在 tabbar 框架内展示）
+      {
+        path: 'index',
+        name: 'vant-index',
+        component: () => import('../views/vant/VantIndex.vue'),
+        meta: { title: 'Vant 移动端' },
+      },
+    ],
+  },
+  // ====== ydl 模块：子目录模块示例（学幼专区）======
+  {
+    path: '/ydl',
+    component: () => import('../views/ydl/MainLayout.vue'),
+    children: [
+      { path: '', name: 'ydl-home', component: () => import('../views/ydl/HomeView.vue') },
+      {
+        path: 'mine',
+        name: 'ydl-mine',
+        component: () => import('../views/ydl/MineView.vue'),
+        meta: { title: '我的' },
+      },
+    ],
+  },
+  // ====== ydl 模块：我的保源列表页（VantList）======
+  {
+    path: '/ydl/my-insurance-source',
+    name: 'ydl-my-insurance-source',
+    component: () => import('../views/ydl/MyInsuranceSource.vue'),
+    meta: { title: '我的保源' },
+  },
+  // ====== ydl 模块：VantList 综合示例（ydl 数据格式）======
+  {
+    path: '/ydl/ydl-list-demo',
+    name: 'ydl-list-demo',
+    component: () => import('../views/ydl/YdlListDemo.vue'),
+    meta: { title: 'VantList 示例（ydl）' },
   },
   {
     path: '/about',
     name: 'about',
     // route level code-splitting
     component: () => import('../views/AboutView.vue'),
-  },
-  // ====== Vant 移动端示例（演示业务页如何挂到路由，挂在 /vant 下，不占用首页） ======
-  {
-    path: '/vant',
-    name: 'vant-index',
-    component: () => import('../views/vant/VantIndex.vue'),
-    meta: { title: 'Vant 移动端' },
   },
   {
     path: '/vant/vant-select-field-demo',
@@ -121,6 +163,18 @@ const manualRoutes = [
     name: 'vant-insurance-form-demo',
     component: () => import('../views/vant/VantInsuranceFormDemo.vue'),
     meta: { title: '保险报案表单' },
+  },
+  {
+    path: '/vant/vant-login-demo',
+    name: 'vant-login-demo',
+    component: () => import('../views/vant/VantLoginDemo.vue'),
+    meta: { title: 'VantLogin 登录' },
+  },
+  {
+    path: '/vant/vant-ins-icon-demo',
+    name: 'vant-ins-icon-demo',
+    component: () => import('../views/vant/VantInsIconDemo.vue'),
+    meta: { title: '保险行业图标' },
   },
 ]
 

@@ -19,6 +19,9 @@ import demoIdcardRoutes from './demo-idcard'
 import demoClaimRoutes from './demo-claim'
 import demoCustomerRoutes from './demo-customer'
 import demoMapRoutes from './demo-map'
+import loginRoutes from './login'
+import ydlInsSourceRoutes from './ydl-ins-source'
+import ydlRenewalRoutes from './ydl-renewal'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -41,6 +44,9 @@ const allRoutes: MockRoute[] = [
   ...demoClaimRoutes,
   ...demoCustomerRoutes,
   ...demoMapRoutes,
+  ...loginRoutes,
+  ...ydlInsSourceRoutes,
+  ...ydlRenewalRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
@@ -66,7 +72,13 @@ async function handleMock(req: IncomingMessage, res: ServerResponse): Promise<bo
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
 
   const data = typeof route.response === 'function' ? await route.response(req) : route.response
-  res.end(JSON.stringify(data))
+  // 支持返回原始 HTML（用于 OAuth 回调页，向 opener 回传授权结果）
+  if (data && typeof data === 'object' && !Array.isArray(data) && (data as any).__html !== undefined) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.end((data as any).__html)
+  } else {
+    res.end(JSON.stringify(data))
+  }
   return true
 }
 
@@ -111,6 +123,22 @@ export function mockPlugin(): Plugin {
             console.log('[mock] ✅ 已拦截 %s %s', req.method, req.url)
           } else {
             console.log('[mock] ❌ 未匹配 %s %s，放行', req.method, req.url)
+            next()
+          }
+        } catch {
+          next()
+        }
+      })
+
+      // ===== ydl 模块（JeecgBoot 风格）：对应 ydlClient 的 baseURL /ydl-api =====
+      server.middlewares.use('/ydl-api', async (req, res, next) => {
+        try {
+          console.log('[mock] 收到请求(ydl): %s %s', req.method, req.url)
+          const matched = await handleMock(req, res)
+          if (matched) {
+            console.log('[mock] ✅ 已拦截(ydl) %s %s', req.method, req.url)
+          } else {
+            console.log('[mock] ❌ 未匹配(ydl) %s %s，放行', req.method, req.url)
             next()
           }
         } catch {

@@ -2,6 +2,9 @@ import './assets/main.css'
 import { initSkin } from './composables/usePiccSkin'
 
 import './styles/vant-picc.css'
+// 函数式组件（showToast/showLoadingToast 等）基于 Popup 渲染，其定位/居中样式不会由
+// 模板 <van-*> 的按需机制自动带入；这里显式引入，确保任意页面的 toast 都能正常显示与居中。
+import 'vant/es/toast/style'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
