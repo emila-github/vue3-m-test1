@@ -45,7 +45,7 @@
  *     })"
  *   />
  */
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCrudList } from '@/composables/useCrudList'
 import type { CrudApi, CrudAction } from '@/composables/useCrudList'
@@ -88,6 +88,14 @@ const props = withDefaults(
     keywordKey?: string
     showSearch?: boolean
     showAdd?: boolean
+    /** 悬浮「新增」按钮文案，默认 '新增' */
+    addText?: string
+    /** 行内「删除」按钮文案，默认 '删除' */
+    deleteText?: string
+    /** 行内「详情」按钮文案，默认 '详情' */
+    detailText?: string
+    /** 行内「编辑」按钮文案，默认 '编辑' */
+    editText?: string
     enableLog?: boolean
     pageSize?: number
     initialQuery?: Record<string, any>
@@ -136,6 +144,10 @@ const props = withDefaults(
     keywordKey: 'keyword',
     showSearch: true,
     showAdd: true,
+    addText: '新增',
+    deleteText: '删除',
+    detailText: '详情',
+    editText: '编辑',
     enableLog: false,
     pageSize: 10,
     initialQuery: () => ({}),
@@ -158,6 +170,8 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
+// 插槽信息（script 中判断 #form 是否存在）
+const slots = useSlots()
 
 // ==================== 复用通用 CRUD Hook ====================
 const crud = useCrudList<any, any, any>({
@@ -270,9 +284,9 @@ const showActionSheet = ref(false)
 const sheetItem = ref<any>(null)
 const sheetActions = computed(() => {
   const base = [
-    { name: '查看详情', value: 'view', perm: permCodes.value.view, icon: 'eye-o' },
-    { name: '编辑', value: 'edit', perm: permCodes.value.edit, icon: 'edit' },
-    { name: '删除', value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' },
+    { name: props.detailText, value: 'view', perm: permCodes.value.view, icon: 'eye-o' },
+    { name: props.editText, value: 'edit', perm: permCodes.value.edit, icon: 'edit' },
+    { name: props.deleteText, value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' },
   ].filter((a) => hasPerm(a.perm))
   const custom = props.actions
     .filter((a) => !a.perm || hasPerm(a.perm))
@@ -288,11 +302,14 @@ const showMore = computed(() => sheetActions.value.length > 0)
 
 function onCreate() {
   emit('create')
-  openCreate()
+  // 仅当提供 #form 槽（内部表单可用）时才打开内部新增弹层；
+  // 否则交由父组件通过 @create 自行打开自定义弹层，避免弹出空表单。
+  if (slots.form) openCreate()
 }
 function onEdit(item: any) {
   emit('edit', item)
-  openEdit(item)
+  // 同上：无 #form 槽时不打开内部编辑弹层，交给父组件 @edit 处理。
+  if (slots.form) openEdit(item)
 }
 function onDetail(item: any) {
   emit('detail', item)
@@ -362,6 +379,15 @@ function scrollToFirstError() {
     formEl.querySelector<HTMLElement>('.van-field--error')
   if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
+
+// 暴露给父组件的命令式方法（如新增/编辑/删除后刷新列表）
+defineExpose({
+  /** 重新拉取第一页列表 */
+  refresh: onRefresh,
+  openCreate,
+  openEdit,
+})
+
 </script>
 
 <template>
@@ -518,7 +544,7 @@ function scrollToFirstError() {
                 icon="delete-o"
                 type="danger"
                 @click="confirmDelete(item)"
-                >删除</van-button
+                >{{ deleteText }}</van-button
               >
               <van-button
                 v-permission="permCodes.view"
@@ -527,7 +553,7 @@ function scrollToFirstError() {
                 icon="eye-o"
                 type="default"
                 @click="onDetail(item)"
-                >详情</van-button
+                >{{ detailText }}</van-button
               >
               <van-button
                 v-permission="permCodes.edit"
@@ -536,7 +562,7 @@ function scrollToFirstError() {
                 icon="edit"
                 color="#18a058"
                 @click="onEdit(item)"
-                >编辑</van-button
+                >{{ editText }}</van-button
               >
               <slot name="row-actions" :item="item" />
             </div>
@@ -556,7 +582,7 @@ function scrollToFirstError() {
       icon="plus"
       round
       @click="onCreate"
-      >新增</van-button
+      >{{ addText }}</van-button
     >
 
     <!-- 删除确认 -->
