@@ -232,6 +232,7 @@ function onClear() {
     <van-calendar
       v-model:show="show"
       v-model="innerValue"
+      teleport="body"
       :type="type"
       :title="title"
       :min-date="minDateVal"
@@ -297,5 +298,13 @@ function onClear() {
 }
 .vant-calendar__field .vant-field-clear-icon:active {
   color: #323233;
+}
+</style>
+
+<!-- 弹窗层级：非 scoped（van-calendar 通过 Teleport 挂到 body，scoped 样式无法命中）。
+     抬升 z-index 并强制挂到 body，避免被列表页悬浮「新增」按钮（z-index:999）遮挡。 -->
+<style>
+.van-calendar__popup {
+  z-index: 3000 !important;
 }
 </style>

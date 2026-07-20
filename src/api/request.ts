@@ -1,107 +1,28 @@
-import axios, {
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from 'axios'
+/**
+ * 默认 API 客户端（vant 模块格式：{ code, data, message }）。
+ *
+ * 通过 core/createClient + vantFormat 构建，导出与旧版完全一致的
+ * get/post/put/del/instance/BizError，保证已有 vant 模块零改动。
+ *
+ * 其它模块目录（src/views/<dir>）的后端格式不同，请各自创建：
+ *   src/api/modules/<dir>/client.ts  —— createClient({ adapter, pagination, baseURL })
+ * 详见 src/api/README.md
+ */
+import { createClient } from './core/http'
+import { vantFormat } from './core/adapters'
 
-/** 统一响应格式 */
-export interface ApiResponse<T = unknown> {
-  code: number
-  data: T
-  message: string
-}
-
-/** 业务异常 */
-export class BizError extends Error {
-  code: number
-  constructor(code: number, message: string) {
-    super(message)
-    this.name = 'BizError'
-    this.code = code
-  }
-}
-
-const instance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  timeout: 15000,
-  headers: { 'Content-Type': 'application/json' },
+const client = createClient({
+  adapter: vantFormat,
+  withTimestamp: true,
 })
 
-// ==================== 请求拦截器 ====================
-instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  // 自动追加时间戳（防缓存）
-  config.params = { ...config.params, t: Date.now() }
+export const instance = client.instance
+export const get = client.get
+export const post = client.post
+export const put = client.put
+export const del = client.del
 
-  console.log(
-    '[axios] → %s %s',
-    config.method?.toUpperCase(),
-    (config.baseURL ?? '') + (config.url ?? ''),
-  )
-  return config
-})
-
-// ==================== 响应拦截器 ====================
-instance.interceptors.response.use(
-  (res: AxiosResponse<ApiResponse>): any => {
-    console.log(
-      '[axios] ← %s %s | status=%d | body=',
-      res.config.method?.toUpperCase(),
-      res.config.url,
-      res.status,
-      res.data,
-    )
-    const { code, data, message } = res.data
-
-    // 业务成功
-    if (code === 0 || code === 200) return data
-
-    // 业务异常
-    switch (code) {
-      case 401:
-        console.warn('[401] 未登录')
-        break
-      case 403:
-        console.warn('[403] 无权限')
-        break
-    }
-
-    return Promise.reject(new BizError(code!, message || '请求失败'))
-  },
-  (err) => {
-    const msg = err?.response?.data?.message || err.message || '网络异常'
-    console.error('[axios] ✗ %s | %s', err?.response?.status || 'NETWORK', msg)
-    return Promise.reject(err)
-  },
-)
-
-// ==================== 便捷方法 ====================
-export function get<T = any>(
-  url: string,
-  params?: Record<string, any>,
-  config?: AxiosRequestConfig,
-): Promise<T> {
-  return instance.get(url, { params, ...config }) as any
-}
-
-export function post<T = any>(
-  url: string,
-  data?: Record<string, any>,
-  config?: AxiosRequestConfig,
-): Promise<T> {
-  return instance.post(url, data, config) as any
-}
-
-export function put<T = any>(
-  url: string,
-  data?: Record<string, any>,
-  config?: AxiosRequestConfig,
-): Promise<T> {
-  return instance.put(url, data, config) as any
-}
-
-export function del<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-  return instance.delete(url, config) as any
-}
+export { BizError } from './core/http'
+export type { ApiResponse } from './types'
 
 export default instance

@@ -1,18 +1,15 @@
 <script setup lang="ts">
 /**
- * VantList 示例：保源信息维护（车险续保保源管理）
+ * ydl 版 VantList 示例：保源信息维护（车险续保保源管理）
  *
- * 全面演示「查询区域」组件接入：
- *   1) src/components 下全部自定义 Vant 组件：
- *      VantSearch / VantSearchField / VantSelectField / VantSelectMultipleField /
- *      VantCalendarField / VantTimePickerField / VantTreeSelectField / VantTreeTagsField / VantUpload
- *   2) Vant4 默认表单组件：
- *      van-field(文本/数字) / van-radio / van-checkbox / van-stepper / van-switch /
- *      van-slider / van-rate / van-cell-group
+ * 与 src/views/vant/VantListDemo.vue 功能完全一致，但所有接口走 ydl 模块
+ * （src/api/modules/ydl/ydl-renewal.ts），对接 JeecgBoot 风格后端：
+ *   - 响应包络 { success, code, message, result, timestamp }
+ *   - 分页 result { records, current, size, total, pages }
+ * 请求分页参数经 VantList requestMap 映射为 current/size 发给 ydl 后端。
  *
- * 全部条件通过 VantList 的 #filters 插槽绑定到 query，查询/更多查询/增删改/扩展操作/权限
- * 均由通用 VantList + useCrudList 承载；数据模型与接口统一从 @/api 引入，
- * 请求经 /api 前缀由 @/mock/demo-renewal 拦截（内存 Mock，无需真实后端）。
+ * 查询区域组件、增删改、扩展操作、权限、弹层全部由通用 VantList + useCrudList 承载，
+ * 数据模型与接口统一从 @/api 引入，请求经 /ydl-api 由 src/mock/ydl-renewal.ts 拦截。
  */
 import { ref } from 'vue'
 import { showToast } from 'vant'
@@ -20,50 +17,51 @@ import VantList from '@/components/VantList.vue'
 import type { ListAction } from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
 
-// ==================== 数据模型与接口（统一来自 @/api） ====================
+// ==================== 数据模型与接口（统一来自 @/api 的 ydl 模块） ====================
 import {
-  type DemoRenewal,
-  type DemoRenewalForm,
-  type DemoRenewalQuery,
-  DEMO_CHANNELS,
-  DEMO_INSURANCE_TYPE_OPTIONS,
-  DEMO_STATUS_OPTIONS,
-  DEMO_ORG_TREE,
-  DEMO_TAG_TREE,
-  DEMO_ORG_NAME,
-  DEMO_DEFAULT_RENEWAL_QUERY,
-  DEMO_DEFAULT_RENEWAL_FORM,
-  getDemoRenewalList,
-  createDemoRenewal,
-  updateDemoRenewal,
-  deleteDemoRenewal,
-  searchDemoInsurers,
-  verifyDemoApplicant,
+  type YdlRenewal,
+  type YdlRenewalForm,
+  type YdlRenewalQuery,
+  YDL_INSURERS,
+  YDL_CHANNELS,
+  YDL_INSURANCE_TYPE_OPTIONS,
+  YDL_STATUS_OPTIONS,
+  YDL_ORG_TREE,
+  YDL_TAG_TREE,
+  YDL_ORG_NAME,
+  YDL_DEFAULT_RENEWAL_QUERY,
+  YDL_DEFAULT_RENEWAL_FORM,
+  getYdlRenewalList,
+  createYdlRenewal,
+  updateYdlRenewal,
+  deleteYdlRenewal,
+  searchYdlInsurers,
+  verifyYdlApplicant,
   uploadDemoFile,
 } from '@/api'
 
-// API 集合：直接指向真实接口函数（请求经 /api 由 mock 拦截）
-const api: CrudApi<DemoRenewal, DemoRenewalForm, DemoRenewalQuery> = {
-  list: getDemoRenewalList,
-  create: createDemoRenewal,
-  update: updateDemoRenewal,
-  remove: deleteDemoRenewal,
+// API 集合：直接指向 ydl 接口函数（请求经 /ydl-api 由 mock 拦截）
+const api: CrudApi<YdlRenewal, YdlRenewalForm, YdlRenewalQuery> = {
+  list: getYdlRenewalList,
+  create: createYdlRenewal,
+  update: updateYdlRenewal,
+  remove: deleteYdlRenewal,
 }
 
 // 初始查询条件 / 新增表单（含全部筛选字段，reset 可复位）
-const initialQuery = DEMO_DEFAULT_RENEWAL_QUERY
-const initialForm = DEMO_DEFAULT_RENEWAL_FORM
+const initialQuery = YDL_DEFAULT_RENEWAL_QUERY
+const initialForm = YDL_DEFAULT_RENEWAL_FORM
 
 // 承保公司远程联想（VantSearchField / VantSearch 的 fetch）
-const searchInsurer = searchDemoInsurers
+const searchInsurer = searchYdlInsurers
 
-// 自定义扩展操作：跟进记录 / 导出（导出需 car:export 权限门禁演示）
+// 自定义扩展操作：跟进记录 / 导出（导出需 ydl:export 权限门禁演示）
 const actions: ListAction[] = [
   { key: 'follow', name: '登记跟进', icon: 'phone-o' },
-  { key: 'export', name: '导出保单', icon: 'down', perm: 'car:export' },
+  { key: 'export', name: '导出保单', icon: 'down', perm: 'ydl:export' },
 ]
 
-function onAction(payload: { key: string; item: DemoRenewal }) {
+function onAction(payload: { key: string; item: YdlRenewal }) {
   if (payload.key === 'follow') showToast(`已登记跟进：${payload.item.applicant}`)
   else if (payload.key === 'export') showToast(`导出保单：${payload.item.policyNo}`)
 }
@@ -109,7 +107,7 @@ async function verifyApplicantHandler(name: string) {
   }
   verifying.value = true
   try {
-    const res = await verifyDemoApplicant(name)
+    const res = await verifyYdlApplicant(name)
     if (res?.verified) {
       applicantVerified.value = true
       lastVerifiedApplicant.value = name
@@ -161,12 +159,12 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 <template>
   <VantList
     :api="api"
-    title="保源信息维护"
-    permission-prefix="car"
+    title="保源信息维护（ydl 格式）"
+    permission-prefix="ydl"
     :row-permission="
       (item) => ({
         edit: item.status !== '已续保', // 已续保的不允许编辑
-        delete: item.editable !== false, // 标记为不可删的不显示删除
+        delete: item.id % 7 !== 0, // 模拟部分记录不可删
         view: true, // 详情始终按角色权限
       })
     "
@@ -177,6 +175,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
     more-filter-title="更多查询（组件全接入）"
     search-placeholder="搜索投保人 / 车牌 / 保单号"
     keyword-key="keyword"
+    :request-map="{ page: 'current', pageSize: 'size' }"
     :actions="actions"
     :show-more="true"
     @action="onAction"
@@ -217,7 +216,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectField：保源状态 -->
         <VantSelectField
           v-model="query.status"
-          :options="DEMO_STATUS_OPTIONS"
+          :options="YDL_STATUS_OPTIONS"
           label="保源状态"
           title="选择状态"
           placeholder="请选择状态"
@@ -226,7 +225,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectField：业务渠道 -->
         <VantSelectField
           v-model="query.channel"
-          :options="DEMO_CHANNELS"
+          :options="YDL_CHANNELS"
           label="业务渠道"
           title="选择渠道"
           placeholder="请选择渠道"
@@ -236,7 +235,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantSelectMultipleField：险种多选 -->
         <VantSelectMultipleField
           v-model="query.insuranceTypes"
-          :options="DEMO_INSURANCE_TYPE_OPTIONS"
+          :options="YDL_INSURANCE_TYPE_OPTIONS"
           label="投保险种"
           title="选择险种（多选）"
           placeholder="可多选险种"
@@ -246,7 +245,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantTreeSelectField：归属机构（级联单选） -->
         <VantTreeSelectField
           v-model="query.region"
-          :options="DEMO_ORG_TREE"
+          :options="YDL_ORG_TREE"
           label="归属机构"
           title="选择机构"
           placeholder="选择归属机构"
@@ -256,7 +255,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <!-- VantTreeTagsField：业务标签（树多选打标签） -->
         <VantTreeTagsField
           v-model="query.tags"
-          :options="DEMO_TAG_TREE"
+          :options="YDL_TAG_TREE"
           label="业务标签"
           title="选择标签"
           placeholder="选择业务标签"
@@ -344,7 +343,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <span class="r-sep">|</span>
         <span>{{ item.insurer }}</span>
         <span class="r-sep">|</span>
-        <span>{{ DEMO_ORG_NAME[item.region] || item.region }}</span>
+        <span>{{ YDL_ORG_NAME[item.region] || item.region }}</span>
       </div>
       <div class="r-meta">
         <span class="r-policy">{{ item.policyNo }}</span>
@@ -405,28 +404,28 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         />
         <VantTreeSelectField
           v-model="form.region"
-          :options="DEMO_ORG_TREE"
+          :options="YDL_ORG_TREE"
           label="归属机构"
           title="选择机构"
           placeholder="选择归属机构"
         />
         <VantSelectField
           v-model="form.channel"
-          :options="DEMO_CHANNELS"
+          :options="YDL_CHANNELS"
           label="业务渠道"
           title="选择渠道"
           placeholder="请选择渠道"
         />
         <VantSelectMultipleField
           v-model="form.insuranceTypes"
-          :options="DEMO_INSURANCE_TYPE_OPTIONS"
+          :options="YDL_INSURANCE_TYPE_OPTIONS"
           label="投保险种"
           title="选择险种（多选）"
           placeholder="可多选险种"
         />
         <VantTreeTagsField
           v-model="form.tags"
-          :options="DEMO_TAG_TREE"
+          :options="YDL_TAG_TREE"
           label="业务标签"
           title="选择标签"
           placeholder="选择业务标签"
@@ -493,7 +492,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <van-cell title="车牌号" :value="item.plateNo" />
         <van-cell title="保单号" :value="item.policyNo" />
         <van-cell title="承保公司" :value="item.insurer" />
-        <van-cell title="归属机构" :value="DEMO_ORG_NAME[item.region] || item.region" />
+        <van-cell title="归属机构" :value="YDL_ORG_NAME[item.region] || item.region" />
         <van-cell title="业务渠道" :value="item.channel" />
         <van-cell title="投保险种" :value="item.insuranceTypes.join('、')" />
         <van-cell title="保费" :value="`¥${item.premium}`" />
@@ -514,16 +513,23 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
     <div class="section-title">使用说明</div>
     <div class="card" style="margin: 0 12px 16px">
       <p class="hint">
-        <b>基础用法</b><br />
-        <code>&lt;VantList :api="api" permission-prefix="renewal"&gt;</code><br />
+        <b>基础用法（ydl 模块）</b><br />
+        <code>&lt;VantList :api="api" permission-prefix="ydl"&gt;</code><br />
         <code>&nbsp;&nbsp;&lt;template #item="{ item }"&gt;...&lt;/template&gt;</code><br />
         <code>&lt;/VantList&gt;</code>
+      </p>
+      <p class="hint">
+        本页所有接口走 ydlClient（baseURL=/ydl-api），后端为 JeecgBoot 风格：<br />
+        响应包络 <code>{ success, code, message, result, timestamp }</code>，
+        分页 <code>result = { records, current, size, total, pages }</code>。<br />
+        列表接口经 ydlPagination 适配器转回通用 PageResult，VantList 无需感知后端差异。
       </p>
       <p class="hint">
         <b>主要 Props</b><br />
         api：CrudApi 集合（list 必填，create/update/remove 缺省则对应功能不可用）<br />
         permissionPrefix / permissionActions：权限前缀与自定义操作码<br />
-        showSearch / showAdd / keywordKey / filters / actions<br />
+        showSearch / showAdd / showDetail / showEdit / showDelete / showMore /
+        keywordKey / filters / actions<br />
         rowPermission(item)：行级自定义权限（与角色权限做「与」）<br />
         responseMap / requestMap：适配异构后端字段命名
       </p>

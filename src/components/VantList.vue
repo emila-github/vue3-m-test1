@@ -96,6 +96,14 @@ const props = withDefaults(
     detailText?: string
     /** 行内「编辑」按钮文案，默认 '编辑' */
     editText?: string
+    /** 行内/更多中是否显示「详情」，默认 true（仍需 view 权限码） */
+    showDetail?: boolean
+    /** 行内/更多中是否显示「编辑」，默认 true（仍需 edit 权限码） */
+    showEdit?: boolean
+    /** 行内/更多中是否显示「删除」，默认 true（仍需 api.delete + delete 权限码） */
+    showDelete?: boolean
+    /** 是否显示行内「更多」按钮（聚合 详情/编辑/删除 + 自定义 actions），默认 false */
+    showMore?: boolean
     enableLog?: boolean
     pageSize?: number
     initialQuery?: Record<string, any>
@@ -148,6 +156,10 @@ const props = withDefaults(
     deleteText: '删除',
     detailText: '详情',
     editText: '编辑',
+    showDetail: true,
+    showEdit: true,
+    showDelete: true,
+    showMore: false,
     enableLog: false,
     pageSize: 10,
     initialQuery: () => ({}),
@@ -283,11 +295,14 @@ function onMoreFilterReset() {
 const showActionSheet = ref(false)
 const sheetItem = ref<any>(null)
 const sheetActions = computed(() => {
-  const base = [
-    { name: props.detailText, value: 'view', perm: permCodes.value.view, icon: 'eye-o' },
-    { name: props.editText, value: 'edit', perm: permCodes.value.edit, icon: 'edit' },
-    { name: props.deleteText, value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' },
-  ].filter((a) => hasPerm(a.perm))
+  const base: { name: string; value: string; perm?: string | string[]; icon: string }[] = []
+  if (props.showDetail)
+    base.push({ name: props.detailText, value: 'view', perm: permCodes.value.view, icon: 'eye-o' })
+  if (props.showEdit)
+    base.push({ name: props.editText, value: 'edit', perm: permCodes.value.edit, icon: 'edit' })
+  if (props.showDelete)
+    base.push({ name: props.deleteText, value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' })
+  const baseFiltered = base.filter((a) => hasPerm(a.perm))
   const custom = props.actions
     .filter((a) => !a.perm || hasPerm(a.perm))
     .map((a) => ({
@@ -296,9 +311,9 @@ const sheetActions = computed(() => {
       icon: a.icon || 'ellipsis',
       danger: a.danger,
     }))
-  return [...base, ...custom]
+  return [...baseFiltered, ...custom]
 })
-const showMore = computed(() => sheetActions.value.length > 0)
+const hasMoreActions = computed(() => sheetActions.value.length > 0)
 
 function onCreate() {
   emit('create')
@@ -526,7 +541,7 @@ defineExpose({
             <!-- 左侧：更多 -->
             <div class="vl-card-actions-left">
               <van-button
-                v-if="showMore"
+                v-if="showMore && hasMoreActions"
                 size="small"
                 icon="ellipsis"
                 plain
@@ -539,7 +554,7 @@ defineExpose({
             <div class="vl-card-actions-right">
               <van-button
                 v-permission="permCodes.delete"
-                v-if="rowCan(item, 'delete')"
+                v-if="showDelete && rowCan(item, 'delete')"
                 size="small"
                 icon="delete-o"
                 type="danger"
@@ -548,7 +563,7 @@ defineExpose({
               >
               <van-button
                 v-permission="permCodes.view"
-                v-if="rowCan(item, 'view')"
+                v-if="showDetail && rowCan(item, 'view')"
                 size="small"
                 icon="eye-o"
                 type="default"
@@ -557,7 +572,7 @@ defineExpose({
               >
               <van-button
                 v-permission="permCodes.edit"
-                v-if="rowCan(item, 'edit')"
+                v-if="showEdit && rowCan(item, 'edit')"
                 size="small"
                 icon="edit"
                 color="#18a058"
