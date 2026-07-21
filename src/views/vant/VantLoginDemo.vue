@@ -68,18 +68,15 @@ function onSuccess(r: LoginResult) {
 
 <template>
   <div class="login-demo">
+    <VantLogin
+      :enabled-methods="enabledMethods"
+      :default-method="defaultMethod"
+      :sms-countdown="smsCountdown"
+      :demo-mode="demoMode"
+      :forgot-password="forgotPassword"
+      @success="onSuccess"
+    />
     <van-nav-bar title="VantLogin 登录组件" />
-
-    <div class="preview-card">
-      <VantLogin
-        :enabled-methods="enabledMethods"
-        :default-method="defaultMethod"
-        :sms-countdown="smsCountdown"
-        :demo-mode="demoMode"
-        :forgot-password="forgotPassword"
-        @success="onSuccess"
-      />
-    </div>
 
     <div v-if="result" class="result-card">
       <h3>（{{ methodLabels[result.method] }}）</h3>
@@ -162,7 +159,11 @@ function onSuccess(r: LoginResult) {
             <van-switch v-model="forgotPassword" size="20" />
           </template>
         </van-cell>
-        <van-cell v-if="demoMode" title="说明" label="已强制降级，无需 https / 可信域名即可看到登录信息；关闭后走真实扫码（需配好回调域名）" />
+        <van-cell
+          v-if="demoMode"
+          title="说明"
+          label="已强制降级，无需 https / 可信域名即可看到登录信息；关闭后走真实扫码（需配好回调域名）"
+        />
       </van-cell-group>
     </div>
   </div>
@@ -173,7 +174,6 @@ function onSuccess(r: LoginResult) {
   padding-bottom: 24px;
 }
 .config-card,
-.preview-card,
 .result-card {
   margin: 12px;
 }

@@ -68,6 +68,27 @@ const emit = defineEmits<{
   error: [payload: { method: LoginMethod; message: string }]
 }>()
 
+// ============================================================
+// 方法说明（本组件仅做「编排」，具体逻辑见对应 composable）
+// ------------------------------------------------------------
+//   useLoginCore        → loading / toast / doLogin
+//                          统一的 loading 态 + 居中提示 + 登录结果派发
+//   useLoginConfig     → title / subtitle / formMethods / oauthMethods
+//                          / activeMethod / switchTo / fetchConfig
+//                          解析可用登录方式、当前激活方式、标题副标题
+//   useSmsLogin        → smsForm / sliderVerified / countdown
+//                          / onSendCode / onSmsSubmit
+//                          短信验证码登录（滑块校验 + 60s 倒计时）
+//   usePasswordLogin   → pwdForm / captchaSvg / refreshCaptcha
+//                          / onPasswordSubmit
+//                          密码登录（含图形验证码）
+//   useOAuthLogin      → onOAuth
+//                          微信 / 企业微信扫码授权（弹窗或整页跳转）
+//   useForgotPassword  → showForgot / resetForm / resetCountdown
+//                          / onSendResetCode / onResetSubmit
+//                          找回密码弹窗（手机号 + 滑块 + 验证码 + 新密码）
+// ============================================================
+
 // ====== 核心（loading / toast / doLogin / 结果派发）======
 const core = useLoginCore(emit)
 const { loading } = core
@@ -116,6 +137,8 @@ const {
 
 const agreeChecked = ref(true)
 
+// 初始化：① 拉取登录配置（后端 GET /login/config，失败则用内置默认值）
+//          ② 拉取密码登录图形验证码（captchaSvg 用于模板渲染）
 onMounted(() => {
   fetchConfig()
   refreshCaptcha()

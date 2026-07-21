@@ -12,7 +12,6 @@
  */
 import { ref, computed } from 'vue'
 import { sendSmsCode, loginBySms } from '@/api/modules/login'
-import type { LoginResult } from '@/api/modules/login'
 import type { LoginCore } from './useLoginCore'
 import type VantSliderVerify from '@/components/VantSliderVerify.vue'
 
