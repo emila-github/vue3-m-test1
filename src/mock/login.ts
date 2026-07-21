@@ -423,6 +423,16 @@ const routes: MockRoute[] = [
     },
   },
 
+  // 退出登录（mock：仅模拟后端销毁会话，前端仍以清除本地 token 为准）
+  {
+    url: '/login/logout',
+    method: 'POST',
+    response: () => {
+      console.log('[oauth][logout] 已收到退出登录请求')
+      return { code: 200, data: { ok: true }, message: '已退出登录' }
+    },
+  },
+
   // ===== 微信：获取扫码授权地址 =====
   {
     url: '/login/wechat/authorize',

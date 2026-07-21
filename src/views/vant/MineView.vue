@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { showConfirmDialog, showToast } from 'vant'
 import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
+import { logout } from '@/api/modules/login'
 
 const router = useRouter()
 const LOGIN_PATH = '/vant/vant-login-demo'
@@ -32,10 +33,15 @@ function goLogin() {
   router.push({ path: LOGIN_PATH, query: { redirect: '/vant/mine' } })
 }
 
-/** 退出登录：清除 token + 用户信息，跳回登录页 */
-function onLogout() {
+/** 退出登录：通知后端销毁会话 + 清除本地 token / 用户信息，跳回登录页 */
+async function onLogout() {
   showConfirmDialog({ title: '提示', message: '确定要退出登录吗？' })
-    .then(() => {
+    .then(async () => {
+      try {
+        await logout()
+      } catch {
+        /* 后端登出失败不影响本地退出 */
+      }
       clearAuth()
       logged.value = false
       user.value = null

@@ -106,3 +106,8 @@ export function getWechatAuthorizeUrl(demo = false) {
 export function getWecomAuthorizeUrl(demo = false) {
   return get<{ url: string; real: boolean }>(`/login/wecom/authorize${demo ? '?demo=1' : ''}`)
 }
+
+/** 退出登录（通知后端销毁会话；前端仍以清除本地 token 为准） */
+export function logout() {
+  return post<{ ok: boolean }>('/login/logout')
+}
