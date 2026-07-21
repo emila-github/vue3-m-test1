@@ -133,11 +133,11 @@ function loadDotEnv(): Record<string, string> {
     for (const line of txt.split('\n')) {
       const m = line.match(/^\s*([\w.-]+)\s*=\s*(.*)\s*$/)
       if (m) {
-        let v = m[2].trim()
+        let v = m[2]!.trim()
         if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
           v = v.slice(1, -1)
         }
-        if (!(m[1] in map)) map[m[1]] = v
+        if (!(m[1]! in map)) map[m[1]!] = v
       }
     }
   }
@@ -442,7 +442,10 @@ const routes: MockRoute[] = [
         return { code: 200, data: { url, real: true }, message: 'ok' }
       }
       if (OAUTH_DEV_FALLBACK) {
-        const url = `${base}/api/login/wechat/callback?dev=1&state=${state}`
+        // 演示降级：用当前访问地址（本地 host），不强制跳 OAUTH_REDIRECT_BASE 公网域名
+        const proto = (req.headers['x-forwarded-proto'] as string) || 'http'
+        const host = req.headers.host || 'localhost'
+        const url = `${proto}://${host}/api/login/wechat/callback?dev=1&state=${state}`
         console.log('[oauth][wechat] 演示降级 url:', url)
         return { code: 200, data: { url, real: false }, message: 'ok（演示降级）' }
       }
@@ -503,7 +506,10 @@ const routes: MockRoute[] = [
         return { code: 200, data: { url, real: true }, message: 'ok' }
       }
       if (OAUTH_DEV_FALLBACK) {
-        const url = `${base}/api/login/wecom/callback?dev=1&state=${state}`
+        // 演示降级：用当前访问地址（本地 host），不强制跳 OAUTH_REDIRECT_BASE 公网域名
+        const proto = (req.headers['x-forwarded-proto'] as string) || 'http'
+        const host = req.headers.host || 'localhost'
+        const url = `${proto}://${host}/api/login/wecom/callback?dev=1&state=${state}`
         console.log('[oauth][wecom] 演示降级 url:', url)
         return { code: 200, data: { url, real: false }, message: 'ok（演示降级）' }
       }

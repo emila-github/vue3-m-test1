@@ -193,6 +193,7 @@ OAUTH_REDIRECT_BASE=https://你的公网域名   # 回调 base，见下
 
 - `VantLogin` 的 `demoMode` 默认 `false`（走真实）。只有显式传 `true` 才强制演示降级。
 - 若页面一直显示「演示」或「微信用户(演示)」，先检查调用处是否把 `demoMode` 写死成了 `true`。
+- **`demoMode=true` 仍走 mock 流程但不跳公网**：点击微信 / 企业微信会请求后端演示降级接口，callback 地址使用当前访问地址（本地 host），**不会跳到 `OAUTH_REDIRECT_BASE` 公网域名**（无需 https / 可信域名即可本地预览登录信息）。本地开发预览把 `demoMode` 设为 `true` 即可彻底避免"redirect_uri 不一致"等线上回调问题。
 
 ### 5) 免费穿透隧道域名会变（cpolar 等）
 
