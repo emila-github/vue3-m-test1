@@ -16,7 +16,14 @@ import { onMounted, onUnmounted } from 'vue'
 import { showLoadingToast, closeToast } from 'vant'
 import { getWechatAuthorizeUrl, getWecomAuthorizeUrl } from '@/api/modules/login'
 import type { LoginMethod, LoginResult } from '@/api/modules/login'
+import { setToken, setUserInfo } from '@/api/core/token'
 import type { LoginCore, EmitFn } from './useLoginCore'
+
+/** OAuth 登录成功：持久化 token + 用户信息（供请求拦截器与「我的」页使用） */
+function persistOAuth(result: LoginResult) {
+  setToken(result.token)
+  setUserInfo(result.userInfo)
+}
 
 export interface OAuthOptions extends LoginCore {
   demoMode: boolean
@@ -61,6 +68,7 @@ export function useOAuthLogin(opts: OAuthOptions) {
     try {
       const d = JSON.parse(raw) as { type?: string; result?: LoginResult; message?: string }
       if (d.type === 'oauth-success' && d.result) {
+        persistOAuth(d.result) // 持久化 token + 用户信息
         toast('登录成功')
         emit('success', d.result)
       } else if (d.type === 'oauth-error') {
@@ -83,6 +91,7 @@ export function useOAuthLogin(opts: OAuthOptions) {
     }
     oauthPopup = null
     if (d.type === 'oauth-success' && d.result) {
+      persistOAuth(d.result) // 持久化 token + 用户信息
       closeToast()
       toast('登录成功')
       loading.value = false

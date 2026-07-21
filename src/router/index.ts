@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // routesFolder（本项目为 src/views/test）自动生成路由表，导出为 routes。
 // 手写路由与约定式路由可并存，最终用 [...manualRoutes, ...routes] 合并即可。
 import { routes, handleHotUpdate } from 'vue-router/auto-routes'
+import { getToken } from '@/api/core/token'
 
 // ==================== 手写路由（业务页接入方式） ====================
 const manualRoutes = [
@@ -168,7 +169,7 @@ const manualRoutes = [
     path: '/vant/vant-login-demo',
     name: 'vant-login-demo',
     component: () => import('../views/vant/VantLoginDemo.vue'),
-    meta: { title: 'VantLogin 登录' },
+    meta: { title: 'VantLogin 登录', public: true },
   },
   {
     path: '/vant/vant-ins-icon-demo',
@@ -187,5 +188,33 @@ const router = createRouter({
 if (import.meta.hot) {
   handleHotUpdate(router)
 }
+
+// ==================== 路由白名单（免登录可访问） ====================
+// 配置方式有两种，满足「有些页面不用登录就能访问」：
+//   1) 在 routeWhiteList 数组里列 path；
+//   2) 任意路由定义里加 meta: { public: true }。
+const LOGIN_PATH = '/vant/vant-login-demo'
+const routeWhiteList: string[] = [
+  LOGIN_PATH, // 登录页自身必须可访问，否则未登录会无限重定向
+  '/about',
+  '/vant/vant-ins-icon-demo',
+]
+
+// 扩展 RouteMeta 类型（title / public）
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    /** 标记为公开路由：免登录即可访问 */
+    public?: boolean
+  }
+}
+
+router.beforeEach((to) => {
+  const loggedIn = !!getToken()
+  const isPublic = to.meta.public === true || routeWhiteList.includes(to.path)
+  if (isPublic || loggedIn) return true
+  // 未登录 → 跳登录页，并记录来源地址（登录成功后跳回）
+  return { path: LOGIN_PATH, query: { redirect: to.fullPath } }
+})
 
 export default router

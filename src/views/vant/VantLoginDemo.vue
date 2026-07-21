@@ -6,9 +6,13 @@
  * 组件会实时响应 props 变化。
  */
 import { ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { showDialog } from 'vant'
 import VantLogin from '../../components/VantLogin.vue'
 import type { LoginMethod, LoginResult } from '../../api/modules/login'
+
+const route = useRoute()
+const router = useRouter()
 
 const allMethods: LoginMethod[] = ['sms', 'password', 'wechat', 'wecom']
 const methodLabels: Record<LoginMethod, string> = {
@@ -30,7 +34,7 @@ const enabledMethods = computed<LoginMethod[]>(() => allMethods.filter((m) => en
 
 const smsCountdown = ref(60)
 /** 演示模式：本地预览用，强制降级返回模拟登录信息（无需 https / 可信域名） */
-const demoMode = ref(true)
+const demoMode = ref(false)
 /** 是否展示「忘记密码」入口（可配置，默认开启） */
 const forgotPassword = ref(true)
 
@@ -59,6 +63,12 @@ const infoRows = computed<{ label: string; value: string }[]>(() => {
 
 function onSuccess(r: LoginResult) {
   result.value = r
+  // 若是被守卫拦截跳来的（带 redirect），登录成功后跳回原页面
+  const redirect = (route.query.redirect as string) || ''
+  if (redirect) {
+    router.replace(redirect)
+    return
+  }
   showDialog({
     title: '登录成功',
     message: `欢迎 ${r.userInfo.name}（${methodLabels[r.method]}）\ntoken: ${r.token.slice(0, 24)}...`,

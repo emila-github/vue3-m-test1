@@ -431,15 +431,19 @@ const routes: MockRoute[] = [
       const base = redirectBase(req)
       const state = randomState()
       const demo = new URL(req.url || '', 'http://localhost').searchParams.get('demo') === '1'
+      console.log('[oauth][wechat] demo=%s wechatReal=%s base=%s', demo, wechatReal, base)
       if (!demo && wechatReal) {
         const redirectUri = encodeURIComponent(`${base}/api/login/wechat/callback`)
         const url =
           `https://open.weixin.qq.com/connect/qrconnect?appid=${WECHAT_APPID}` +
           `&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_login&state=${state}#wechat_redirect`
+        console.log('[oauth][wechat] authorize url:', url)
+        console.log('[oauth][wechat] → 需在微信开放平台登记的回调域名:', base)
         return { code: 200, data: { url, real: true }, message: 'ok' }
       }
       if (OAUTH_DEV_FALLBACK) {
         const url = `${base}/api/login/wechat/callback?dev=1&state=${state}`
+        console.log('[oauth][wechat] 演示降级 url:', url)
         return { code: 200, data: { url, real: false }, message: 'ok（演示降级）' }
       }
       return { code: 500, data: null, message: '未配置微信登录凭证(WECHAT_APPID/WECHAT_SECRET)' }
@@ -488,15 +492,19 @@ const routes: MockRoute[] = [
       const base = redirectBase(req)
       const state = randomState()
       const demo = new URL(req.url || '', 'http://localhost').searchParams.get('demo') === '1'
+      console.log('[oauth][wecom] demo=%s wecomReal=%s base=%s', demo, wecomReal, base)
       if (!demo && wecomReal) {
         const redirectUri = encodeURIComponent(`${base}/api/login/wecom/callback`)
         const url =
           `https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=${WECOM_CORPID}` +
           `&agentid=${WECOM_AGENTID}&redirect_uri=${redirectUri}&state=${state}`
+        console.log('[oauth][wecom] authorize url:', url)
+        console.log('[oauth][wecom] → 需在企业微信后台登记的回调域名:', base)
         return { code: 200, data: { url, real: true }, message: 'ok' }
       }
       if (OAUTH_DEV_FALLBACK) {
         const url = `${base}/api/login/wecom/callback?dev=1&state=${state}`
+        console.log('[oauth][wecom] 演示降级 url:', url)
         return { code: 200, data: { url, real: false }, message: 'ok（演示降级）' }
       }
       return { code: 500, data: null, message: '未配置企业微信凭证(WECOM_CORPID/WECOM_CORPSECRET)' }

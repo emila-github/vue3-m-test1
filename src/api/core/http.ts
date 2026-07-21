@@ -7,6 +7,7 @@ import axios, {
 import type { ClientOptions, ApiClient } from './types'
 import type { PageParams, PageResult } from '../types'
 import { defaultPagination } from './adapters'
+import { getToken, TOKEN_HEADER } from './token'
 
 /** 业务异常（统一抛出，便于上层 catch 区分） */
 export class BizError extends Error {
@@ -46,6 +47,12 @@ export function createClient(options: ClientOptions): ApiClient {
   instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     if (options.withTimestamp !== false) {
       config.params = { ...config.params, t: Date.now() }
+    }
+    // 注入登录 token：字段名可配置（见 core/token.ts 的 TOKEN_HEADER）
+    const token = getToken()
+    if (token) {
+      config.headers = config.headers ?? {}
+      config.headers[TOKEN_HEADER] = token
     }
     options.onRequest?.(config)
     return config

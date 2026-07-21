@@ -1,11 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { showConfirmDialog, showToast } from 'vant'
+import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
 
-const user = ref({
-  name: '测试用户',
-  dept: '展业一部',
-  role: '展业员',
-  avatar: '',
+const router = useRouter()
+const LOGIN_PATH = '/vant/vant-login-demo'
+
+// 登录态 + 当前登录用户信息（登录成功后由 setUserInfo 持久化）
+const logged = ref(isLoggedIn())
+const user = ref(getUserInfo())
+
+/** 头像占位首字：优先用户名，未登录则用「登」 */
+const avatarText = computed(() => (user.value?.name || '登').slice(0, 1))
+/** 副标题：部门 · 角色（缺省则展示手机号 / 提示登录） */
+const subText = computed(() => {
+  if (!user.value) return '登录后享受更多服务'
+  const parts = [user.value.dept, user.value.role].filter(Boolean)
+  return parts.length ? parts.join(' · ') : user.value.phone || ''
 })
 
 const cells = ref([
@@ -14,18 +26,41 @@ const cells = ref([
   { icon: 'setting-o', title: '设置', to: '' },
   { icon: 'info-o', title: '关于中国人保', to: '' },
 ])
+
+/** 未登录时点头像区 → 去登录 */
+function goLogin() {
+  router.push({ path: LOGIN_PATH, query: { redirect: '/vant/mine' } })
+}
+
+/** 退出登录：清除 token + 用户信息，跳回登录页 */
+function onLogout() {
+  showConfirmDialog({ title: '提示', message: '确定要退出登录吗？' })
+    .then(() => {
+      clearAuth()
+      logged.value = false
+      user.value = null
+      showToast('已退出登录')
+      router.replace({ path: LOGIN_PATH, query: { redirect: '/vant/mine' } })
+    })
+    .catch(() => {
+      /* 取消退出 */
+    })
+}
 </script>
 
 <template>
   <div class="mine">
     <header class="mine-header">
-      <div class="mine-user">
+      <div class="mine-user" @click="!logged && goLogin()">
         <div class="avatar">
-          {{ user.name.slice(0, 1) }}
+          {{ avatarText }}
         </div>
         <div class="mine-meta">
-          <div class="mine-name">{{ user.name }}</div>
-          <div class="mine-sub">{{ user.dept }} · {{ user.role }}</div>
+          <div class="mine-name">
+            {{ logged ? user?.name : '未登录' }}
+            <van-icon v-if="!logged" name="arrow" />
+          </div>
+          <div class="mine-sub">{{ subText }}</div>
         </div>
       </div>
     </header>
@@ -41,7 +76,12 @@ const cells = ref([
     </van-cell-group>
 
     <div class="mine-logout">
-      <van-button block round type="primary" plain>退出登录</van-button>
+      <van-button v-if="logged" block round type="primary" plain @click="onLogout">
+        退出登录
+      </van-button>
+      <van-button v-else block round type="primary" @click="goLogin">
+        去登录
+      </van-button>
     </div>
   </div>
 </template>

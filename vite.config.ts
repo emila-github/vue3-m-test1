@@ -99,6 +99,9 @@ export default defineConfig(({ mode, command }) => {
     // 有后端时启用
     server: {
       host: '0.0.0.0', // 允许通过本机 IP 访问
+      // 允许通过内网穿透（cpolar 等）域名访问 dev server；
+      // true = 放行所有 host（仅开发期使用，生产勿开）
+      allowedHosts: true,
 
       ...(isMock ? {} : { proxy }),
     },

@@ -12,6 +12,7 @@
 import { ref, type Ref } from 'vue'
 import { showToast, showLoadingToast, closeToast } from 'vant'
 import type { LoginMethod, LoginResult } from '@/api/modules/login'
+import { setToken, setUserInfo } from '@/api/core/token'
 
 export type EmitFn = (event: string, ...args: any[]) => void
 
@@ -39,6 +40,8 @@ export function useLoginCore(emit: EmitFn): LoginCore {
     showLoadingToast({ message: '登录中...', forbidClick: true, duration: 0 })
     try {
       const result = await fn()
+      setToken(result.token) // 持久化 token，供请求拦截器注入 X-Access-Token
+      setUserInfo(result.userInfo) // 持久化用户信息，供「我的」页展示
       closeToast()
       toast('登录成功')
       emit('success', result)
