@@ -160,10 +160,23 @@ const groups: GroupConf[] = [
       },
     ],
   },
+  {
+    // Demo 演示：免权限，始终渲染（perm 为空数组 → 始终可见）
+    title: 'Demo 演示',
+    items: [
+      {
+        key: 'ydl-demo-list',
+        title: 'VantList 示例',
+        to: '/ydl/ydl-list-demo',
+        perm: [],
+      },
+    ],
+  },
 ]
 
-/** 项级显隐：命中 perm 任一即显示 */
+/** 项级显隐：命中 perm 任一即显示；perm 为空（如 Demo 演示）表示免权限，始终可见 */
 function itemVisible(it: MenuConf): boolean {
+  if (it.perm.length === 0) return true
   return hasMenuAny(...it.perm)
 }
 

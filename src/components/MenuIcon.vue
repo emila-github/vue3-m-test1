@@ -59,6 +59,9 @@ const ICONS: Record<string, { c: string; p: string }> = {
   // ============ 领航足迹 ============
   'lhzj-lhVisitInfoList': { c: '#06b6d4', p: `<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 5-5 2.2 2.2-5z"/>` },
 
+  // ============ Demo 演示 ============
+  'ydl-demo-list': { c: '#1989fa', p: `<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/>` },
+
   // 兜底
   _default: { c: '#d71920', p: `<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 17v.02"/>` },
 }
