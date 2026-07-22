@@ -181,7 +181,7 @@ const allPermissionsDefine = [
   },
   { group: '车险模块权限（Stage4）', items: ['car:create', 'car:edit', 'car:view', 'car:delete'] },
   {
-    group: 'ydl 模块权限（学幼专区）',
+    group: 'ydl 模块权限（福建源动力平台）',
     items: ['ydl:create', 'ydl:edit', 'ydl:view', 'ydl:delete', 'ydl:export'],
   },
   {

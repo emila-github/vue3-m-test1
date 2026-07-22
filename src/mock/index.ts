@@ -153,7 +153,7 @@ export function mockPlugin(): Plugin {
         }
       })
 
-      // ===== 站点（旧站 / 学幼专区）模块：对应 siteClient 的 baseURL /site-api =====
+      // ===== 站点（旧站 / 福建源动力平台）模块：对应 siteClient 的 baseURL /site-api =====
       server.middlewares.use('/site-api', async (req, res, next) => {
         try {
           console.log('[mock] 收到请求(site): %s %s', req.method, req.url)

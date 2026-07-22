@@ -17,7 +17,12 @@ import { useSitePasswordLogin } from '@/composables/ydl/useSitePasswordLogin'
 const route = useRoute()
 const router = useRouter()
 const wecom = useSiteWecomLogin()
-const { captchaItems, loading: pwdLoading, refreshCaptcha, submit: submitPwd } = useSitePasswordLogin()
+const {
+  captchaItems,
+  loading: pwdLoading,
+  refreshCaptcha,
+  submit: submitPwd,
+} = useSitePasswordLogin()
 
 const activeTab = ref<'wecom' | 'password'>('wecom')
 const username = ref('')
@@ -101,12 +106,16 @@ onMounted(async () => {
           class="card-tab"
           :class="{ 'card-tab--active': activeTab === 'wecom' }"
           @click="activeTab = 'wecom'"
-        >企业微信</button>
+        >
+          企业微信
+        </button>
         <button
           class="card-tab"
           :class="{ 'card-tab--active': activeTab === 'password' }"
           @click="activeTab = 'password'"
-        >账号登录</button>
+        >
+          账号登录
+        </button>
       </div>
 
       <!-- 企业微信 -->
@@ -129,14 +138,20 @@ onMounted(async () => {
         </div>
         <div class="card-field">
           <van-icon name="shield-o" class="field-icon" />
-          <input v-model="captcha" class="field-input" maxlength="4" placeholder="请输入图形验证码" />
+          <input
+            v-model="captcha"
+            class="field-input"
+            maxlength="4"
+            placeholder="请输入图形验证码"
+          />
           <span class="captcha-box" title="点击刷新验证码" @click="refreshCaptcha">
             <template v-if="captchaItems.length">
               <i
                 v-for="(it, i) in captchaItems"
                 :key="i"
                 :style="{ color: it.color, transform: `rotate(${it.rotate}deg)` }"
-              >{{ it.ch }}</i>
+                >{{ it.ch }}</i
+              >
             </template>
             <span v-else class="captcha-loading">点击刷新</span>
           </span>

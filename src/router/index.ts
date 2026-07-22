@@ -36,7 +36,7 @@ const manualRoutes = [
       },
     ],
   },
-  // ====== ydl 模块：子目录模块示例（学幼专区）======
+  // ====== ydl 模块：子目录模块示例（福建源动力平台）======
   {
     path: '/ydl',
     component: () => import('../views/ydl/MainLayout.vue'),
@@ -49,13 +49,6 @@ const manualRoutes = [
         meta: { title: '我的' },
       },
     ],
-  },
-  // ====== ydl 模块：我的保源列表页（VantList）======
-  {
-    path: '/ydl/my-insurance-source',
-    name: 'ydl-my-insurance-source',
-    component: () => import('../views/ydl/MyInsuranceSource.vue'),
-    meta: { title: '我的保源' },
   },
   // ====== ydl 模块：VantList 综合示例（ydl 数据格式）======
   {
@@ -178,12 +171,6 @@ const manualRoutes = [
     name: 'ydl-login',
     component: () => import('../views/ydl/SiteLoginView.vue'),
     meta: { title: '站点登录', public: true },
-  },
-  {
-    path: '/vant/vant-ins-icon-demo',
-    name: 'vant-ins-icon-demo',
-    component: () => import('../views/vant/VantInsIconDemo.vue'),
-    meta: { title: '保险行业图标' },
   },
 ]
 

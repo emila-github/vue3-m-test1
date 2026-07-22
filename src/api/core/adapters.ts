@@ -18,7 +18,7 @@ export const vantFormat: ResponseAdapter = {
 }
 
 /**
- * ydl 模块（JeecgBoot 风格）响应适配器，站点（旧站 / 学幼专区）共用同一套格式。
+ * ydl 模块（JeecgBoot 风格）响应适配器，站点（旧站 / 福建源动力平台）共用同一套格式。
  *
  * 包络：{ success, message, code, result, timestamp }   业务数据在 result 字段。
  *

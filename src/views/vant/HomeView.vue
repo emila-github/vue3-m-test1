@@ -6,12 +6,12 @@
  *   1. 红色渐变头部：品牌名 + 城市选择 + 搜索栏
  *   2. 红底区域内的快捷菜单（车险算费风格 / highlight 白色方块图标）
  *   3. 营业推广 banner 区
- *   4. 白底业务菜单卡片（学幼专区风格 / default 红色圆徽图标）
+ *   4. 白底业务菜单卡片（福建源动力平台风格 / default 红色圆徽图标）
  *   5. 底部 tabbar 由 MainLayout 提供
  *
  * 图标双风格：
  *   - highlight（车险算费风格）：白色圆角方块 + 彩色线性图标 → 用于红底区高频入口
- *   - default（学幼专区风格）：红色圆形徽章 + 白色线性图标 → 用于白底常规菜单（默认）
+ *   - default（福建源动力平台风格）：红色圆形徽章 + 白色线性图标 → 用于白底常规菜单（默认）
  */
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -42,7 +42,7 @@ const quickItems = ref<MenuItem[]>([
   { key: 'insurance-source-monitor-track-visit', title: '拜访汇总', to: '/monitor/track/visit', style: 'highlight' },
 ])
 
-// ====== 业务菜单分组（学幼专区 default 风格）======
+// ====== 业务菜单分组（福建源动力平台 default 风格）======
 const groups = ref<MenuGroup[]>([
   {
     title: '',
@@ -115,7 +115,7 @@ function go(it: MenuItem) {
       </div>
     </header>
 
-    <!-- ==================== 白底业务菜单（default 学幼专区风格）==================== -->
+    <!-- ==================== 白底业务菜单（default 福建源动力平台风格）==================== -->
     <main class="home-body">
       <section v-for="(g, gi) in groups" :key="'g' + gi" class="menu-section">
         <h2 v-if="g.title" class="section-title">{{ g.title }}</h2>
@@ -304,7 +304,7 @@ function go(it: MenuItem) {
   color: #1a1a1a;
 }
 
-/* 学幼专区网格 */
+/* 福建源动力平台网格 */
 .menu-grid {
   background: #fff;
   border-radius: 14px;
