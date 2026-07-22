@@ -31,11 +31,11 @@ const modules: ModuleItem[] = [
   },
   {
     key: 'ydl',
-    title: '学幼专区',
-    desc: '校园 / 幼教业务模块示例（子目录模块首页）',
+    title: '福建源动力平台',
+    desc: '源动力业务平台（子目录模块首页）',
     to: '/ydl',
-    icon: '🎒',
-    color: '#07c160',
+    icon: '源',
+    color: '#D71920',
   },
 ]
 
@@ -130,6 +130,8 @@ function open(m: ModuleItem) {
   align-items: center;
   justify-content: center;
   font-size: 24px;
+  font-weight: 700;
+  color: #fff;
   flex-shrink: 0;
 }
 .mod-info {

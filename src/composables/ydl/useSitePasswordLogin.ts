@@ -12,16 +12,25 @@ import { setToken } from '@/api/core/token'
 import { usePermission } from '@/composables/usePermission'
 
 export function useSitePasswordLogin() {
-  const captchaUrl = ref('')
+  // 验证码字符 + 每个字符的视觉样式（内联 DOM 渲染，避免图片不显示）
+  const captchaCode = ref('')
+  const captchaItems = ref<{ ch: string; color: string; rotate: number }[]>([])
   const loading = ref(false)
   let captchaKey = ''
   const { loadPermissionsByToken } = usePermission()
 
+  const captchaPalette = ['#c41230', '#0d47a1', '#1b5e20', '#e65100']
+
   /** 刷新图形验证码 */
   async function refreshCaptcha() {
-    const { img, captchaKey: key } = await getCaptchaImg()
-    // 后端返回 gif 的 base64（可能带 data: 前缀，也可能不带）
-    captchaUrl.value = img.startsWith('data:') ? img : 'data:image/gif;base64,' + img
+    const { code, captchaKey: key } = await getCaptchaImg()
+    captchaCode.value = code
+    // 为每个字符随机配色 + 旋转，模拟图形验证码观感
+    captchaItems.value = code.split('').map((ch) => ({
+      ch,
+      color: captchaPalette[Math.floor(Math.random() * captchaPalette.length)],
+      rotate: Math.random() * 30 - 15,
+    }))
     captchaKey = key
   }
 
@@ -49,5 +58,5 @@ export function useSitePasswordLogin() {
     }
   }
 
-  return { captchaUrl, loading, refreshCaptcha, submit }
+  return { captchaCode, captchaItems, loading, refreshCaptcha, submit }
 }

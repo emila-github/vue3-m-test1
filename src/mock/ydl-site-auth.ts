@@ -28,6 +28,17 @@ function queryParam(req: any, key: string): string {
 
 const permResult = (permRaw as any).result
 
+// ==================== 图形验证码（Mock 生成） ====================
+// 生成 4 位字符（前端以「内联 DOM」渲染，避免 <img>+dataURL 在部分环境下不显示）。
+let currentCaptcha = ''
+function makeCaptcha(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let code = ''
+  for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)]
+  currentCaptcha = code
+  return code
+}
+
 const routes: MockRoute[] = [
   // 企业微信：授权地址（演示：直接回跳带 code）
   {
@@ -53,17 +64,30 @@ const routes: MockRoute[] = [
       msg: '登录成功',
     }),
   },
-  // 普通登录：图形验证码
+  // 普通登录：图形验证码（返回字符，前端内联 DOM 渲染）
   {
     url: '/sys/captchaImage',
     method: 'GET',
-    response: ok({ img: '', captchaKey: 'mock_captcha_key' }),
+    response: () => ok({ code: makeCaptcha(), captchaKey: 'mock_captcha_key' }),
   },
-  // 普通登录：账号密码登录（演示：任意账号密码通过）
+  // 普通登录：账号密码登录（演示：任意账号密码，但需验证码正确）
   {
     url: '/sys/social/wxLogin',
     method: 'POST',
-    response: ok({ token: 'mock_site_token_' + Date.now() }),
+    response: (req: any) => {
+      let body: any = req.body
+      if (typeof body === 'string') {
+        try {
+          body = JSON.parse(body)
+        } catch {
+          body = {}
+        }
+      }
+      if (body?.captcha && currentCaptcha && body.captcha.toUpperCase() !== currentCaptcha.toUpperCase()) {
+        return { success: false, code: 500, message: '验证码错误', result: null, timestamp: Date.now() }
+      }
+      return ok({ token: 'mock_site_token_' + Date.now() })
+    },
   },
   // 登录后拉权限（直接返回样例 JSON 的 result）
   {
