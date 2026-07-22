@@ -9,18 +9,7 @@
  * 后端响应包络：{ success, code, message, result, timestamp }（由 ydlFormat 适配器解包为 result）。
  * 列表 result 为分页对象：{ records, current, size, total, pages }。
  */
-import { ydlGet, ydlPost, ydlPut } from './client'
-
-// ==================== 分页返回结构（JeecgBoot） ====================
-
-/** ydl 后端分页结构（result） */
-export interface YdlPageResult<T> {
-  records: T[]
-  current: number
-  size: number
-  total: number
-  pages: number
-}
+import { ydlGet, ydlPost, ydlPut, type YdlPageResult } from './client'
 
 // ==================== 数据模型 ====================
 
