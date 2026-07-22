@@ -57,6 +57,13 @@ const manualRoutes = [
     component: () => import('../views/ydl/YdlListDemo.vue'),
     meta: { title: 'VantList 示例（ydl）' },
   },
+  // ====== ydl 模块：我的保源（保险来源）======
+  {
+    path: '/ydl/my-insurance-source',
+    name: 'ydl-my-insurance-source',
+    component: () => import('../views/ydl/MyInsuranceSource.vue'),
+    meta: { title: '我的保源' },
+  },
   {
     path: '/about',
     name: 'about',
