@@ -31,7 +31,7 @@ const modules: ModuleItem[] = [
   },
   {
     key: 'ydl',
-    title: '学幼专区',
+    title: '福建源动力平台',
     desc: '校园 / 幼教业务模块示例（子目录模块首页）',
     to: '/ydl',
     icon: '🎒',

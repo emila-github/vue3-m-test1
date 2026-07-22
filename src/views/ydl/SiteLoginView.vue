@@ -80,7 +80,7 @@ onMounted(async () => {
 <template>
   <div class="site-login">
     <header class="login-header">
-      <div class="login-title">学幼专区</div>
+      <div class="login-title">福建源动力平台</div>
       <div class="login-sub">站点登录</div>
     </header>
 

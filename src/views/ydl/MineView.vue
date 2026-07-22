@@ -24,7 +24,7 @@ const cells = ref([
   { icon: 'contact', title: '个人资料', to: '' },
   { icon: 'balance-o', title: '权限与角色', to: '' },
   { icon: 'setting-o', title: '设置', to: '' },
-  { icon: 'info-o', title: '关于学幼专区', to: '' },
+  { icon: 'info-o', title: '关于福建源动力平台', to: '' },
 ])
 
 function goLogin() {

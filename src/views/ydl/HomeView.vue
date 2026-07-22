@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * HomeView（ydl 模块）—— 学幼专区首页（示例子目录模块）
+ * HomeView（ydl 模块）—— 福建源动力平台首页（示例子目录模块）
  */
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -39,7 +39,7 @@ function go(it: MenuItem) {
 <template>
   <div class="ydl-home">
     <header class="ydl-header">
-      <div class="ydl-title">学幼专区</div>
+      <div class="ydl-title">福建源动力平台</div>
       <div class="ydl-sub">校园 / 幼教业务工作台</div>
     </header>
 
