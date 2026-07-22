@@ -22,6 +22,7 @@ import demoMapRoutes from './demo-map'
 import loginRoutes from './login'
 import ydlRenewalRoutes from './ydl-renewal'
 import siteAuthRoutes from './ydl-site-auth'
+import ydlInsSourceRoutes from './ydl-ins-source'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
