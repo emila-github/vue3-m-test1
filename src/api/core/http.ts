@@ -70,8 +70,12 @@ export function createClient(options: ClientOptions): ApiClient {
       const code = adapter.extractCode(raw)
       const message = adapter.extractMessage(raw)
 
-      if (code === 401 || code === 403) {
-        options.onAuthFail?.(code)
+      if (code === 401 || code === 403 || code === 510) {
+        // 允许单次请求标记 __skipAuthFail：例如登出接口，目标本就是登录页，
+        // 无需 onAuthFail 抢跳，避免与本地清理/跳转竞争导致闪烁或错误回跳。
+        if (!(res.config as any).__skipAuthFail) {
+          options.onAuthFail?.(code)
+        }
       }
       return Promise.reject(new BizError(code ?? -1, message, raw))
     },

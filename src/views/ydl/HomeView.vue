@@ -17,8 +17,13 @@ interface MenuItem {
 }
 
 const items = ref<MenuItem[]>([
-  { key: 'ydl-ins-source', title: '我的保源', to: '/ydl/my-insurance-source', style: 'highlight' },
-  { key: 'ydl-list-demo', title: '列表示例', to: '/ydl/ydl-list-demo', style: 'default', badge: 'DEMO' },
+  {
+    key: 'ydl-list-demo',
+    title: '列表示例',
+    to: '/ydl/ydl-list-demo',
+    style: 'default',
+    badge: 'DEMO',
+  },
   { key: 'ydl-class', title: '班级管理', to: '/ydl/class', style: 'default' },
   { key: 'ydl-student', title: '学生档案', to: '/ydl/student', style: 'default' },
   { key: 'ydl-notice', title: '通知公告', to: '/ydl/notice', style: 'default', badge: 'NEW' },
@@ -40,12 +45,7 @@ function go(it: MenuItem) {
 
     <main class="ydl-body">
       <div class="ydl-grid">
-        <button
-          v-for="it in items"
-          :key="it.key"
-          class="ydl-item"
-          @click="go(it)"
-        >
+        <button v-for="it in items" :key="it.key" class="ydl-item" @click="go(it)">
           <MenuIcon :name="it.key" :style="it.style ?? 'default'" :size="44" :badge="it.badge" />
           <span class="ydl-label">{{ it.title }}</span>
         </button>

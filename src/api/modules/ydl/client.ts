@@ -12,6 +12,18 @@ import { ydlFormat, ydlPagination } from '../../core/adapters'
 
 export { ydlFormat, ydlPagination }
 
+/**
+ * ydl 后端通用分页返回结构（JeecgBoot 风格 result）。
+ * 各业务 API 复用此类型，勿在具体业务文件里重复定义。
+ */
+export interface YdlPageResult<T> {
+  records: T[]
+  current: number
+  size: number
+  total: number
+  pages: number
+}
+
 export const ydlClient = createClient({
   adapter: ydlFormat,
   pagination: ydlPagination,

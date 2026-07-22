@@ -69,7 +69,7 @@ function createPermissionDirective(check: (codes: string[]) => boolean): Directi
 }
 
 // 复用单例判断函数
-const { hasAny, hasAll, hasNone } = usePermission()
+const { hasAny, hasAll, hasNone, hasMenuAny, hasMenuAll } = usePermission()
 
 /** v-permission：拥有任意一个即可见 */
 export const permissionDirective = createPermissionDirective((codes) => hasAny(...codes))
@@ -77,5 +77,11 @@ export const permissionDirective = createPermissionDirective((codes) => hasAny(.
 export const permissionAllDirective = createPermissionDirective((codes) => hasAll(...codes))
 /** v-permission-none：拥有任意一个就隐藏（没有任何权限才可见） */
 export const permissionNoneDirective = createPermissionDirective((codes) => hasNone(...codes))
+
+// ===== 菜单级权限指令（数据源为 menuAuth，对应旧站 v-has-*permission-menu） =====
+/** v-menu：拥有任意一个菜单权限即可见 */
+export const menuDirective = createPermissionDirective((codes) => hasMenuAny(...codes))
+/** v-menu-all：必须拥有全部菜单权限才可见 */
+export const menuAllDirective = createPermissionDirective((codes) => hasMenuAll(...codes))
 
 export default permissionDirective

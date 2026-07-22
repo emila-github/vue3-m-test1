@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // 手写路由与约定式路由可并存，最终用 [...manualRoutes, ...routes] 合并即可。
 import { routes, handleHotUpdate } from 'vue-router/auto-routes'
 import { getToken } from '@/api/core/token'
+import { usePermission } from '@/composables/usePermission'
 
 // ==================== 手写路由（业务页接入方式） ====================
 const manualRoutes = [
@@ -171,6 +172,13 @@ const manualRoutes = [
     component: () => import('../views/vant/VantLoginDemo.vue'),
     meta: { title: 'VantLogin 登录', public: true },
   },
+  // ====== ydl 站点登录页（白名单，独立于 tabbar 框架） ======
+  {
+    path: '/ydl/login',
+    name: 'ydl-login',
+    component: () => import('../views/ydl/SiteLoginView.vue'),
+    meta: { title: '站点登录', public: true },
+  },
   {
     path: '/vant/vant-ins-icon-demo',
     name: 'vant-ins-icon-demo',
@@ -193,9 +201,12 @@ if (import.meta.hot) {
 // 配置方式有两种，满足「有些页面不用登录就能访问」：
 //   1) 在 routeWhiteList 数组里列 path；
 //   2) 任意路由定义里加 meta: { public: true }。
-const LOGIN_PATH = '/vant/vant-login-demo'
+const LOGIN_PATH = '/vant/vant-login-demo' // vant 模块登录页
+const SITE_LOGIN_PATH = '/ydl/login' // ydl 站点登录页
 const routeWhiteList: string[] = [
   LOGIN_PATH, // 登录页自身必须可访问，否则未登录会无限重定向
+  SITE_LOGIN_PATH,
+  '/', // 模块总入口（业务模块选择菜单）
   '/about',
   '/vant/vant-ins-icon-demo',
 ]
@@ -209,12 +220,27 @@ declare module 'vue-router' {
   }
 }
 
-router.beforeEach((to) => {
-  const loggedIn = !!getToken()
+router.beforeEach(async (to) => {
+  const token = getToken()
   const isPublic = to.meta.public === true || routeWhiteList.includes(to.path)
-  if (isPublic || loggedIn) return true
-  // 未登录 → 跳登录页，并记录来源地址（登录成功后跳回）
-  return { path: LOGIN_PATH, query: { redirect: to.fullPath } }
+  if (!token) {
+    if (isPublic) return true
+    // 未登录：ydl 模块跳站点登录页，其余跳 vant 登录页，并记录来源地址
+    const login = to.path.startsWith('/ydl') ? SITE_LOGIN_PATH : LOGIN_PATH
+    return { path: login, query: { redirect: to.fullPath } }
+  }
+  // 已登录：进入 ydl 模块且菜单权限尚未加载时，用 token 拉一次真实权限树
+  if (to.path.startsWith('/ydl')) {
+    const { menuAuth, loadPermissionsByToken } = usePermission()
+    if (menuAuth.value.length === 0) {
+      try {
+        await loadPermissionsByToken(token)
+      } catch {
+        /* 拉权限失败不拦截，交由页面处理 */
+      }
+    }
+  }
+  return true
 })
 
 export default router
