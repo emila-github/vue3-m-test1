@@ -3,10 +3,11 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { showConfirmDialog, showToast } from 'vant'
 import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
-import { logout } from '@/api/modules/login'
+import { usePermission } from '@/composables/usePermission'
+import { siteLogout } from '@/api/modules/ydl/site-auth'
 
 const router = useRouter()
-const LOGIN_PATH = '/vant/vant-login-demo'
+const LOGIN_PATH = '/ydl/login'
 
 // 登录态 + 当前登录用户信息（登录成功后由 setUserInfo 持久化）
 const logged = ref(isLoggedIn())
@@ -30,24 +31,28 @@ function goLogin() {
   router.push({ path: LOGIN_PATH, query: { redirect: '/ydl/mine' } })
 }
 
-/** 退出登录：通知后端销毁会话 + 清除本地 token / 用户信息，跳回登录页 */
+/** 退出登录：先本地清理并即时反馈，再异步通知后端销毁会话（失败不影响本地退出） */
 async function onLogout() {
-  showConfirmDialog({ title: '提示', message: '确定要退出登录吗？' })
-    .then(async () => {
-      try {
-        await logout()
-      } catch {
-        /* 后端登出失败不影响本地退出 */
-      }
-      clearAuth()
-      logged.value = false
-      user.value = null
-      showToast('已退出登录')
-      router.replace({ path: LOGIN_PATH, query: { redirect: '/ydl/mine' } })
-    })
-    .catch(() => {
-      /* 取消退出 */
-    })
+  const { resetPermissions } = usePermission()
+  // 取消退出直接返回（showConfirmDialog 取消时 reject）
+  const confirmed = await showConfirmDialog({
+    title: '提示',
+    message: '确定要退出登录吗？',
+  }).catch(() => false)
+  if (!confirmed) return
+
+  // 本地清理先行：无论后端返回什么（含 401/510），都即时、稳定地退出
+  resetPermissions() // 清空按钮 / 菜单权限
+  clearAuth() // 清除本地 token / 用户信息
+  logged.value = false
+  user.value = null
+  showToast('已退出登录')
+  router.replace({ path: LOGIN_PATH, query: { redirect: '/ydl/mine' } })
+
+  // 再异步通知后端销毁会话（标记 __skipAuthFail，不再触发 onAuthFail 抢跳）
+  siteLogout().catch(() => {
+    /* 后端登出失败不影响本地退出 */
+  })
 }
 </script>
 

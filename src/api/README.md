@@ -18,8 +18,7 @@ src/api/
 │   ├── demo-*.ts
 │   └── ydl/              # ydl 模块：自带客户端，对接 JeecgBoot 格式
 │       ├── client.ts     # ydlClient / ydlGet / ydlPost / ydlPut / ydlDel / ydlPaginate ...
-│       ├── ydl-ins-source.ts   # 我的保源（JeecgBoot 分页 records/current/size）
-│       └── ydl-renewal.ts      # 车险续保保源（功能同 demo-renewal，ydl 数据格式示例）
+│       └── ydl-renewal.ts      # 车险续保保源（功能同 demo-renewal，ydl 数据格式示例 JeecgBoot 分页 records/current/size）
 └── index.ts              # 统一导出
 ```
 

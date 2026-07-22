@@ -10,9 +10,8 @@
  * 列表接口通过 ydlPagination 适配器把 records/current/size/total 转回通用 PageResult<YdlRenewal>，
  * 调用方（VantList / useCrudList）拿到的仍是统一结构，与后端格式解耦。
  */
-import { ydlGet, ydlPost, ydlPut, ydlDel, ydlPagination } from './client'
+import { ydlGet, ydlPost, ydlPut, ydlDel, ydlPagination, type YdlPageResult } from './client'
 import type { PageParams, PageResult } from '../../types'
-import type { YdlPageResult } from './ydl-ins-source'
 
 // ==================== 数据模型 ====================
 
@@ -209,9 +208,10 @@ export const YDL_DEFAULT_RENEWAL_FORM: YdlRenewalForm = {
  * ydlGet 解包出 result（records/current/size/total），再由 ydlPagination 转回通用 PageResult。
  */
 export function getYdlRenewalList(params: YdlRenewalQuery & PageParams) {
-  return ydlGet<YdlPageResult<YdlRenewal>>('/data/renewal/list', params as Record<string, any>).then(
-    (res) => ydlPagination.fromResult(res) as PageResult<YdlRenewal>,
-  )
+  return ydlGet<YdlPageResult<YdlRenewal>>(
+    '/data/renewal/list',
+    params as Record<string, any>,
+  ).then((res) => ydlPagination.fromResult(res) as PageResult<YdlRenewal>)
 }
 
 /** 保源详情 */

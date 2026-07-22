@@ -1,0 +1,2138 @@
+{
+  "success": true,
+  "message": "查询成功",
+  "code": 200,
+  "result": {
+    "allAuth": [
+      {
+        "action": "xb/endList/5_50",
+        "describe": "保费5到50万",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoDelete",
+        "describe": "删除",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbRenewedList:RenewedQuestionInput",
+        "describe": "问题项目录入",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbAuditList:ActiveEdit",
+        "describe": "提交审核",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbRenewedList:Feedback",
+        "describe": "续保反馈",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "policy:jcEnterpriseRisk:list",
+        "describe": "产品渗透率列表查询",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageViewAddContactsInfo",
+        "describe": "添加-客户信息",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:edit",
+        "describe": "业务员编辑按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:form:phone",
+        "describe": "手机号可编辑",
+        "type": "2",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageViewEditTeamInfo",
+        "describe": "编辑-落地机构团队信息",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbExtendDistribInfo:list",
+        "describe": "续保保单查询权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:createOrgAccount",
+        "describe": "创建机构账号",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "policyDetail:export",
+        "describe": "签单明细导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:comments",
+        "describe": "管理员点评权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "sys:user:list",
+        "describe": "用户列表数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "sys:role:list",
+        "describe": "角色列表权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "isCollect:labelEdit",
+        "describe": "编辑标签按钮权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "isCollect:delete",
+        "describe": "删除按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:list",
+        "describe": "拜访列表数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "insuraceSourceDistribution:nearPage",
+        "describe": "近期待办数据",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbDistribInfoList:Add",
+        "describe": "分配",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageView",
+        "describe": "查看",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbExtendDistribInfo:exportXls",
+        "describe": "续保分配保单导出权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "distribution:unpush",
+        "describe": "查看未推送保源(当前操作人可见)",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:add",
+        "describe": "添加拜访记录按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "distribution:sendExportPush",
+        "describe": "推送导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:view",
+        "describe": "查看拜访记录详情按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "policy:jcEnterpriseItem:list",
+        "describe": "标的渗透率列表查询",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoService",
+        "describe": "申请服务",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:add",
+        "describe": "添加用户按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbRenewedList:RenewedEndInput",
+        "describe": "申请项目终止",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageViewEditContactsInfo",
+        "describe": "编辑-客户信息",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "monitor:isExportDetailList",
+        "describe": "汇总统计导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoEdit",
+        "describe": "编辑",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xb/question/5_50",
+        "describe": "保费5万以上50万以下",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "is:optImport",
+        "describe": "保源操作权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbRenewedList:RenewedInput",
+        "describe": "续保录入",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoView",
+        "describe": "查看",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "sys:sysDepart:queryIdTree",
+        "describe": "查看本机构及其下属机构",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoDownloadModel",
+        "describe": "下载模板",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:delete",
+        "describe": "用户删除",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "memberScore:list",
+        "describe": "业务员评分查询",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:import",
+        "describe": "导入权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xb/question/0_5",
+        "describe": "保费5万以下",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:icBaseInfoImportExcel",
+        "describe": "导入",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageViewAddItemInfo",
+        "describe": "添加-重要事项",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "user:edit",
+        "describe": "用户编辑",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xb/endList/0_5",
+        "describe": "保费5万以下",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:delete",
+        "describe": "业务员删除按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "sysUser:departUserList",
+        "describe": "用户数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "monitor:isExportUnVisit",
+        "describe": "未拜访导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracksDetail:export",
+        "describe": "拜访明细导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:myPageViewDeleteContactsInfo",
+        "describe": "删除-客户信息",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:weekStat",
+        "describe": "拜访跟踪周统计数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "distribution:pushed",
+        "describe": "查看自己所推送的保源",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "insuraceSourceDistribution:querySelf",
+        "describe": "查看自己保源数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "sys:user:export",
+        "describe": "导出用户列表数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "data:insuranceSource:list",
+        "describe": "保源管理列表数据权限",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "depart:myDeparts",
+        "describe": "查看当前用户所处部门及下属部门",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbRenewedList:RequestAudit",
+        "describe": "再次预审核",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xb/endList/50+",
+        "describe": "保费50万及以上",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "visitTracks:result",
+        "describe": "添加销售结果按钮",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ic:auditPagePassAudit",
+        "describe": "审核",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xb/question/50+",
+        "describe": "保费50万及以上",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarRenewedList:Feedback",
+        "describe": "续保录入",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarRenewedList:RenewedEndInput",
+        "describe": "项目终止",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarRenewedList:RenewedBack",
+        "describe": "退回业务",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarDistribInfoList:Add",
+        "describe": "分配",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:distributeImport",
+        "describe": "批量导入分配",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:distributeExport",
+        "describe": "续保清单导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:renewedExport",
+        "describe": "续保清单导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endExport",
+        "describe": "终止清单导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endPass",
+        "describe": "驳回/通过",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:feedbackSummaryExport",
+        "describe": "反馈统计导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:summaryExport",
+        "describe": "到期清单导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:xbRateSummaryExport",
+        "describe": "续保率统计导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endRateSummaryExport",
+        "describe": "终止项目统计导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:handleAdd",
+        "describe": "新增白名单",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:importExcel",
+        "describe": "导入",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:downloadModel",
+        "describe": "下载模板",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:add",
+        "describe": "新增",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:edit",
+        "describe": "编辑",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:delete",
+        "describe": "删除",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:exportXls",
+        "describe": "导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lh:queryPageList",
+        "describe": "列表数据规则",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:view",
+        "describe": "查看",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:lhSummaryBranchExport",
+        "describe": "导出",
+        "type": "1",
+        "status": "1"
+      },
+      {
+        "action": "lhVisitInfo:lhSummaryExport",
+        "describe": "导出",
+        "type": "1",
+        "status": "1"
+      }
+    ],
+    "auth": [
+      {
+        "action": "xbRenewedList:RenewedEndInput",
+        "describe": "申请项目终止",
+        "type": "1"
+      },
+      {
+        "action": "xbAuditList:ActiveEdit",
+        "describe": "提交审核",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoDownloadModel",
+        "describe": "下载模板",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoImportExcel",
+        "describe": "导入",
+        "type": "1"
+      },
+      {
+        "action": "user:edit",
+        "describe": "用户编辑",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:distributeExport",
+        "describe": "续保清单导出",
+        "type": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:handleAdd",
+        "describe": "新增白名单",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:comments",
+        "describe": "管理员点评权限",
+        "type": "1"
+      },
+      {
+        "action": "data:insuranceSource:list",
+        "describe": "保源管理列表数据权限",
+        "type": "1"
+      },
+      {
+        "action": "isCollect:delete",
+        "describe": "删除按钮",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:summaryExport",
+        "describe": "到期清单导出",
+        "type": "1"
+      },
+      {
+        "action": "user:add",
+        "describe": "添加用户按钮",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:list",
+        "describe": "拜访列表数据权限",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageViewAddContactsInfo",
+        "describe": "添加-客户信息",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:delete",
+        "describe": "业务员删除按钮",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endRateSummaryExport",
+        "describe": "终止项目统计导出",
+        "type": "1"
+      },
+      {
+        "action": "sysUser:departUserList",
+        "describe": "用户数据权限",
+        "type": "1"
+      },
+      {
+        "action": "user:createOrgAccount",
+        "describe": "创建机构账号",
+        "type": "1"
+      },
+      {
+        "action": "xbCarRenewedList:Feedback",
+        "describe": "续保录入",
+        "type": "1"
+      },
+      {
+        "action": "monitor:isExportDetailList",
+        "describe": "汇总统计导出",
+        "type": "1"
+      },
+      {
+        "action": "policy:jcEnterpriseItem:list",
+        "describe": "标的渗透率列表查询",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:feedbackSummaryExport",
+        "describe": "反馈统计导出",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoService",
+        "describe": "申请服务",
+        "type": "1"
+      },
+      {
+        "action": "xbCarDistribInfoList:Add",
+        "describe": "分配",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endExport",
+        "describe": "终止清单导出",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageViewEditContactsInfo",
+        "describe": "编辑-客户信息",
+        "type": "1"
+      },
+      {
+        "action": "visitTracksDetail:export",
+        "describe": "拜访明细导出",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageViewDeleteContactsInfo",
+        "describe": "删除-客户信息",
+        "type": "1"
+      },
+      {
+        "action": "insuraceSourceDistribution:nearPage",
+        "describe": "近期待办数据",
+        "type": "1"
+      },
+      {
+        "action": "xbExtendDistribInfo:exportXls",
+        "describe": "续保分配保单导出权限",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoView",
+        "describe": "查看",
+        "type": "1"
+      },
+      {
+        "action": "xbCarRenewedList:RenewedBack",
+        "describe": "退回业务",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:add",
+        "describe": "新增",
+        "type": "1"
+      },
+      {
+        "action": "xbRenewedList:RequestAudit",
+        "describe": "再次预审核",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoDelete",
+        "describe": "删除",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:renewedExport",
+        "describe": "续保清单导出",
+        "type": "1"
+      },
+      {
+        "action": "user:import",
+        "describe": "导入权限",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:add",
+        "describe": "添加拜访记录按钮",
+        "type": "1"
+      },
+      {
+        "action": "xb/question/0_5",
+        "describe": "保费5万以下",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:view",
+        "describe": "查看拜访记录详情按钮",
+        "type": "1"
+      },
+      {
+        "action": "memberScore:list",
+        "describe": "业务员评分查询",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageViewEditTeamInfo",
+        "describe": "编辑-落地机构团队信息",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:weekStat",
+        "describe": "拜访跟踪周统计数据权限",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:result",
+        "describe": "添加销售结果按钮",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:edit",
+        "describe": "编辑",
+        "type": "1"
+      },
+      {
+        "action": "policy:jcEnterpriseRisk:list",
+        "describe": "产品渗透率列表查询",
+        "type": "1"
+      },
+      {
+        "action": "xb/endList/0_5",
+        "describe": "保费5万以下",
+        "type": "1"
+      },
+      {
+        "action": "monitor:isExportUnVisit",
+        "describe": "未拜访导出",
+        "type": "1"
+      },
+      {
+        "action": "distribution:unpush",
+        "describe": "查看未推送保源(当前操作人可见)",
+        "type": "1"
+      },
+      {
+        "action": "isCollect:labelEdit",
+        "describe": "编辑标签按钮权限",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:distributeImport",
+        "describe": "批量导入分配",
+        "type": "1"
+      },
+      {
+        "action": "xbRenewedList:RenewedInput",
+        "describe": "续保录入",
+        "type": "1"
+      },
+      {
+        "action": "depart:myDeparts",
+        "describe": "查看当前用户所处部门及下属部门",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:lhSummaryBranchExport",
+        "describe": "导出",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:xbRateSummaryExport",
+        "describe": "续保率统计导出",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageViewAddItemInfo",
+        "describe": "添加-重要事项",
+        "type": "1"
+      },
+      {
+        "action": "ic:auditPagePassAudit",
+        "describe": "审核",
+        "type": "1"
+      },
+      {
+        "action": "insuraceSourceDistribution:querySelf",
+        "describe": "查看自己保源数据权限",
+        "type": "1"
+      },
+      {
+        "action": "sys:user:list",
+        "describe": "用户列表数据权限",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:delete",
+        "describe": "删除",
+        "type": "1"
+      },
+      {
+        "action": "xbExtendDistribInfo:list",
+        "describe": "续保保单查询权限",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:lhSummaryExport",
+        "describe": "导出",
+        "type": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:downloadModel",
+        "describe": "下载模板",
+        "type": "1"
+      },
+      {
+        "action": "user:form:phone",
+        "describe": "手机号可编辑",
+        "type": "2"
+      },
+      {
+        "action": "xbDistribInfoList:Add",
+        "describe": "分配",
+        "type": "1"
+      },
+      {
+        "action": "policyDetail:export",
+        "describe": "签单明细导出",
+        "type": "1"
+      },
+      {
+        "action": "ysWhitelistDataList:importExcel",
+        "describe": "导入",
+        "type": "1"
+      },
+      {
+        "action": "ic:icBaseInfoEdit",
+        "describe": "编辑",
+        "type": "1"
+      },
+      {
+        "action": "xbRenewedList:RenewedQuestionInput",
+        "describe": "问题项目录入",
+        "type": "1"
+      },
+      {
+        "action": "xbRenewedList:Feedback",
+        "describe": "续保反馈",
+        "type": "1"
+      },
+      {
+        "action": "distribution:pushed",
+        "describe": "查看自己所推送的保源",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:view",
+        "describe": "查看",
+        "type": "1"
+      },
+      {
+        "action": "lhVisitInfo:exportXls",
+        "describe": "导出",
+        "type": "1"
+      },
+      {
+        "action": "ic:myPageView",
+        "describe": "查看",
+        "type": "1"
+      },
+      {
+        "action": "distribution:sendExportPush",
+        "describe": "推送导出",
+        "type": "1"
+      },
+      {
+        "action": "visitTracks:edit",
+        "describe": "业务员编辑按钮",
+        "type": "1"
+      },
+      {
+        "action": "xbCarRenewedList:RenewedEndInput",
+        "describe": "项目终止",
+        "type": "1"
+      },
+      {
+        "action": "is:optImport",
+        "describe": "保源操作权限",
+        "type": "1"
+      },
+      {
+        "action": "xbCarExtendInfoCar:endPass",
+        "describe": "驳回/通过",
+        "type": "1"
+      }
+    ],
+    "menu": [
+      {
+        "redirect": null,
+        "path": "/dashboard/analysis",
+        "component": "dashboard/Analysis",
+        "route": "1",
+        "meta": {
+          "keepAlive": false,
+          "icon": "home",
+          "title": "首页"
+        },
+        "name": "dashboard-analysis",
+        "id": "30794e1eda0d5d65771634093d2d2871"
+      },
+      {
+        "redirect": "/is/collect",
+        "path": "/insurance-source/collect",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/insurance-source/collect/add",
+            "component": "insuranceSource/collect/Edit",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "新增保源"
+            },
+            "name": "insurance-source-collect-add",
+            "id": "72535bf9dbcedc0d74ac8015501c15a8"
+          },
+          {
+            "path": "/insurance-source/collect/index",
+            "component": "insuranceSource/collect/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "保源查询和编辑"
+            },
+            "name": "insurance-source-collect-index",
+            "id": "8cc3a9e02cee036f417ea314981b86c1"
+          },
+          {
+            "path": "/insurance-source/collect/labelType",
+            "component": "insuranceSource/data/labelType/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "标签管理"
+            },
+            "name": "insurance-source-collect-labelType",
+            "id": "a42f69ed6c222c4cf31a6cb245f61268"
+          },
+          {
+            "path": "/insurance-source/collect/view/:id",
+            "component": "insuranceSource/collect/Edit",
+            "route": "1",
+            "hidden": true,
+            "meta": {
+              "keepAlive": false,
+              "title": "查看保源"
+            },
+            "name": "insurance-source-collect-view-@id",
+            "id": "5667f14e93365811b554321b74e30212"
+          },
+          {
+            "path": "/insurance-source/collect/edit/:id",
+            "component": "insuranceSource/collect/Edit",
+            "route": "1",
+            "hidden": true,
+            "meta": {
+              "keepAlive": false,
+              "title": "编辑保源"
+            },
+            "name": "insurance-source-collect-edit-@id",
+            "id": "4cd25245863ac74a7affebbaf013719d"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "form",
+          "title": "保源采集"
+        },
+        "name": "insurance-source-collect",
+        "id": "54049fa2dd3b5b6efc93d3a7354da1b6"
+      },
+      {
+        "redirect": "/is/distribution",
+        "path": "/insurance-source/distribution",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/insurance-source/distribution/send",
+            "component": "insuranceSource/distribution/Send",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "保源推送"
+            },
+            "name": "insurance-source-distribution-send",
+            "id": "3105b1193b15847a453255686a21ca23"
+          },
+          {
+            "path": "/insurance-source/distribution",
+            "component": "insuranceSource/distribution/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "保源回收"
+            },
+            "name": "insurance-source-distribution",
+            "id": "37c82cf66496197e6bd5c7eff8c0b654"
+          }
+        ],
+        "meta": {
+          "keepAlive": true,
+          "icon": "branches",
+          "title": "保源分配"
+        },
+        "name": "insurance-source-distribution",
+        "id": "93a92a217a0c7f3688c374150bb732fb"
+      },
+      {
+        "redirect": null,
+        "path": "/lhzj",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/lhzj/lhVisitInfoList",
+            "component": "lhzj/lhVisitInfoList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "领航足迹列表"
+            },
+            "name": "lhzj-lhVisitInfoList",
+            "id": "6e23f21a0f8b014d998a0c78e5ec1a42"
+          },
+          {
+            "path": "/lhzj/lhSummaryCity",
+            "component": "lhzj/lhSummaryCity/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "领航足迹拜访量统计(市)"
+            },
+            "name": "lhzj-lhSummaryCity",
+            "id": "4829117185fa1719c5c6d8f707a0458c"
+          },
+          {
+            "path": "/lhzj/lhSummaryCounty",
+            "component": "lhzj/lhSummaryCounty/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "领航足迹拜访量统计(区/县)"
+            },
+            "name": "lhzj-lhSummaryCounty",
+            "id": "d3e62a807036c2afa54851634e49258d"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "stock",
+          "title": "领航足迹"
+        },
+        "name": "lhzj",
+        "id": "21e7a9984d59c9396afe085910a309bb"
+      },
+      {
+        "redirect": null,
+        "path": "/insurance-source/send",
+        "component": "insuranceSource/send/index",
+        "route": "1",
+        "meta": {
+          "keepAlive": false,
+          "icon": "deployment-unit",
+          "title": "保源推送"
+        },
+        "name": "insurance-source-send",
+        "id": "43222e09c2183ca467722851c2eee506"
+      },
+      {
+        "redirect": null,
+        "path": "/insurance-source/workplace",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/insurance-source/workplace/my-insurance-source",
+            "component": "insuranceSource/workplace/MyInsuranceSource/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "我的保源"
+            },
+            "name": "insurance-source-workplace-my-insurance-source",
+            "id": "c745c008b7cd79c4453d3b5c2cedab0b"
+          },
+          {
+            "path": "/insurance-source/workplace/my-is-detail/:id",
+            "component": "insuranceSource/workplace/MyISDetail/index",
+            "route": "1",
+            "hidden": true,
+            "meta": {
+              "keepAlive": true,
+              "title": "我的拜访"
+            },
+            "name": "insurance-source-workplace-my-is-detail-@id",
+            "id": "374ee24a626febf6d00df22f5e8cc476"
+          }
+        ],
+        "meta": {
+          "keepAlive": true,
+          "icon": "desktop",
+          "title": "工作台"
+        },
+        "name": "insurance-source-workplace",
+        "id": "7629799e2db0b28ef81229c998896d96"
+      },
+      {
+        "redirect": null,
+        "path": "/insurance-source/monitor",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/insurance-source/monitor/dataSupport",
+            "component": "insuranceSource/monitor/dataSupport/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "保源提数"
+            },
+            "name": "insurance-source-monitor-dataSupport",
+            "id": "7e05217b9412229f382ecf7fdcc2440b"
+          },
+          {
+            "path": "/insurance-source/monitor/result/detail",
+            "component": "insuranceSource/monitor/result/Detail",
+            "route": "1",
+            "hidden": true,
+            "meta": {
+              "keepAlive": false,
+              "title": "销售结果详情"
+            },
+            "name": "insurance-source-monitor-result-detail",
+            "id": "5ab183d04145c2ec56a8200f53bd1120"
+          },
+          {
+            "path": "/insurance-source/monitor/source",
+            "component": "insuranceSource/monitor/source/index",
+            "route": "1",
+            "children": [
+              {
+                "path": "/insurance-source/monitor/source/UnVisit",
+                "component": "insuranceSource/monitor/source/UnVisit",
+                "route": "1",
+                "meta": {
+                  "keepAlive": false,
+                  "title": "未拜访查询"
+                },
+                "name": "insurance-source-monitor-source-UnVisit",
+                "id": "07e8623ebba24afac14185fa56cece77"
+              },
+              {
+                "path": "/insurance-source/monitor/source/add",
+                "component": "insuranceSource/monitor/source/Add",
+                "route": "1",
+                "meta": {
+                  "keepAlive": true,
+                  "title": "保源新增统计"
+                },
+                "name": "insurance-source-monitor-source-add",
+                "id": "43b1dfd55bea3b4924a89af5f821ab55"
+              },
+              {
+                "path": "/insurance-source/monitor/source/send",
+                "component": "insuranceSource/monitor/source/Send",
+                "route": "1",
+                "meta": {
+                  "keepAlive": true,
+                  "title": "保源推送统计"
+                },
+                "name": "insurance-source-monitor-source-send",
+                "id": "64bdf30c4aa791b5ef2807d1ce547028"
+              }
+            ],
+            "meta": {
+              "keepAlive": true,
+              "title": "保源统计"
+            },
+            "name": "insurance-source-monitor-source",
+            "id": "a034a536e8fa97ddbf5b02a3f57574ba"
+          },
+          {
+            "path": "/insurance-source/monitor/track/index",
+            "component": "insuranceSource/monitor/track/index",
+            "route": "1",
+            "children": [
+              {
+                "path": "/insurance-source/monitor/track/visit",
+                "component": "insuranceSource/monitor/track/Visit",
+                "route": "1",
+                "meta": {
+                  "keepAlive": true,
+                  "title": "拜访汇总"
+                },
+                "name": "insurance-source-monitor-track-visit",
+                "id": "5c9a68826a1ba2fc1a5abaa8a015962a"
+              },
+              {
+                "path": "/insurance-source/monitor/track/collect",
+                "component": "insuranceSource/monitor/track/Collect",
+                "route": "1",
+                "meta": {
+                  "keepAlive": true,
+                  "title": "统计汇总"
+                },
+                "name": "insurance-source-monitor-track-collect",
+                "id": "284070e6fe204468916364993881459d"
+              }
+            ],
+            "meta": {
+              "keepAlive": true,
+              "title": "跟踪统计"
+            },
+            "name": "insurance-source-monitor-track-index",
+            "id": "a1d8503622efc0e1191b0fc64942e662"
+          },
+          {
+            "path": "/insurance-source/monitor/result",
+            "component": "insuranceSource/monitor/result/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "结果统计"
+            },
+            "name": "insurance-source-monitor-result",
+            "id": "ad61f337cfcc4a36614b7ba5d7d5f9a0"
+          }
+        ],
+        "meta": {
+          "keepAlive": true,
+          "icon": "radar-chart",
+          "title": "数据统计-旧"
+        },
+        "name": "insurance-source-monitor",
+        "id": "6354fce5642e246b433eac46fb00af2d"
+      },
+      {
+        "redirect": null,
+        "path": "/insurance-source/stats",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/insurance-source/stats/TrackSummary",
+            "component": "insuranceSource/stats/TrackSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "跟踪统计"
+            },
+            "name": "insurance-source-stats-TrackSummary",
+            "id": "4fd5e2b68c139df95b87d950c0a17ade"
+          },
+          {
+            "path": "/insurance-source/stats/UserSummary",
+            "component": "insuranceSource/stats/UserSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "劳效统计"
+            },
+            "name": "insurance-source-stats-UserSummary",
+            "id": "5fe9446716a5dbdbeb0de84dfa49e0a8"
+          },
+          {
+            "path": "/insurance-source/stats/Visit",
+            "component": "insuranceSource/stats/Visit/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "拜访明细"
+            },
+            "name": "insurance-source-stats-Visit",
+            "id": "4fd57d980226a55c8c7cedd44052df65"
+          },
+          {
+            "path": "/insuranceSource/monitor/track/SignInList/index",
+            "component": "insuranceSource/monitor/track/SignInList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "签到明细"
+            },
+            "name": "insuranceSource-monitor-track-SignInList-index",
+            "id": "a0f79df5e5b0d04b0ce2bdf18a59bf5c"
+          },
+          {
+            "path": "/insurance-source/stats/PolicySummary",
+            "component": "insuranceSource/stats/PolicySummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "签单明细"
+            },
+            "name": "insurance-source-stats-PolicySummary",
+            "id": "70ca1b25df2016be2c44cceb5a3bada3"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "数据统计"
+        },
+        "name": "insurance-source-stats",
+        "id": "97e18f074ff875967dd516f1ff334bc8"
+      },
+      {
+        "redirect": null,
+        "path": "/jc",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/jc/JcEnterpriseItemList",
+            "component": "jc/JcEnterpriseItemList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "客户渗透率"
+            },
+            "name": "jc-JcEnterpriseItemList",
+            "id": "d86ec4a7c2b93bdd217f369709a38d0b"
+          },
+          {
+            "path": "/jc/JcEnterpriseRiskList",
+            "component": "jc/JcEnterpriseRiskList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "新续企业增量保费"
+            },
+            "name": "jc-JcEnterpriseRiskList",
+            "id": "e56ef6ffd312511a5e17fd56ddf0389e"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "line-chart",
+          "title": "千万级企业决策"
+        },
+        "name": "jc",
+        "id": "d8d2016be1e40b252ad5381cbd2f592f"
+      },
+      {
+        "redirect": null,
+        "path": "/xb/stats",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/xb/stats/summaryAudit",
+            "component": "xb/stats/summaryAudit/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "预审核统计"
+            },
+            "name": "xb-stats-summaryAudit",
+            "id": "88126edc343e84606947e2af294703bd"
+          },
+          {
+            "path": "/xb/stats/summaryRenewed",
+            "component": "xb/stats/summaryRenewed/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "续保率统计"
+            },
+            "name": "xb-stats-summaryRenewed",
+            "id": "b1f9b0c015f7449667636bb9147103c8"
+          },
+          {
+            "path": "/xb/stats/summaryQuestion",
+            "component": "xb/stats/summaryQuestion/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "问题项目统计"
+            },
+            "name": "xb-stats-summaryQuestion",
+            "id": "bfaacd4bf8cc8d15559217727051102f"
+          },
+          {
+            "path": "/xb/stats/summaryEnd",
+            "component": "xb/stats/summaryEnd/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "项目终止统计"
+            },
+            "name": "xb-stats-summaryEnd",
+            "id": "0cbc9d56a31cada502b06a92a7eb8324"
+          },
+          {
+            "path": "/xb/stats/feedbackSummary",
+            "component": "xb/stats/feedbackSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "续保反馈统计"
+            },
+            "name": "xb-stats-feedbackSummary",
+            "id": "15fd058e5869b95e7ab92325bb899f8b"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "续保统计"
+        },
+        "name": "xb-stats",
+        "id": "42ab990a6f0a38acc0a779b7d5071b18"
+      },
+      {
+        "redirect": null,
+        "path": "/ic",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/ic/icBaseInfo",
+            "component": "ic/icBaseInfo/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "客户基本信息"
+            },
+            "name": "ic-icBaseInfo",
+            "id": "7219b5bddf6f3b28089b9e71afafee33"
+          },
+          {
+            "path": "/ic/auditPage",
+            "component": "ic/auditPage/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "申请审核"
+            },
+            "name": "ic-auditPage",
+            "id": "28068fc22194c7eba16422d7a2cdeecc"
+          },
+          {
+            "path": "/ic/myPage",
+            "component": "ic/myPage/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "我的客户"
+            },
+            "name": "ic-myPage",
+            "id": "41023d12b46c335041a7b4d899746f9b"
+          },
+          {
+            "path": "/ic/myPage/view/:id",
+            "component": "ic/myPage/view/index",
+            "route": "1",
+            "hidden": true,
+            "meta": {
+              "keepAlive": false,
+              "title": "我的客户详情"
+            },
+            "name": "ic-myPage-view-@id",
+            "id": "7f0e5300805792ef3e6814d79e515912"
+          },
+          {
+            "path": "/ic/importDistribute",
+            "component": "ic/importDistribute/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "批量分配"
+            },
+            "name": "ic-importDistribute",
+            "id": "e59150eea473e71a6967104624b35694"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "重要客户管理"
+        },
+        "name": "ic",
+        "id": "c3ae3d3f4b6b6ab05dae09c40db75061"
+      },
+      {
+        "redirect": null,
+        "path": "/xb/xbReport",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/xb/xbReport/cbList/index",
+            "component": "xb/xbReport/cbList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "承保清单"
+            },
+            "name": "xb-xbReport-cbList-index",
+            "id": "d12e2b6f083c66b6720f5da0ff55b20a"
+          },
+          {
+            "path": "/xb/xbReport/lpList/index",
+            "component": "xb/xbReport/lpList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "理赔清单"
+            },
+            "name": "xb-xbReport-lpList-index",
+            "id": "fa1f1533f35ccd6ea35f1f02097b966e"
+          },
+          {
+            "path": "/xb/xbReport/ykMainPageCustom/index",
+            "component": "xb/xbReport/ykMainPageCustom/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "集团汇总报表"
+            },
+            "name": "xb-xbReport-ykMainPageCustom-index",
+            "id": "7d61e0752d11cef3c5d6b9f46ff9228d"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "要客报表"
+        },
+        "name": "xb-xbReport",
+        "id": "ce5297a2a7cdab82fd9c47111594fdfd"
+      },
+      {
+        "redirect": null,
+        "path": "/xb",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/xb/auditList",
+            "component": "xb/auditList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "续保预审核"
+            },
+            "name": "xb-auditList",
+            "id": "97d4a7d93c60faa1d8663348debaa1e1"
+          },
+          {
+            "path": "/xb/distribInfoList",
+            "component": "xb/distribInfoList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "续保分配"
+            },
+            "name": "xb-distribInfoList",
+            "id": "fcd0e8090c02055c64a3d024058ef0a9"
+          },
+          {
+            "path": "/xb/renewedList",
+            "component": "xb/renewedList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "我的续保"
+            },
+            "name": "xb-renewedList",
+            "id": "b04e1cae029d30c1ff8f49732828039a"
+          },
+          {
+            "path": "/xb/questionList",
+            "component": "xb/questionList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "问题项目"
+            },
+            "name": "xb-questionList",
+            "id": "20d61e4f12ccdc249114fabd526ce15d"
+          },
+          {
+            "path": "/xb/endList",
+            "component": "xb/endList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "项目终止"
+            },
+            "name": "xb-endList",
+            "id": "acc61681f3ca7627d085f40a0e0588fd"
+          },
+          {
+            "path": "/xb/riskUserList",
+            "component": "xb/riskUserList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "用户险种关联数据"
+            },
+            "name": "xb-riskUserList",
+            "id": "ebb530b9495e654da2160ee50f91d988"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "续保管理"
+        },
+        "name": "xb",
+        "id": "03d27e53b89d4c98bcff04fe223b47f9"
+      },
+      {
+        "redirect": null,
+        "path": "/isystem",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/isystem/group",
+            "component": "system/GroupList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "团队管理"
+            },
+            "name": "isystem-group",
+            "id": "b8583dc21ec82d91c47dcb7e75bab436"
+          },
+          {
+            "path": "/sys/setting/configs",
+            "component": "system/SysSetting",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "系统配置"
+            },
+            "name": "sys-setting-configs",
+            "id": "c0f7e71eb5f4e46bb49fe9d6279d63bb"
+          },
+          {
+            "path": "/isystem/user",
+            "component": "system/UserList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "用户管理"
+            },
+            "name": "isystem-user",
+            "id": "3f915b2769fc80648e92d04e84ca059d"
+          },
+          {
+            "path": "/isystem/departUserList",
+            "component": "system/DepartUserList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "我的部门"
+            },
+            "name": "isystem-departUserList",
+            "id": "5c2f42277948043026b7a14692456828"
+          },
+          {
+            "path": "/isystem/roleUserList",
+            "component": "system/RoleUserList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "角色维护"
+            },
+            "name": "isystem-roleUserList",
+            "id": "190c2b43bec6a5f7a4194a85db67d96a"
+          },
+          {
+            "path": "/isystem/depart",
+            "component": "system/DepartList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "部门管理"
+            },
+            "name": "isystem-depart",
+            "id": "45c966826eeff4c99b8f8ebfe74511fc"
+          },
+          {
+            "path": "/isps/userAnnouncement",
+            "component": "system/UserAnnouncementList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "我的消息"
+            },
+            "name": "isps-userAnnouncement",
+            "id": "53a9230444d33de28aa11cc108fb1dba"
+          },
+          {
+            "path": "/isystem/role",
+            "component": "system/RoleList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "角色管理"
+            },
+            "name": "isystem-role",
+            "id": "e8af452d8948ea49d37c934f5100ae6a"
+          },
+          {
+            "path": "/isystem/permission",
+            "component": "system/PermissionList",
+            "route": "1",
+            "meta": {
+              "keepAlive": true,
+              "title": "菜单管理"
+            },
+            "name": "isystem-permission",
+            "id": "54dd5457a3190740005c1bfec55b1c34"
+          },
+          {
+            "path": "/isys/category",
+            "component": "system/SysCategoryList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "分类字典"
+            },
+            "name": "isys-category",
+            "id": "ebb9d82ea16ad864071158e0c449d186"
+          },
+          {
+            "path": "/isystem/dict",
+            "component": "system/DictList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "数据字典"
+            },
+            "name": "isystem-dict",
+            "id": "f1cb187abf927c88b89470d08615f5ac"
+          },
+          {
+            "path": "/isystem/annountCement",
+            "component": "system/SysAnnouncementList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "系统通告"
+            },
+            "name": "isystem-annountCement",
+            "id": "e08cb190ef230d5d4f03824198773950"
+          },
+          {
+            "path": "/sys/departRole/list",
+            "component": "system/DepartRoleList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "部门角色维护"
+            },
+            "name": "sys-departRole-list",
+            "id": "fd78ea7eaaa026ce4308580647019b9e"
+          },
+          {
+            "path": "/system/sysWeakPasswordDict/list",
+            "component": "system/SysWeakPasswordDictList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "弱口令管理"
+            },
+            "name": "system-sysWeakPasswordDict-list",
+            "id": "b9e127271f8045212683e280d2dd61b5"
+          },
+          {
+            "path": "/system/sysAclRule/list",
+            "component": "system/SysAclRuleList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "接口访问控制"
+            },
+            "name": "system-sysAclRule-list",
+            "id": "c7fb220d603030c44d28cce27b213b05"
+          },
+          {
+            "path": "/system/sysSocial/list",
+            "component": "system/SysSocialList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "社交信息"
+            },
+            "name": "system-sysSocial-list",
+            "id": "d4a7aa1e5d60596516cab6a67c010b56"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "setting",
+          "title": "系统管理"
+        },
+        "name": "isystem",
+        "id": "d7d6e2e4e2934f2c9385a623fd98c6f3"
+      },
+      {
+        "redirect": null,
+        "path": "/dashboard3",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/isystem/QuartzJobList",
+            "component": "system/QuartzJobList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "定时任务"
+            },
+            "name": "isystem-QuartzJobList",
+            "id": "b1cb0a3fedf7ed0e4653cb5a229837ee"
+          },
+          {
+            "path": "/isystem/loginInfo",
+            "component": "system/SysLoginInfoList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "登录管理"
+            },
+            "name": "isystem-loginInfo",
+            "id": "07dd521db941103dc7456b5aebe0972e"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "dashboard",
+          "title": "系统监控"
+        },
+        "name": "dashboard3",
+        "id": "08e6b9dc3c04489c8e1ff2ce6f105aa4"
+      },
+      {
+        "redirect": null,
+        "path": "/opt",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/data/importFailInfo/list",
+            "component": "buss/ImportFailInfoList",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "导入错误信息"
+            },
+            "name": "data-importFailInfo-list",
+            "id": "1f591a2f562f7dcaa534c782e39328eb"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "save",
+          "title": "操作数据"
+        },
+        "name": "opt",
+        "id": "ee27430e0b0b89e12c75db27abe4a865"
+      },
+      {
+        "redirect": null,
+        "path": "/xbCar",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/xbCar/renewedList",
+            "component": "xbCar/renewedList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "我的续保"
+            },
+            "name": "xbCar-renewedList",
+            "id": "31ece28e296910014fff7f250f564ab8"
+          },
+          {
+            "path": "/xbCar/distribInfoList",
+            "component": "xbCar/distribInfoList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "续保分配"
+            },
+            "name": "xbCar-distribInfoList",
+            "id": "516d60078ee8baba98c99286c9d19a9e"
+          },
+          {
+            "path": "/xbCar/endList",
+            "component": "xbCar/endList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "项目终止"
+            },
+            "name": "xbCar-endList",
+            "id": "9aa1646cbf4079c39f973ef58e147966"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "car",
+          "title": "车险续保管理"
+        },
+        "name": "xbCar",
+        "id": "6af9853919ea895035025814cc1de8c6"
+      },
+      {
+        "redirect": null,
+        "path": "/xbCar/stats",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/xbCar/stats/feedbackSummar",
+            "component": "xbCar/stats/feedbackSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "反馈统计"
+            },
+            "name": "xbCar-stats-feedbackSummar",
+            "id": "63c20981be2159350ecfd55f46ae1cb1"
+          },
+          {
+            "path": "/xbCar/stats/xbRateSummary",
+            "component": "xbCar/stats/xbRateSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "续保率统计"
+            },
+            "name": "xbCar-stats-xbRateSummary",
+            "id": "31264b48ce1c1a316f1ac07e82381bc7"
+          },
+          {
+            "path": "/xbCar/stats/endRateSummary",
+            "component": "xbCar/stats/endRateSummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "终止项目统计"
+            },
+            "name": "xbCar-stats-endRateSummary",
+            "id": "0f263d647452a5d693853473146febac"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "bar-chart",
+          "title": "车险续保统计"
+        },
+        "name": "xbCar-stats",
+        "id": "873fa7fffe863533040487a4dc4b84fd"
+      },
+      {
+        "redirect": null,
+        "path": "/ys",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/ys/ysExtendInfoList",
+            "component": "ys/ysExtendInfoList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "我的应收"
+            },
+            "name": "ys-ysExtendInfoList",
+            "id": "f9dcec9fc70f2b8aaa0d33d6eae263af"
+          },
+          {
+            "path": "/ys/ysFeedbackInfoList",
+            "component": "ys/ysFeedbackInfoList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "应收保单管理"
+            },
+            "name": "ys-ysFeedbackInfoList",
+            "id": "eb57866df8cba85cf3bea51fd8fd93a1"
+          },
+          {
+            "path": "/ys/ysWhitelistDataList",
+            "component": "ys/ysWhitelistDataList/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "应收白名单"
+            },
+            "name": "ys-ysWhitelistDataList",
+            "id": "e3f207d5ef1340bd103eb2b067f367d7"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "stock",
+          "title": "应收保费催收管理"
+        },
+        "name": "ys",
+        "id": "a959868613a714a694b292a65e309d39"
+      },
+      {
+        "redirect": null,
+        "path": "/ys/stats",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "children": [
+          {
+            "path": "/ys/stats/dailySummary",
+            "component": "ys/stats/dailySummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "应收保费日监控报表"
+            },
+            "name": "ys-stats-dailySummary",
+            "id": "d63a5ea6197c38166ca8b9334ad19688"
+          },
+          {
+            "path": "/ys/stats/rySummary",
+            "component": "ys/stats/rySummary/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "总公司“红黄牌”预警"
+            },
+            "name": "ys-stats-rySummary",
+            "id": "8ed9d90987a1675a6aa02b2759b8a81d"
+          },
+          {
+            "path": "/ys/stats/summaryCount",
+            "component": "ys/stats/summaryCount/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "催收监控报表"
+            },
+            "name": "ys-stats-summaryCount",
+            "id": "f8961a96fd7e3c56ea9c5285133407fe"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "icon": "radar-chart",
+          "title": "应收情况统计"
+        },
+        "name": "ys-stats",
+        "id": "6ffdcbcd0dc9db9dd0696d0b49d331d2"
+      },
+      {
+        "redirect": null,
+        "path": "/authc",
+        "component": "layouts/RouteView",
+        "route": "1",
+        "hidden": true,
+        "children": [
+          {
+            "path": "/insurance-source/FcddPolicyMain/index",
+            "component": "insuranceSource/FcddPolicyMain/index",
+            "route": "1",
+            "meta": {
+              "keepAlive": false,
+              "title": "非车督导-待续保跟踪"
+            },
+            "name": "insurance-source-FcddPolicyMain-index",
+            "id": "bf9324a6540b462e35dbb48bbf52006e"
+          }
+        ],
+        "meta": {
+          "keepAlive": false,
+          "title": "不可视权限控制(虚拟)"
+        },
+        "name": "authc",
+        "id": "5a134e92c47e041443fad82caab773ab"
+      }
+    ]
+  },
+  "others": null,
+  "timestamp": 1784625049155
+}

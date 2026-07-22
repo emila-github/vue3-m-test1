@@ -20,8 +20,8 @@ import demoClaimRoutes from './demo-claim'
 import demoCustomerRoutes from './demo-customer'
 import demoMapRoutes from './demo-map'
 import loginRoutes from './login'
-import ydlInsSourceRoutes from './ydl-ins-source'
 import ydlRenewalRoutes from './ydl-renewal'
+import siteAuthRoutes from './ydl-site-auth'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -47,6 +47,7 @@ const allRoutes: MockRoute[] = [
   ...loginRoutes,
   ...ydlInsSourceRoutes,
   ...ydlRenewalRoutes,
+  ...siteAuthRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
@@ -73,7 +74,12 @@ async function handleMock(req: IncomingMessage, res: ServerResponse): Promise<bo
 
   const data = typeof route.response === 'function' ? await route.response(req) : route.response
   // 支持返回原始 HTML（用于 OAuth 回调页，向 opener 回传授权结果）
-  if (data && typeof data === 'object' && !Array.isArray(data) && (data as any).__html !== undefined) {
+  if (
+    data &&
+    typeof data === 'object' &&
+    !Array.isArray(data) &&
+    (data as any).__html !== undefined
+  ) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.end((data as any).__html)
   } else {
@@ -139,6 +145,22 @@ export function mockPlugin(): Plugin {
             console.log('[mock] ✅ 已拦截(ydl) %s %s', req.method, req.url)
           } else {
             console.log('[mock] ❌ 未匹配(ydl) %s %s，放行', req.method, req.url)
+            next()
+          }
+        } catch {
+          next()
+        }
+      })
+
+      // ===== 站点（旧站 / 学幼专区）模块：对应 siteClient 的 baseURL /site-api =====
+      server.middlewares.use('/site-api', async (req, res, next) => {
+        try {
+          console.log('[mock] 收到请求(site): %s %s', req.method, req.url)
+          const matched = await handleMock(req, res)
+          if (matched) {
+            console.log('[mock] ✅ 已拦截(site) %s %s', req.method, req.url)
+          } else {
+            console.log('[mock] ❌ 未匹配(site) %s %s，放行', req.method, req.url)
             next()
           }
         } catch {

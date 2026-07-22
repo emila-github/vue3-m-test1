@@ -18,12 +18,20 @@ export const vantFormat: ResponseAdapter = {
 }
 
 /**
- * ydl 模块（JeecgBoot 风格）格式：
- *   { success, message, code, result, timestamp }   成功：success === true
- * 业务数据在 result 字段。
+ * ydl 模块（JeecgBoot 风格）响应适配器，站点（旧站 / 学幼专区）共用同一套格式。
+ *
+ * 包络：{ success, message, code, result, timestamp }   业务数据在 result 字段。
+ *
+ * 旧站有两套成功语义（此处统一兼容）：
+ *   - 鉴权类接口（企业微信 getWxUserInfo 等）：{ code: 0, result }
+ *   - 业务类接口（登录 / 权限 / 登出）：{ success: true, code: 200, result }
+ * 统一把 code===0 || code===200 || success===true 都视为成功。
+ *
+ * 注意：getWxUserInfo 内层的 result.code==='00' 属业务判定（成功 / 未绑定 / 未注册），
+ * 由 composable 在拿到 result 后再判，不要塞进适配器。
  */
 export const ydlFormat: ResponseAdapter = {
-  isSuccess: (r) => !!r && (r.success === true || r.code === 0),
+  isSuccess: (r) => !!r && (r.success === true || r.code === 0 || r.code === 200),
   extractData: (r) => r?.result,
   extractMessage: (r) => r?.message ?? '请求失败',
   extractCode: (r) => r?.code,
