@@ -87,7 +87,10 @@ function finishWecom(res: WecomLoginResult) {
 /** 企业微信按钮点击：无 code → 整页跳授权（start 内部 location.href 并 return，不会进 finishWecom）；
  *  带 code 回跳 → start 换 token 后把结果交给 finishWecom 统一处理。 */
 function onWecomClick() {
-  wecom.start().then(finishWecom).catch((e) => showToast(e?.message || '企业微信授权失败'))
+  wecom
+    .start()
+    .then(finishWecom)
+    .catch((e) => showToast(e?.message || '企业微信授权失败'))
 }
 
 onMounted(async () => {

@@ -42,10 +42,7 @@ export interface WecomLoginResult {
  * 把后端返回的用户档案（可能是内联字段、userInfo 对象，或 getSiteUserInfo 返回）
  * 归一化为统一的 UserInfo，供「我的」页回显。字段名容错多种写法。
  */
-function toUserInfo(
-  inline: SiteWxUserInfoResult,
-  profile?: SiteUserInfo | null,
-): UserInfo {
+function toUserInfo(inline: SiteWxUserInfoResult, profile?: SiteUserInfo | null): UserInfo {
   const src: Record<string, any> = { ...(inline as any), ...(profile || {}) }
   const pick = (...keys: string[]) =>
     keys.map((k) => src[k]).find((v) => v !== undefined && v !== null && v !== '')
@@ -53,8 +50,7 @@ function toUserInfo(
     typeof src.depart === 'object'
       ? src.depart?.departName || src.depart?.departName_dictText
       : src.departName || src.depart
-  const post =
-    typeof src.post === 'object' ? src.post?.name || src.post?.postName : src.post
+  const post = typeof src.post === 'object' ? src.post?.name || src.post?.postName : src.post
   const name = (pick('realname', 'name', 'username') as string) || '企业微信用户'
   return {
     userId: (pick('id', 'username') as string) || '',
