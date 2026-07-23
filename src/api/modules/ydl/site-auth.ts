@@ -42,6 +42,38 @@ export interface SiteWxUserInfoResult {
   socialId?: string
   wxAuthId?: string
   msg?: string
+  /**
+   * 真实后端在已绑定时通常会把登录用户主表一并返回（JeecgBoot 常见约定），
+   * 用于「我的」页回显。字段位置可能内联也可能包在 userInfo 里，composable 兼容两种。
+   */
+  userInfo?: SiteUserInfo
+  realname?: string
+  username?: string
+  name?: string
+  phone?: string
+  avatar?: string
+  departName?: string
+  depart?: string | { departName?: string; departName_dictText?: string }
+  post?: string | { name?: string; postName?: string }
+}
+
+/**
+ * 站点登录用户档案（「我的」页回显来源）。
+ * 来自 getWxUserInfo 的内联/内嵌字段，或单独的 getSiteUserInfo 接口。
+ * 字段容错：真实后端字段名可能不同，故全部可选。
+ */
+export interface SiteUserInfo {
+  id?: string
+  username?: string
+  realname?: string
+  name?: string
+  phone?: string
+  avatar?: string
+  orgCode?: string
+  departName?: string
+  depart?: string | { departName?: string; departName_dictText?: string }
+  post?: string | { name?: string; postName?: string }
+  [key: string]: any
 }
 
 // ==================== 企业微信登录（走 wx 根路径，/cp/... 前缀） ====================
@@ -51,6 +83,15 @@ export function getAuthUrl(params: { wxAppId: string; redirect: string; getPriva
 
 export function getWxUserInfo(params: { wxAppId: string; code: string }) {
   return siteWxPost<SiteWxUserInfoResult>('/cp/wxAuth/getWxUserInfo', params)
+}
+
+/**
+ * 登录后拉取当前登录用户档案（用于「我的」页回显）。
+ * 文档中已定义但主流程未使用；真实联调时企业微信登录成功后调用，
+ * 携带 X-Access-Token（siteWxClient 自动注入）换取用户主表。
+ */
+export function getSiteUserInfo(token: string) {
+  return siteWxPost<SiteUserInfo>('/cp/wxAuth/getUserInfo', { token })
 }
 
 // ==================== 普通登录 ====================

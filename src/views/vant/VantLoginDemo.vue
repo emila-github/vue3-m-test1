@@ -42,9 +42,7 @@ const result = ref<LoginResult | null>(null)
 const showRaw = ref(false)
 
 /** 是否真实 OAuth 返回（非演示降级）。后端在 raw 里带有 _real 标记 */
-const isReal = computed(
-  () => !!result.value?.userInfo.raw && (result.value.userInfo.raw as any)._real === true,
-)
+const isReal = computed(() => result.value?.userInfo.raw?._real === true)
 
 /** 登录信息卡片展示的字段：仅展示有值的字段 */
 const infoRows = computed<{ label: string; value: string }[]>(() => {

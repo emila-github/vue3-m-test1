@@ -10,8 +10,14 @@
  * 成功后：setToken + 拉权限（loadPermissionsByToken）。
  */
 import { useRoute } from 'vue-router'
-import { getAuthUrl, getWxUserInfo } from '@/api/modules/ydl/site-auth'
-import { setToken } from '@/api/core/token'
+import {
+  getAuthUrl,
+  getWxUserInfo,
+  getSiteUserInfo,
+  type SiteWxUserInfoResult,
+  type SiteUserInfo,
+} from '@/api/modules/ydl/site-auth'
+import { setToken, setUserInfo, type UserInfo } from '@/api/core/token'
 import { usePermission } from '@/composables/usePermission'
 
 const WX_APP_ID = (import.meta.env.VITE_SITE_WX_APP_ID as string) || ''
@@ -30,6 +36,34 @@ export interface WecomLoginResult {
   socialId?: string
   wxAuthId?: string
   msg?: string
+}
+
+/**
+ * 把后端返回的用户档案（可能是内联字段、userInfo 对象，或 getSiteUserInfo 返回）
+ * 归一化为统一的 UserInfo，供「我的」页回显。字段名容错多种写法。
+ */
+function toUserInfo(
+  inline: SiteWxUserInfoResult,
+  profile?: SiteUserInfo | null,
+): UserInfo {
+  const src: Record<string, any> = { ...(inline as any), ...(profile || {}) }
+  const pick = (...keys: string[]) =>
+    keys.map((k) => src[k]).find((v) => v !== undefined && v !== null && v !== '')
+  const depart =
+    typeof src.depart === 'object'
+      ? src.depart?.departName || src.depart?.departName_dictText
+      : src.departName || src.depart
+  const post =
+    typeof src.post === 'object' ? src.post?.name || src.post?.postName : src.post
+  const name = (pick('realname', 'name', 'username') as string) || '企业微信用户'
+  return {
+    userId: (pick('id', 'username') as string) || '',
+    name,
+    phone: (src.phone as string) || '',
+    dept: (depart as string) || '',
+    role: (post as string) || '',
+    avatar: (src.avatar as string) || '',
+  }
 }
 
 export function useSiteWecomLogin() {
@@ -63,6 +97,17 @@ export function useSiteWecomLogin() {
     const res = await getWxUserInfo({ wxAppId: WX_APP_ID, code })
     if (res.code === '00' && res.token) {
       setToken(res.token)
+      // 回显用户：优先用 getWxUserInfo 内联/内嵌的用户字段；缺失时再单独拉档案。
+      // 用 getSiteUserInfo 失败不致命（降级为默认名），不影响登录态。
+      let profile: SiteUserInfo | null = null
+      if (!res.userInfo && !res.realname && !res.username && !res.name) {
+        try {
+          profile = await getSiteUserInfo(res.token)
+        } catch {
+          profile = null
+        }
+      }
+      setUserInfo(toUserInfo(res, profile)) // 持久化用户档案 → 我的页读取
       await loadPermissionsByToken(res.token) // 登录后立即拉权限
       return { ok: true }
     }

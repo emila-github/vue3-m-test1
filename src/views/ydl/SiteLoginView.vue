@@ -11,7 +11,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showToast, showLoadingToast, closeToast } from 'vant'
-import { useSiteWecomLogin } from '@/composables/ydl/useSiteWecomLogin'
+import { useSiteWecomLogin, type WecomLoginResult } from '@/composables/ydl/useSiteWecomLogin'
 import { useSitePasswordLogin } from '@/composables/ydl/useSitePasswordLogin'
 
 const route = useRoute()
@@ -44,9 +44,6 @@ const captchaSrc = computed(() => {
   return `data:${mime};base64,${captchaImg.value}`
 })
 
-// 进入页面即拉取一次验证码，切到账号登录 Tab 时直接显示
-refreshCaptcha()
-
 /** 普通登录提交 */
 async function onSubmitPassword() {
   if (!username.value || !password.value || !captcha.value) {
@@ -71,30 +68,40 @@ async function onSubmitPassword() {
   }
 }
 
-/** 企业微信按钮点击：无 code → 整页跳授权（start 内部处理） */
+/** 企业微信登录结果统一处理：成功跳 redirect / 未绑定切密码 Tab 带 socialId / 其它提示。
+ *  onWecomClick（无 code 跳转后回跳）与 onMounted（回跳带 code）共用，避免结果分支重复。 */
+function finishWecom(res: WecomLoginResult) {
+  if (res.ok) {
+    showToast('登录成功')
+    router.replace(redirect)
+  } else if (res.code === '01') {
+    // 未绑定：切到普通登录，带上 socialId 用于绑定
+    socialId.value = res.socialId || ''
+    activeTab.value = 'password'
+    showToast('请先绑定账号')
+  } else if (res.code) {
+    showToast(res.msg || '企业微信登录失败')
+  }
+}
+
+/** 企业微信按钮点击：无 code → 整页跳授权（start 内部 location.href 并 return，不会进 finishWecom）；
+ *  带 code 回跳 → start 换 token 后把结果交给 finishWecom 统一处理。 */
 function onWecomClick() {
-  // start() 在无 code 时会 location.href 跳转，不会返回
-  wecom.start().catch((e) => showToast(e?.message || '企业微信授权失败'))
+  wecom.start().then(finishWecom).catch((e) => showToast(e?.message || '企业微信授权失败'))
 }
 
 onMounted(async () => {
+  // 进入页面即拉取一次验证码，切到账号登录 Tab 时直接显示
+  refreshCaptcha()
   // 回跳携带 code：自动换 token 并拉权限
   const code = new URL(location.href).searchParams.get('code')
-  if (code) {
-    showLoadingToast({ message: '企业微信登录中...', forbidClick: true })
+  if (!code) return
+  showLoadingToast({ message: '企业微信登录中...', forbidClick: true })
+  try {
     const res = await wecom.start()
+    finishWecom(res)
+  } finally {
     closeToast()
-    if (res.ok) {
-      showToast('登录成功')
-      router.replace(redirect)
-    } else if (res.code === '01') {
-      // 未绑定：切到普通登录，带上 socialId 用于绑定
-      socialId.value = res.socialId || ''
-      activeTab.value = 'password'
-      showToast('请先绑定账号')
-    } else {
-      showToast(res.msg || '企业微信登录失败')
-    }
   }
 })
 </script>

@@ -105,6 +105,22 @@ const routes: MockRoute[] = [
       msg: '登录成功',
     }),
   },
+  // 企业微信：登录后拉取当前用户档案（演示数据，供「我的」页回显）
+  {
+    url: '/cp/wxAuth/getUserInfo',
+    method: 'POST',
+    response: ok({
+      id: 'U10086',
+      username: 'ydl_admin',
+      realname: '源动力管理员',
+      phone: '13800001000',
+      avatar: '',
+      departName: '福建源动力平台',
+      depart: { departName_dictText: '福建源动力平台' },
+      post: { name: '系统管理员' },
+      orgCode: 'A01',
+    }),
+  },
   // 普通登录：图形验证码（返回 base64 SVG 图，对齐真实后端 result.img 格式）
   {
     url: '/sys/captchaImage',
