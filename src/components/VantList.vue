@@ -301,7 +301,12 @@ const sheetActions = computed(() => {
   if (props.showEdit)
     base.push({ name: props.editText, value: 'edit', perm: permCodes.value.edit, icon: 'edit' })
   if (props.showDelete)
-    base.push({ name: props.deleteText, value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' })
+    base.push({
+      name: props.deleteText,
+      value: 'delete',
+      perm: permCodes.value.delete,
+      icon: 'delete-o',
+    })
   const baseFiltered = base.filter((a) => hasPerm(a.perm))
   const custom = props.actions
     .filter((a) => !a.perm || hasPerm(a.perm))
@@ -402,7 +407,6 @@ defineExpose({
   openCreate,
   openEdit,
 })
-
 </script>
 
 <template>

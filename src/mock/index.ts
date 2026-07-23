@@ -46,7 +46,6 @@ const allRoutes: MockRoute[] = [
   ...demoCustomerRoutes,
   ...demoMapRoutes,
   ...loginRoutes,
-  ...ydlInsSourceRoutes,
   ...ydlRenewalRoutes,
   ...siteAuthRoutes,
 ]
@@ -162,6 +161,22 @@ export function mockPlugin(): Plugin {
             console.log('[mock] ✅ 已拦截(site) %s %s', req.method, req.url)
           } else {
             console.log('[mock] ❌ 未匹配(site) %s %s，放行', req.method, req.url)
+            next()
+          }
+        } catch {
+          next()
+        }
+      })
+
+      // ===== 站点微信鉴权模块：对应 siteWxClient 的 baseURL /wx-api（/cp/wxAuth/...） =====
+      server.middlewares.use('/wx-api', async (req, res, next) => {
+        try {
+          console.log('[mock] 收到请求(wx): %s %s', req.method, req.url)
+          const matched = await handleMock(req, res)
+          if (matched) {
+            console.log('[mock] ✅ 已拦截(wx) %s %s', req.method, req.url)
+          } else {
+            console.log('[mock] ❌ 未匹配(wx) %s %s，放行', req.method, req.url)
             next()
           }
         } catch {

@@ -52,32 +52,60 @@ export function useOAuthLogin(opts: OAuthOptions) {
     window.location.href = url
   }
 
-  /** 整页跳转（移动端）授权回来后，从 sessionStorage 恢复结果 */
-  function restoreOAuthFromSession() {
-    let raw: string | null = null
+  /** 从 URL 片段读取 OAuth 结果（跨域整页跳转也能用，sessionStorage 同源才可用） */
+  function readOauthFromUrl(): { type?: string; result?: LoginResult; message?: string } | null {
     try {
-      raw = sessionStorage.getItem('oauth_result')
-      if (raw) {
-        sessionStorage.removeItem('oauth_result')
-        sessionStorage.removeItem('oauth_return')
-      }
-    } catch {
-      raw = null
-    }
-    if (!raw) return
-    try {
-      const d = JSON.parse(raw) as { type?: string; result?: LoginResult; message?: string }
-      if (d.type === 'oauth-success' && d.result) {
-        persistOAuth(d.result) // 持久化 token + 用户信息
-        toast('登录成功')
-        emit('success', d.result)
-      } else if (d.type === 'oauth-error') {
-        const msg = d.message || '授权失败'
-        toast(msg)
-        emit('error', { method: activeMethod.value, message: msg })
-      }
+      const m = (location.hash || '').match(/[#&]oauth=([^&]+)/)
+      if (m && m[1]) return JSON.parse(decodeURIComponent(m[1])) as any
     } catch {
       /* 忽略解析失败 */
+    }
+    return null
+  }
+
+  /** 清除 URL 中的 oauth 片段，避免刷新重复触发 */
+  function clearOauthFromUrl() {
+    try {
+      history.replaceState(null, '', location.pathname + location.search)
+    } catch {
+      /* 忽略 */
+    }
+  }
+
+  /** 整页跳转（移动端）授权回来后，恢复登录结果并持久化 */
+  function restoreOAuthResult() {
+    // 1) 优先 URL 片段（跨域整页跳转可用）
+    let data = readOauthFromUrl()
+    const fromUrl = !!data
+    // 2) 同源降级：sessionStorage
+    if (!data) {
+      try {
+        const raw = sessionStorage.getItem('oauth_result')
+        if (raw) data = JSON.parse(raw)
+      } catch {
+        /* 忽略 */
+      }
+    }
+    if (!data) return
+    // 清理已消费的结果
+    if (fromUrl) {
+      clearOauthFromUrl()
+    } else {
+      try {
+        sessionStorage.removeItem('oauth_result')
+        sessionStorage.removeItem('oauth_return')
+      } catch {
+        /* 忽略 */
+      }
+    }
+    if (data.type === 'oauth-success' && data.result) {
+      persistOAuth(data.result) // 持久化 token + 用户信息
+      toast('登录成功')
+      emit('success', data.result)
+    } else if (data.type === 'oauth-error') {
+      const msg = data.message || '授权失败'
+      toast(msg)
+      emit('error', { method: activeMethod.value, message: msg })
     }
   }
 
@@ -136,10 +164,11 @@ export function useOAuthLogin(opts: OAuthOptions) {
 
   async function onOAuth(method: LoginMethod) {
     try {
+      const returnUrl = location.href || ''
       const url =
         method === 'wechat'
-          ? await getWechatAuthorizeUrl(demoMode)
-          : await getWecomAuthorizeUrl(demoMode)
+          ? await getWechatAuthorizeUrl(demoMode, returnUrl)
+          : await getWecomAuthorizeUrl(demoMode, returnUrl)
       openOAuthPopup(url.url, method)
     } catch (e: any) {
       toast(e?.message || '获取授权地址失败')
@@ -148,7 +177,7 @@ export function useOAuthLogin(opts: OAuthOptions) {
 
   onMounted(() => {
     window.addEventListener('message', onOAuthMessage)
-    restoreOAuthFromSession()
+    restoreOAuthResult()
   })
   onUnmounted(() => {
     if (oauthCloseTimer) clearInterval(oauthCloseTimer)

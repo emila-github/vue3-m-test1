@@ -1,14 +1,14 @@
 <script setup lang="ts">
 /**
  * SiteLoginView（ydl 站点登录页）
- * 提供两种登录方式（对齐旧站）：
- *   - 企业微信：无 code 时整页跳授权；回调带 code 时自动换 token 并拉权限
- *   - 普通登录：账号 + 图形验证码 + md5 密码
- * 登录成功后跳 redirect（默认 /ydl）。
+ * UI 参考 VantLogin 组件（白卡 + 胶囊 Tab + 自定义图标输入行 + 浅红药丸按钮）。
  *
- * UI 参考 VantLogin.vue（胶囊 Tab + 白卡 + 浅红药丸按钮 + PICC 粉红渐变）。
+ * 提供两种登录方式（对齐旧站）：
+ *   - 企业微信：左侧 Tab，无 code 时整页跳授权；回调带 code 时自动换 token 并拉权限
+ *   - 普通登录：右侧 Tab，账号 + 图形验证码 + md5 密码
+ * 登录成功后跳 redirect（默认 /ydl）。
  */
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showToast, showLoadingToast, closeToast } from 'vant'
 import { useSiteWecomLogin } from '@/composables/ydl/useSiteWecomLogin'
@@ -18,7 +18,7 @@ const route = useRoute()
 const router = useRouter()
 const wecom = useSiteWecomLogin()
 const {
-  captchaItems,
+  captchaImg,
   loading: pwdLoading,
   refreshCaptcha,
   submit: submitPwd,
@@ -31,6 +31,18 @@ const captcha = ref('')
 const socialId = ref('') // 企业微信未绑定时回传，普通登录时带上去绑定
 
 const redirect = (route.query.redirect as string) || '/ydl'
+
+// 根据 base64 头部推断真实图片 MIME（后端返回 PNG，mock 返回 SVG，不能写死 gif）
+const captchaSrc = computed(() => {
+  if (!captchaImg.value) return ''
+  const head = captchaImg.value.slice(0, 8)
+  let mime = 'image/gif'
+  if (head.startsWith('iVBOR')) mime = 'image/png'
+  else if (head.startsWith('/9j/')) mime = 'image/jpeg'
+  else if (head.startsWith('R0lGOD')) mime = 'image/gif'
+  else if (head.startsWith('PHN2') || head.startsWith('PD94')) mime = 'image/svg+xml'
+  return `data:${mime};base64,${captchaImg.value}`
+})
 
 // 进入页面即拉取一次验证码，切到账号登录 Tab 时直接显示
 refreshCaptcha()
@@ -90,44 +102,44 @@ onMounted(async () => {
 <template>
   <div class="site-login">
     <!-- ====== 顶部标题区 ====== -->
-    <header class="login-header">
+    <div class="login-header">
       <div class="login-brand">
         <span class="brand-mark">源</span>
         <span class="brand-text">源动力平台</span>
       </div>
       <h1 class="login-title">福建源动力平台</h1>
       <p class="login-subtitle">站点登录</p>
-    </header>
+    </div>
 
-    <!-- ====== 卡片式登录（胶囊 Tab） ====== -->
+    <!-- ====== 卡片式登录表单（胶囊 Tab 切换） ====== -->
     <div class="login-card">
+      <!-- 胶囊 Tab 切换器：左 企业微信 / 右 密码 -->
       <div class="card-tabs">
         <button
           class="card-tab"
           :class="{ 'card-tab--active': activeTab === 'wecom' }"
           @click="activeTab = 'wecom'"
         >
-          企业微信
+          企业微信登录
         </button>
         <button
           class="card-tab"
           :class="{ 'card-tab--active': activeTab === 'password' }"
           @click="activeTab = 'password'"
         >
-          账号登录
+          密码登录
         </button>
       </div>
 
-      <!-- 企业微信 -->
-      <div v-show="activeTab === 'wecom'" class="card-form">
-        <button type="button" class="submit-btn wecom-btn" @click="onWecomClick">
-          <van-icon name="wechat" /> 企业微信扫码登录
-        </button>
+      <!-- ========== 企业微信登录 ========== -->
+      <div v-if="activeTab === 'wecom'" class="card-form tab-body">
+        <button type="button" class="submit-btn" @click="onWecomClick">企业微信登录</button>
         <p class="tip">点击后跳转企业微信授权，授权后自动回登录页完成登录。</p>
+        <p v-if="socialId" class="bind-tip">检测到企业微信未绑定账号，登录后将自动绑定</p>
       </div>
 
-      <!-- 账号登录 -->
-      <van-form v-show="activeTab === 'password'" @submit="onSubmitPassword" class="card-form">
+      <!-- ========== 账号密码登录 ========== -->
+      <div v-else class="card-form">
         <div class="card-field">
           <van-icon name="contact" class="field-icon" />
           <input v-model="username" class="field-input" placeholder="请输入账号" />
@@ -142,29 +154,30 @@ onMounted(async () => {
             v-model="captcha"
             class="field-input"
             maxlength="4"
-            placeholder="请输入图形验证码"
+            placeholder="请输入右侧图形验证码"
           />
-          <span class="captcha-box" title="点击刷新验证码" @click="refreshCaptcha">
-            <template v-if="captchaItems.length">
-              <i
-                v-for="(it, i) in captchaItems"
-                :key="i"
-                :style="{ color: it.color, transform: `rotate(${it.rotate}deg)` }"
-                >{{ it.ch }}</i
-              >
-            </template>
-            <span v-else class="captcha-loading">点击刷新</span>
+          <span class="captcha-img" title="点击刷新验证码" @click="refreshCaptcha">
+            <img v-if="captchaImg" :src="captchaSrc" class="captcha-svg-img" alt="图形验证码" />
+            <span v-else class="captcha-loading">加载中</span>
           </span>
         </div>
-        <button type="submit" class="submit-btn" :class="{ loading: pwdLoading }">登录</button>
+
+        <button
+          type="button"
+          class="submit-btn"
+          :class="{ loading: pwdLoading }"
+          @click="onSubmitPassword"
+        >
+          登录
+        </button>
         <p v-if="socialId" class="bind-tip">检测到企业微信未绑定账号，登录后将自动绑定</p>
-      </van-form>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* ====== 页面根容器：PICC 粉红渐变背景 ====== */
+/* ====== 页面根容器：粉红渐变背景 ====== */
 .site-login {
   max-width: 480px;
   min-height: 100vh;
@@ -223,10 +236,11 @@ onMounted(async () => {
   overflow: hidden;
 }
 
-/* 胶囊 Tab 切换器 */
+/* --- 胶囊 Tab 切换器（仿 VantLogin） --- */
 .card-tabs {
   display: flex;
   padding: 0 6px;
+  gap: 0;
 }
 .card-tab {
   flex: 1;
@@ -236,18 +250,26 @@ onMounted(async () => {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
   background: transparent;
   color: #d71920;
-  transition: all 0.25s;
+  position: relative;
 }
 .card-tab--active {
   background: linear-gradient(135deg, #e88a91, #d71920);
   color: #fff;
 }
+.card-tab:not(.card-tab--active):hover {
+  color: #b01418;
+}
 
-/* 表单内容 */
+/* --- 表单内容 --- */
 .card-form {
   padding: 20px 20px 16px;
+}
+.tab-body {
+  text-align: center;
 }
 
 /* 自定义输入行（无边框，底部细线） */
@@ -257,6 +279,7 @@ onMounted(async () => {
   border-bottom: 1px solid #eee;
   padding: 12px 0;
   gap: 10px;
+  position: relative;
 }
 .card-field + .card-field {
   margin-top: 4px;
@@ -282,52 +305,25 @@ onMounted(async () => {
   font-size: 14px;
 }
 
-/* 图形验证码（内联 DOM 渲染，确保一定可见） */
-.captcha-box {
-  position: relative;
+/* 图形验证码（点击刷新） */
+.captcha-img {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  width: 104px;
-  height: 40px;
+  width: 90px;
+  height: 34px;
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  background: linear-gradient(135deg, #fafafa, #f0f0f0);
+  background: #f7f8fa;
   user-select: none;
-  box-shadow: inset 0 0 0 1px #eee;
 }
-/* 干扰线（两条斜穿的细线） */
-.captcha-box::before {
-  content: '';
-  position: absolute;
-  left: -10%;
-  top: 55%;
-  width: 120%;
-  height: 1.5px;
-  background: rgba(215, 25, 32, 0.35);
-  transform: rotate(-12deg);
-}
-.captcha-box::after {
-  content: '';
-  position: absolute;
-  left: -10%;
-  top: 30%;
-  width: 120%;
-  height: 1.2px;
-  background: rgba(21, 101, 192, 0.3);
-  transform: rotate(8deg);
-}
-.captcha-box i {
-  position: relative;
-  z-index: 1;
-  font-style: normal;
-  font-size: 23px;
-  font-weight: 900;
-  font-family: Arial, Helvetica, sans-serif;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+.captcha-svg-img {
+  display: block;
+  width: 90px;
+  height: 34px;
+  object-fit: contain;
 }
 .captcha-loading {
   color: #bbb;
@@ -356,12 +352,6 @@ onMounted(async () => {
 .submit-btn.loading {
   opacity: 0.6;
   pointer-events: none;
-}
-.wecom-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 /* 提示文案 */

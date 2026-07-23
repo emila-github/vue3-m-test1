@@ -77,7 +77,13 @@ const LABEL_OPTIONS: { id: string; name: string }[] = [
 const CITIES = ['杭州市', '宁波市', '温州市', '南京市', '苏州市', '上海市']
 const STREETS = ['科技大道', '解放路', '中山北路', '人民广场', '滨江大道', '文一西路']
 const SURNAMES = ['张', '王', '李', '赵', '陈', '刘', '杨', '黄', '周', '吴']
-const COMPANY_SUFFIX = ['科技有限公司', '贸易有限公司', '建筑工程公司', '物流有限公司', '餐饮管理公司']
+const COMPANY_SUFFIX = [
+  '科技有限公司',
+  '贸易有限公司',
+  '建筑工程公司',
+  '物流有限公司',
+  '餐饮管理公司',
+]
 
 function pad(n: number, len = 2): string {
   return String(n).padStart(len, '0')
@@ -103,7 +109,10 @@ function buildRecord(i: number): SourceRecord {
     customerName: `${city.slice(0, 2)}${surname}氏${COMPANY_SUFFIX[i % COMPANY_SUFFIX.length]}`,
     customerAddress: `${city}${street}${(i % 200) + 1}号`,
     contactsName: `${surname}${['经理', '主管', '总监', '专员'][i % 4]}`,
-    contactsPhone: `1${['3', '5', '7', '8', '9'][i % 5]}${pad((i * 137) % 100000000, 9)}`.slice(0, 11),
+    contactsPhone: `1${['3', '5', '7', '8', '9'][i % 5]}${pad((i * 137) % 100000000, 9)}`.slice(
+      0,
+      11,
+    ),
     waitComments,
     updateTime,
     isSelf: i % 2 === 0,
@@ -170,7 +179,8 @@ const routes: MockRoute[] = [
       let filtered = [...data]
       if (customerName) filtered = filtered.filter((r) => r.customerName.includes(customerName))
       if (isSelf) filtered = filtered.filter((r) => r.isSelf)
-      if (isWaitComments) filtered = filtered.filter((r) => r.waitComments === 1 || r.waitComments === 2)
+      if (isWaitComments)
+        filtered = filtered.filter((r) => r.waitComments === 1 || r.waitComments === 2)
       if (begin) filtered = filtered.filter((r) => r.updateTime.slice(0, 10) >= begin)
       if (end) filtered = filtered.filter((r) => r.updateTime.slice(0, 10) <= end)
 
@@ -225,7 +235,9 @@ const routes: MockRoute[] = [
     url: '/data/insuraceSource/addCheck',
     method: 'GET',
     response: (req) => {
-      const name = (new URL(req.url!, 'http://localhost').searchParams.get('customerName') || '').trim()
+      const name = (
+        new URL(req.url!, 'http://localhost').searchParams.get('customerName') || ''
+      ).trim()
       if (!name) return ok([])
       const matched = data.filter((d) => d.customerName.includes(name))
       const result = matched.map((d) => ({

@@ -94,8 +94,8 @@ const meta = computed(() => ICONS[props.name] ?? ICONS._default)
   <span class="ins-icon" :style="{ width: size + 'px', height: size + 'px' }">
     <svg
       viewBox="0 0 24 24"
-      :width="size * 0.50"
-      :height="size * 0.50"
+      :width="size * 0.5"
+      :height="size * 0.5"
       fill="none"
       :stroke="meta.c"
       stroke-width="1.75"

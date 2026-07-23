@@ -81,8 +81,7 @@ export function createClient(options: ClientOptions): ApiClient {
     },
     (err) => {
       const data = err?.response?.data
-      const message =
-        data?.message ?? data?.msg ?? err?.message ?? '网络异常'
+      const message = data?.message ?? data?.msg ?? err?.message ?? '网络异常'
       return Promise.reject(new BizError(err?.response?.status ?? -1, message, data))
     },
   )

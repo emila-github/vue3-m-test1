@@ -12,8 +12,7 @@
 import type { UserInfo } from '../modules/login'
 
 const TOKEN_HEADER = (import.meta.env.VITE_TOKEN_HEADER as string) || 'X-Access-Token'
-const TOKEN_STORAGE_KEY =
-  (import.meta.env.VITE_TOKEN_STORAGE_KEY as string) || 'app_token'
+const TOKEN_STORAGE_KEY = (import.meta.env.VITE_TOKEN_STORAGE_KEY as string) || 'app_token'
 /** 用户信息本地存储 key（跟随 token key 派生，避免再加一个环境变量） */
 const USER_STORAGE_KEY = `${TOKEN_STORAGE_KEY}_user`
 

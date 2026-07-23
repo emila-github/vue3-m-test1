@@ -10,6 +10,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+// 环境标识（来自 VITE_APP_TITLE，如 "Vue3 Demo"、"Vue3 Demo (DEV)"），用于区分当前联调/构建环境
+const envTitle = (import.meta.env.VITE_APP_TITLE as string) || ''
+
 interface ModuleItem {
   key: string
   title: string
@@ -48,19 +51,17 @@ function open(m: ModuleItem) {
   <div class="mod-home">
     <!-- ==================== 头部 ==================== -->
     <header class="mod-header">
-      <div class="mod-brand">中国人保</div>
+      <div class="mod-header-top">
+        <div class="mod-brand">中国人保</div>
+        <div v-if="envTitle" class="mod-env">{{ envTitle }}</div>
+      </div>
       <div class="mod-title">请选择业务模块</div>
       <div class="mod-sub">不同模块拥有独立的首页与「我的」</div>
     </header>
 
     <!-- ==================== 模块卡片列表 ==================== -->
     <main class="mod-body">
-      <button
-        v-for="m in modules"
-        :key="m.key"
-        class="mod-card"
-        @click="open(m)"
-      >
+      <button v-for="m in modules" :key="m.key" class="mod-card" @click="open(m)">
         <div class="mod-icon" :style="{ background: m.color }">{{ m.icon }}</div>
         <div class="mod-info">
           <div class="mod-name">{{ m.title }}</div>
@@ -84,6 +85,21 @@ function open(m: ModuleItem) {
   padding: 28px 20px 36px;
   color: #fff;
   border-radius: 0 0 24px 24px;
+}
+.mod-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mod-env {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
 }
 .mod-brand {
   font-size: 20px;

@@ -520,16 +520,16 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
       </p>
       <p class="hint">
         本页所有接口走 ydlClient（baseURL=/ydl-api），后端为 JeecgBoot 风格：<br />
-        响应包络 <code>{ success, code, message, result, timestamp }</code>，
-        分页 <code>result = { records, current, size, total, pages }</code>。<br />
+        响应包络 <code>{ success, code, message, result, timestamp }</code>， 分页
+        <code>result = { records, current, size, total, pages }</code>。<br />
         列表接口经 ydlPagination 适配器转回通用 PageResult，VantList 无需感知后端差异。
       </p>
       <p class="hint">
         <b>主要 Props</b><br />
         api：CrudApi 集合（list 必填，create/update/remove 缺省则对应功能不可用）<br />
         permissionPrefix / permissionActions：权限前缀与自定义操作码<br />
-        showSearch / showAdd / showDetail / showEdit / showDelete / showMore /
-        keywordKey / filters / actions<br />
+        showSearch / showAdd / showDetail / showEdit / showDelete / showMore / keywordKey / filters
+        / actions<br />
         rowPermission(item)：行级自定义权限（与角色权限做「与」）<br />
         responseMap / requestMap：适配异构后端字段命名
       </p>

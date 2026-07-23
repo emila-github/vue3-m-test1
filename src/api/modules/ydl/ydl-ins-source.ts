@@ -222,10 +222,10 @@ function toYdlInsSourceSubmit(d: YdlInsSourceForm): YdlInsSourceSubmit {
     customerAddress: d.customerAddress,
     contactsName: d.contactsName,
     contactsPhone: d.contactsPhone,
-    productLine: Array.isArray(d.productLine) ? d.productLine.join(',') : (d.productLine || ''),
+    productLine: Array.isArray(d.productLine) ? d.productLine.join(',') : d.productLine || '',
     customerLabel: Array.isArray(d.customerLabel)
       ? d.customerLabel.join(',')
-      : (d.customerLabel || ''),
+      : d.customerLabel || '',
   }
 }
 

@@ -50,9 +50,7 @@ export function useLoginConfig(props: LoginConfigProps) {
     () => props.defaultMethod ?? serverConfig.value?.defaultMethod ?? 'sms',
   )
 
-  const title = computed(
-    () => props.title ?? serverConfig.value?.title ?? '欢迎使用中国人保APP',
-  )
+  const title = computed(() => props.title ?? serverConfig.value?.title ?? '欢迎使用中国人保APP')
   const subtitle = computed(
     () => props.subtitle ?? serverConfig.value?.subtitle ?? '首次登录将自动为您创建账号',
   )

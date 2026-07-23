@@ -29,14 +29,55 @@ function queryParam(req: any, key: string): string {
 const permResult = (permRaw as any).result
 
 // ==================== 图形验证码（Mock 生成） ====================
-// 生成 4 位字符（前端以「内联 DOM」渲染，避免 <img>+dataURL 在部分环境下不显示）。
+// 生成 base64 SVG（带可读字符），对齐真实后端 result.img 格式，
+// 便于联调前端 <img :src="data:..."> 渲染路径。SVG 为文本格式，
+// 浏览器/Node 均可正常解码，且必定含有可读验证码文字。登录校验据此比对（见 wxLogin）。
+const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+const CAPTCHA_COLORS = ['#d71920', '#1565c0', '#1b5e20', '#e65100']
+
+/** 环境自适应 base64：浏览器用 btoa，Node 用 Buffer（mock 插件两种环境都可能跑） */
+function toBase64(s: string): string {
+  if (typeof Buffer !== 'undefined') return Buffer.from(s).toString('base64')
+  return btoa(unescape(encodeURIComponent(s)))
+}
+
+/** XML 转义，避免字符破坏 SVG 结构 */
+function escapeXml(s: string): string {
+  return s.replace(/[<>&'"]/g, (c) =>
+    c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c === "'" ? '&apos;' : '&quot;',
+  )
+}
+
 let currentCaptcha = ''
-function makeCaptcha(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
+function makeCaptchaSvg(): string {
+  // 生成 4 位验证码字符
   let code = ''
-  for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)]
+  for (let i = 0; i < 4; i++)
+    code += CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]
   currentCaptcha = code
-  return code
+
+  const W = 100
+  const H = 40
+  let texts = ''
+  for (let i = 0; i < 4; i++) {
+    const x = 16 + i * 22
+    const y = 30
+    const rot = (Math.random() * 30 - 15).toFixed(1)
+    const color = CAPTCHA_COLORS[i % CAPTCHA_COLORS.length]
+    texts +=
+      `<text x="${x}" y="${y}" font-family="Arial, Helvetica, sans-serif" font-size="26" ` +
+      `font-weight="bold" fill="${color}" text-anchor="middle" ` +
+      `transform="rotate(${rot} ${x} ${y})">${escapeXml(code[i] ?? '')}</text>`
+  }
+  // 两条干扰线
+  const lines =
+    `<line x1="0" y1="12" x2="100" y2="16" stroke="#d71920" stroke-opacity="0.3" stroke-width="1.2"/>` +
+    `<line x1="0" y1="30" x2="100" y2="26" stroke="#1565c0" stroke-opacity="0.3" stroke-width="1"/>`
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
+    `<rect width="${W}" height="${H}" fill="#f5f5f5"/>${lines}${texts}</svg>`
+  return toBase64(svg)
 }
 
 const routes: MockRoute[] = [
@@ -64,11 +105,12 @@ const routes: MockRoute[] = [
       msg: '登录成功',
     }),
   },
-  // 普通登录：图形验证码（返回字符，前端内联 DOM 渲染）
+  // 普通登录：图形验证码（返回 base64 SVG 图，对齐真实后端 result.img 格式）
   {
     url: '/sys/captchaImage',
     method: 'GET',
-    response: () => ok({ code: makeCaptcha(), captchaKey: 'mock_captcha_key' }),
+    response: () =>
+      ok({ img: makeCaptchaSvg(), captchaKey: 'mock_captcha_key' }, { message: '验证码生成成功' }),
   },
   // 普通登录：账号密码登录（演示：任意账号密码，但需验证码正确）
   {
@@ -83,8 +125,18 @@ const routes: MockRoute[] = [
           body = {}
         }
       }
-      if (body?.captcha && currentCaptcha && body.captcha.toUpperCase() !== currentCaptcha.toUpperCase()) {
-        return { success: false, code: 500, message: '验证码错误', result: null, timestamp: Date.now() }
+      if (
+        body?.captcha &&
+        currentCaptcha &&
+        body.captcha.toUpperCase() !== currentCaptcha.toUpperCase()
+      ) {
+        return {
+          success: false,
+          code: 500,
+          message: '验证码错误',
+          result: null,
+          timestamp: Date.now(),
+        }
       }
       return ok({ token: 'mock_site_token_' + Date.now() })
     },

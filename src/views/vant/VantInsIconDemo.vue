@@ -47,22 +47,12 @@ const rows = ref<InsRow[]>([
   <div class="ins-demo">
     <van-nav-bar title="保险行业图标" left-text="返回" left-arrow @click-left="$router.back()" />
 
-    <div class="ins-banner">
-      仿 PICC 移动端截图：白底圆角方块 + 红色描边线形图标
-    </div>
+    <div class="ins-banner">仿 PICC 移动端截图：白底圆角方块 + 红色描边线形图标</div>
 
-    <section
-      v-for="(row, ri) in rows"
-      :key="'r' + ri"
-      class="ins-section"
-    >
+    <section v-for="(row, ri) in rows" :key="'r' + ri" class="ins-section">
       <h3 class="ins-section-title">{{ row.title }}</h3>
       <div class="ins-row">
-        <div
-          v-for="it in row.items"
-          :key="it.key"
-          class="ins-item"
-        >
+        <div v-for="it in row.items" :key="it.key" class="ins-item">
           <InsuranceIcon :name="it.key" :size="52" :badge="it.badge" />
           <span class="ins-label">{{ it.title }}</span>
         </div>

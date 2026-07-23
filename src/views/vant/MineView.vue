@@ -72,22 +72,14 @@ async function onLogout() {
     </header>
 
     <van-cell-group inset class="mine-cells">
-      <van-cell
-        v-for="c in cells"
-        :key="c.title"
-        :icon="c.icon"
-        :title="c.title"
-        is-link
-      />
+      <van-cell v-for="c in cells" :key="c.title" :icon="c.icon" :title="c.title" is-link />
     </van-cell-group>
 
     <div class="mine-logout">
       <van-button v-if="logged" block round type="primary" plain @click="onLogout">
         退出登录
       </van-button>
-      <van-button v-else block round type="primary" @click="goLogin">
-        去登录
-      </van-button>
+      <van-button v-else block round type="primary" @click="goLogin"> 去登录 </van-button>
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@
  * 接口契约来自 `md/ydl/站点登录开发文档.md` 与 `md/ydl/getUserPermissionByToken.json`。
  * 所有请求经 siteClient（ydlFormat 适配器 + /site-api 前缀）。
  */
-import { siteGet, sitePost } from './site-client'
+import { siteGet, sitePost, siteWxGet, siteWxPost } from './site-client'
 
 // ==================== 权限数据结构（对齐 getUserPermissionByToken.json） ====================
 export interface SiteAuthItem {
@@ -44,19 +44,19 @@ export interface SiteWxUserInfoResult {
   msg?: string
 }
 
-// ==================== 企业微信登录 ====================
+// ==================== 企业微信登录（走 wx 根路径，/cp/... 前缀） ====================
 export function getAuthUrl(params: { wxAppId: string; redirect: string; getPrivateInfo?: any }) {
-  return siteGet<SiteAuthUrlResult>('/cp/wxAuth/getAuthUrl', params)
+  return siteWxGet<SiteAuthUrlResult>('/cp/wxAuth/getAuthUrl', params)
 }
 
 export function getWxUserInfo(params: { wxAppId: string; code: string }) {
-  return sitePost<SiteWxUserInfoResult>('/cp/wxAuth/getWxUserInfo', params)
+  return siteWxPost<SiteWxUserInfoResult>('/cp/wxAuth/getWxUserInfo', params)
 }
 
 // ==================== 普通登录 ====================
-/** 图形验证码（base64 + 缓存 key） */
+/** 图形验证码：真实后端返回 base64 图（img）；mock 返回字符（code）。两者并存以兼容两种模式 */
 export function getCaptchaImg() {
-  return siteGet<{ img: string; captchaKey: string }>('/sys/captchaImage')
+  return siteGet<{ img?: string; code?: string; captchaKey: string }>('/sys/captchaImage')
 }
 
 /** 账号密码登录（密码需 md5，旧站约定） */

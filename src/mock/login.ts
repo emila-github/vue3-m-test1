@@ -6,7 +6,7 @@
  *   POST /login/sms-code          — 发送短信验证码
  *   POST /login/sms               — 验证码登录
  *   POST /login/password          — 密码登录
- *   GET  /login/wechat/authorize  — 获取微信扫码授权地址（真实 / 演示降级）
+ *   GET  /login/wechat/authorize  — 获取微信网页授权地址（网页授权：在网页中携带身份，code 经 sns/userinfo 换用户信息）
  *   GET  /login/wechat/callback   — 微信 OAuth 回调（node 端换票 + 拉真实用户信息）
  *   POST /login/wechat            — 微信登录（redirect 模式，传 code 换用户信息）
  *   GET  /login/wecom/authorize   — 获取企业微信扫码授权地址
@@ -66,7 +66,9 @@ function genCaptchaSvg(text: string): string {
   for (let i = 0; i < 4; i++) {
     svg += `<line x1="${(Math.random() * w).toFixed(1)}" y1="${(Math.random() * h).toFixed(1)}" x2="${(
       Math.random() * w
-    ).toFixed(1)}" y2="${(Math.random() * h).toFixed(1)}" stroke="${rc()}" stroke-width="1" opacity="0.4"/>`
+    ).toFixed(
+      1,
+    )}" y2="${(Math.random() * h).toFixed(1)}" stroke="${rc()}" stroke-width="1" opacity="0.4"/>`
   }
   // 字符
   for (let i = 0; i < text.length; i++) {
@@ -237,7 +239,12 @@ async function exchangeWecom(code: string): Promise<Record<string, any>> {
     }
   }
   // 非企业成员（仅能拿到 openid）
-  return { userId: info.openid, name: '微信用户', openid: info.openid, raw: { ...info, _real: true } }
+  return {
+    userId: info.openid,
+    name: '微信用户',
+    openid: info.openid,
+    raw: { ...info, _real: true },
+  }
 }
 
 // ===== 演示降级用户（未配置凭证时） =====
@@ -262,12 +269,17 @@ function mockWecomUser() {
   }
 }
 
-// ===== OAuth 回调页：把结果 postMessage 给 opener 并关闭弹窗 =====
-function callbackHtml(result: any, errMsg: string | null): string {
+// ===== OAuth 回调页：把结果 postMessage 给 opener / 整页跳转回登录页 =====
+// returnUrl：由 authorize 的 state 带回的登录页地址（跨域也能用）；缺省降级 sessionStorage
+function callbackHtml(result: any, errMsg: string | null, returnUrl?: string): string {
   const payload = errMsg
     ? { type: 'oauth-error', message: errMsg }
     : { type: 'oauth-success', result }
   const tip = errMsg ? '授权失败：' + errMsg : '登录成功，正在关闭…'
+  // 回跳地址：优先用 state 带回的 returnUrl（跨域可用），同源降级用 sessionStorage
+  const backExpr = returnUrl
+    ? JSON.stringify(returnUrl)
+    : `((function(){ try { return sessionStorage.getItem('oauth_return') || '/'; } catch(e){ return '/'; } })())`
   return `<!doctype html><html><head><meta charset="utf-8"><title>授权中</title>
   <style>body{font-family:-apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;color:#333;font-size:15px}</style></head>
   <body><div>${tip}</div>
@@ -281,11 +293,11 @@ function callbackHtml(result: any, errMsg: string | null): string {
         try { window.opener.postMessage(data, '*'); } catch(e){}
         setTimeout(function(){ window.close(); }, 900);
       } else {
-        // 整页跳转模式（移动端）：结果存 sessionStorage 后跳回登录页
+        // 整页跳转模式（移动端）：结果写入 URL 片段后跳回（跨域也能用，sessionStorage 同源才可用）
+        var back = ${backExpr};
         try { sessionStorage.setItem('oauth_result', JSON.stringify(data)); } catch(e){}
-        var back = '/';
-        try { back = sessionStorage.getItem('oauth_return') || '/'; } catch(e){}
-        location.replace(back);
+        var cleanBack = (back || '/').split('#')[0];
+        location.replace(cleanBack + '#oauth=' + encodeURIComponent(JSON.stringify(data)));
       }
     })();
   </script></body></html>`
@@ -338,9 +350,17 @@ const routes: MockRoute[] = [
         return { code: 400, data: null, message: '验证码已过期，请重新获取' }
       }
       smsStore.delete(phone)
-      return { code: 200, data: buildResult('sms', {
-        userId: 'U10086', name: '测试用户', phone, dept: '展业一部', role: 'agent',
-      }), message: '登录成功' }
+      return {
+        code: 200,
+        data: buildResult('sms', {
+          userId: 'U10086',
+          name: '测试用户',
+          phone,
+          dept: '展业一部',
+          role: 'agent',
+        }),
+        message: '登录成功',
+      }
     },
   },
 
@@ -352,7 +372,11 @@ const routes: MockRoute[] = [
       const code = randomCaptchaText(4)
       const captchaId = 'cap_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8)
       captchaStore.set(captchaId, { code, expireAt: Date.now() + 5 * 60 * 1000 })
-      return { code: 200, data: { captchaId, svg: genCaptchaSvg(code), devCode: code }, message: 'ok' }
+      return {
+        code: 200,
+        data: { captchaId, svg: genCaptchaSvg(code), devCode: code },
+        message: 'ok',
+      }
     },
   },
 
@@ -365,7 +389,9 @@ const routes: MockRoute[] = [
       const body = await parseBody(req)
       const account = String(body.account || '').trim()
       const password = String(body.password || '')
-      const captcha = String(body.captcha || '').trim().toUpperCase()
+      const captcha = String(body.captcha || '')
+        .trim()
+        .toUpperCase()
       const captchaId = String(body.captchaId || '')
       // 校验图形验证码
       const cap = captchaStore.get(captchaId)
@@ -385,9 +411,17 @@ const routes: MockRoute[] = [
       if (stored && stored !== password) {
         return { code: 401, data: null, message: '账号或密码错误' }
       }
-      return { code: 200, data: buildResult('password', {
-        userId: 'U10086', name: '测试用户', phone: '13800001000', dept: '展业一部', role: 'agent',
-      }), message: '登录成功' }
+      return {
+        code: 200,
+        data: buildResult('password', {
+          userId: 'U10086',
+          name: '测试用户',
+          phone: '13800001000',
+          dept: '展业一部',
+          role: 'agent',
+        }),
+        message: '登录成功',
+      }
     },
   },
 
@@ -433,22 +467,28 @@ const routes: MockRoute[] = [
     },
   },
 
-  // ===== 微信：获取扫码授权地址 =====
+  // ===== 微信：获取网页授权地址（网页授权：在网页中携带用户身份，code 经 sns/userinfo 换昵称头像） =====
   {
     url: '/login/wechat/authorize',
     method: 'GET',
     response: (req) => {
       const base = redirectBase(req)
-      const state = randomState()
+      const ret = new URL(req.url || '', 'http://localhost').searchParams.get('return') || ''
+      const state = randomState() + (ret ? '|' + encodeURIComponent(ret) : '')
       const demo = new URL(req.url || '', 'http://localhost').searchParams.get('demo') === '1'
       console.log('[oauth][wechat] demo=%s wechatReal=%s base=%s', demo, wechatReal, base)
       if (!demo && wechatReal) {
         const redirectUri = encodeURIComponent(`${base}/api/login/wechat/callback`)
+        // 官方「网页授权」链接：https://open.weixin.qq.com/connect/oauth2/authorize
+        //   ?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code
+        //   &scope=snsapi_userinfo&state=STATE#wechat_redirect
+        // 注：微信公众平台网页授权没有 agentid 参数；scope=snsapi_userinfo 用于拉取昵称/头像
+        //     （exchangeWechat 调 sns/userinfo），若仅取 openid 可改 snsapi_base
         const url =
-          `https://open.weixin.qq.com/connect/qrconnect?appid=${WECHAT_APPID}` +
-          `&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_login&state=${state}#wechat_redirect`
+          `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WECHAT_APPID}` +
+          `&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
         console.log('[oauth][wechat] authorize url:', url)
-        console.log('[oauth][wechat] → 需在微信开放平台登记的回调域名:', base)
+        console.log('[oauth][wechat] → 需在微信公众平台登记的回调域名:', base)
         return { code: 200, data: { url, real: true }, message: 'ok' }
       }
       if (OAUTH_DEV_FALLBACK) {
@@ -469,13 +509,16 @@ const routes: MockRoute[] = [
     method: 'GET',
     response: async (req) => {
       const { searchParams } = new URL(req.url || '', 'http://localhost')
+      const stateRaw = searchParams.get('state') || ''
+      const sep = stateRaw.indexOf('|')
+      const returnUrl = sep >= 0 ? decodeURIComponent(stateRaw.slice(sep + 1)) : ''
       const dev = searchParams.get('dev')
       const code = searchParams.get('code') || ''
       try {
         const userInfo = dev ? mockWechatUser() : await exchangeWechat(code)
-        return { __html: callbackHtml(buildResult('wechat', userInfo), null) }
+        return { __html: callbackHtml(buildResult('wechat', userInfo), null, returnUrl) }
       } catch (e: any) {
-        return { __html: callbackHtml(null, e?.message || '微信登录失败') }
+        return { __html: callbackHtml(null, e?.message || '微信登录失败', returnUrl) }
       }
     },
   },
@@ -497,20 +540,25 @@ const routes: MockRoute[] = [
     },
   },
 
-  // ===== 企业微信：获取扫码授权地址 =====
+  // ===== 企业微信：获取网页授权地址（网页授权：在网页中携带成员身份，code 经 getuserinfo 换 userid） =====
   {
     url: '/login/wecom/authorize',
     method: 'GET',
     response: (req) => {
       const base = redirectBase(req)
-      const state = randomState()
+      const ret = new URL(req.url || '', 'http://localhost').searchParams.get('return') || ''
+      const state = randomState() + (ret ? '|' + encodeURIComponent(ret) : '')
       const demo = new URL(req.url || '', 'http://localhost').searchParams.get('demo') === '1'
       console.log('[oauth][wecom] demo=%s wecomReal=%s base=%s', demo, wecomReal, base)
       if (!demo && wecomReal) {
         const redirectUri = encodeURIComponent(`${base}/api/login/wecom/callback`)
+        // 官方「网页授权」链接：https://open.weixin.qq.com/connect/oauth2/authorize
+        //   ?appid=CORPID&redirect_uri=REDIRECT_URI&response_type=code
+        //   &scope=snsapi_base&state=STATE&agentid=AGENTID#wechat_redirect
+        // snsapi_base 静默获取成员身份；code 回传后经 exchangeWecom 的 cgi-bin/auth/getuserinfo 换 userid
         const url =
-          `https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=${WECOM_CORPID}` +
-          `&agentid=${WECOM_AGENTID}&redirect_uri=${redirectUri}&state=${state}`
+          `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WECOM_CORPID}` +
+          `&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_base&state=${state}&agentid=${WECOM_AGENTID}#wechat_redirect`
         console.log('[oauth][wecom] authorize url:', url)
         console.log('[oauth][wecom] → 需在企业微信后台登记的回调域名:', base)
         return { code: 200, data: { url, real: true }, message: 'ok' }
@@ -533,13 +581,16 @@ const routes: MockRoute[] = [
     method: 'GET',
     response: async (req) => {
       const { searchParams } = new URL(req.url || '', 'http://localhost')
+      const stateRaw = searchParams.get('state') || ''
+      const sep = stateRaw.indexOf('|')
+      const returnUrl = sep >= 0 ? decodeURIComponent(stateRaw.slice(sep + 1)) : ''
       const dev = searchParams.get('dev')
       const code = searchParams.get('code') || ''
       try {
         const userInfo = dev ? mockWecomUser() : await exchangeWecom(code)
-        return { __html: callbackHtml(buildResult('wecom', userInfo), null) }
+        return { __html: callbackHtml(buildResult('wecom', userInfo), null, returnUrl) }
       } catch (e: any) {
-        return { __html: callbackHtml(null, e?.message || '企业微信登录失败') }
+        return { __html: callbackHtml(null, e?.message || '企业微信登录失败', returnUrl) }
       }
     },
   },

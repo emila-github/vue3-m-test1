@@ -34,7 +34,7 @@ const enabledMethods = computed<LoginMethod[]>(() => allMethods.filter((m) => en
 
 const smsCountdown = ref(60)
 /** 演示模式：本地预览用，强制降级返回模拟登录信息（无需 https / 可信域名） */
-const demoMode = ref(true)
+const demoMode = ref(false)
 /** 是否展示「忘记密码」入口（可配置，默认开启） */
 const forgotPassword = ref(true)
 

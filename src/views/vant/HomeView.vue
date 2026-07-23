@@ -36,10 +36,27 @@ interface MenuGroup {
 // ====== 红底快捷入口（车险算费 highlight 风格）======
 const quickItems = ref<MenuItem[]>([
   { key: 'dashboard-analysis', title: '数据汇总', to: '/analysis', style: 'highlight' },
-  { key: 'insurance-source-stats-TrackSummary', title: '跟踪统计', to: '/track-summary', style: 'highlight', badge: 'NEW' },
+  {
+    key: 'insurance-source-stats-TrackSummary',
+    title: '跟踪统计',
+    to: '/track-summary',
+    style: 'highlight',
+    badge: 'NEW',
+  },
   { key: 'insurance-source-workplace', title: '我的保源', to: '/myis', style: 'highlight' },
-  { key: 'xb-renewedList', title: '续保管理', to: '/xb/renewedList', style: 'highlight', badge: '热' },
-  { key: 'insurance-source-monitor-track-visit', title: '拜访汇总', to: '/monitor/track/visit', style: 'highlight' },
+  {
+    key: 'xb-renewedList',
+    title: '续保管理',
+    to: '/xb/renewedList',
+    style: 'highlight',
+    badge: '热',
+  },
+  {
+    key: 'insurance-source-monitor-track-visit',
+    title: '拜访汇总',
+    to: '/monitor/track/visit',
+    style: 'highlight',
+  },
 ])
 
 // ====== 业务菜单分组（福建源动力平台 default 风格）======
@@ -120,12 +137,7 @@ function go(it: MenuItem) {
       <section v-for="(g, gi) in groups" :key="'g' + gi" class="menu-section">
         <h2 v-if="g.title" class="section-title">{{ g.title }}</h2>
         <div v-if="g.items.length" class="menu-grid">
-          <button
-            v-for="it in g.items"
-            :key="it.key"
-            class="menu-item"
-            @click="go(it)"
-          >
+          <button v-for="it in g.items" :key="it.key" class="menu-item" @click="go(it)">
             <MenuIcon :name="it.key" :style="it.style ?? 'default'" :size="44" :badge="it.badge" />
             <span class="menu-label">{{ it.title }}</span>
           </button>
@@ -134,7 +146,8 @@ function go(it: MenuItem) {
 
       <!-- 底部安全提示条 -->
       <div class="safety-tips">
-        <span>安全</span><span>医疗新升级</span><span>增额寿险</span><span>少儿医疗</span><span>福运周周乐</span><span>盛夏嘻游</span>
+        <span>安全</span><span>医疗新升级</span><span>增额寿险</span><span>少儿医疗</span
+        ><span>福运周周乐</span><span>盛夏嘻游</span>
       </div>
 
       <!-- 底部留白，避免被 tabbar 遮挡 -->
