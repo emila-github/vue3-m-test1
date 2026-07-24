@@ -48,6 +48,11 @@ export const ydlFormat: ResponseAdapter = {
  */
 export const ydlPagination: PaginationAdapter = {
   toParams: (p) => ({ current: p.page, size: p.pageSize }),
+  /**
+   * 将原始响应数据转换为分页结果对象
+   * @param raw - 原始响应数据
+   * @returns 分页结果对象，包含列表、总数、当前页码和页面大小
+   */
   fromResult: (raw) => ({
     list: raw?.records ?? [],
     total: raw?.total ?? 0,
@@ -62,6 +67,11 @@ export const ydlPagination: PaginationAdapter = {
  */
 export const defaultPagination: PaginationAdapter = {
   toParams: (p) => ({ ...p }),
+  /**
+   * 将原始响应数据转换为分页结果对象
+   * @param raw - 原始响应数据
+   * @returns 分页结果对象，包含列表、总数、当前页码和页面大小
+   */
   fromResult: (raw) => ({
     list: raw?.list ?? [],
     total: raw?.total ?? 0,

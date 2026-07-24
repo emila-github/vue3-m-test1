@@ -45,9 +45,9 @@ const api: CrudApi<YdlInsSource, YdlInsSourceForm, YdlInsSourceQuery> = {
 // 初始查询条件（含全部筛选字段，reset 可复位）
 const initialQuery: YdlInsSourceQuery = {
   customerName: '',
-  isSelf: false,
-  isNear: false,
-  isWaitComments: 0,
+  isSelf: false, // 只显示本人保源
+  isNear: true, // 近期代办
+  isWaitComments: 0, //待点评  1 勾选 0 不勾选
   updateTimeRange: [],
 }
 
