@@ -52,6 +52,12 @@ export interface UseCrudListOptions<T, F, Q> {
   permissionPrefix?: string
   /** 自定义权限操作码映射（覆盖默认 create/edit/view/delete 后缀） */
   permissionActions?: Partial<Record<CrudAction, string>>
+  /**
+   * 免权限动作：列出的动作不受权限门禁限制，按钮始终可见（对应 v-permission 的空值恒可见规则）。
+   * 例：freeActions: ['view'] → 详情按钮任何角色都能看，无需 ydl:view 权限码。
+   * 适用于「只读/查看人人可进」或「后端未配置该动作权限」的场景。
+   */
+  freeActions?: CrudAction[]
   /** 是否启用操作日志，默认 false */
   enableLog?: boolean
   /** 列表响应字段映射（适配不同后端字段命名）。
@@ -91,11 +97,13 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
   // 权限 / 角色变化时触发根组件重渲染，使 v-permission 指令 updated 重新求值
   const permTick = computed(() => `${currentRole.value}|${permissions.value.join(',')}`)
 
-  // 权限码：prefix + action
+  // 权限码：prefix + action；freeActions 中的动作解析为空串（v-permission 对空值恒可见）
+  const freeSet = new Set(options.freeActions ?? [])
   const permCodes = computed<Record<CrudAction, string>>(() => {
     const prefix = options.permissionPrefix ?? ''
     const custom = options.permissionActions ?? {}
     const build = (action: CrudAction) => {
+      if (freeSet.has(action)) return '' // 不需要权限：空码令 v-permission 始终放行
       const suffix = custom[action] ?? action
       return prefix ? `${prefix}:${suffix}` : suffix
     }
