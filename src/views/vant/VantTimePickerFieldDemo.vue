@@ -26,6 +26,8 @@ const disabledVal = ref('08:00')
 const readonlyVal = ref('20:30')
 // ⑧ 必填 + 图标
 const requiredVal = ref('')
+// ⑨ 日期时间（type=datetime）—— van-picker-group 单工具栏
+const dateTime = ref('')
 </script>
 
 <template>
@@ -153,6 +155,25 @@ const requiredVal = ref('')
         clearable
       />
     </div>
+
+    <!-- ⑨ 日期时间（type=datetime）：van-picker-group 单工具栏，日期/时间标签切换 -->
+    <div class="section-title">⑨ 日期时间（type=datetime）</div>
+    <div class="card">
+      <VantTimePickerField
+        v-model="dateTime"
+        type="datetime"
+        label="拜访时间"
+        title="选择拜访时间"
+        placeholder="请选择日期与时间"
+        clearable
+        @change="onChange"
+      />
+      <p class="hint">
+        当前值：<code>{{ dateTime || '（空）' }}</code
+        ><br />
+        弹出层内通过「日期 / 时间」标签页切换，仅一条确认/取消工具栏（不再重复）。
+      </p>
+    </div>
   </div>
 
   <div class="usage-page">
@@ -166,7 +187,8 @@ const requiredVal = ref('')
       </p>
       <p class="hint">
         <b>主要 Props</b><br />
-        type：time（HH:mm）/ date（YYYY-MM-DD）/ year-month（YYYY-MM）<br />
+        type：time（HH:mm）/ date（YYYY-MM-DD）/ year-month（YYYY-MM）/ datetime（YYYY-MM-DD
+        HH:mm:ss）<br />
         format：自定义输出格式 · minDate / maxDate · minHour / maxHour / minMinute / maxMinute<br />
         clearable / disabled / readonly / required
       </p>

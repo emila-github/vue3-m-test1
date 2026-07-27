@@ -211,27 +211,28 @@ function onClear() {
       @confirm="onConfirm"
       @cancel="show = false"
     />
-    <template v-else-if="isDateTime">
+    <van-picker-group
+      v-else-if="isDateTime"
+      :tabs="['选择日期', '选择时间']"
+      :title="title"
+      @confirm="onDateTimeConfirm"
+      @cancel="show = false"
+    >
       <van-date-picker
         v-model="pickerValue"
-        title="选择日期"
         :columns-type="['year', 'month', 'day']"
         :min-date="minDate"
         :max-date="maxDate"
-        @cancel="show = false"
       />
       <van-time-picker
         v-model="timeValue"
-        title="选择时间"
+        :columns-type="['hour', 'minute']"
         :min-hour="minHour"
         :max-hour="maxHour"
         :min-minute="minMinute"
         :max-minute="maxMinute"
-        :columns-type="['hour', 'minute']"
-        @cancel="show = false"
       />
-      <div class="vtp-datetime-confirm" @click="onDateTimeConfirm">确定</div>
-    </template>
+    </van-picker-group>
     <van-date-picker
       v-else
       v-model="pickerValue"
@@ -265,19 +266,5 @@ function onClear() {
 }
 .vant-time-picker .vant-field-clear-icon:active {
   color: #323233;
-}
-
-/* ===== datetime 模式：日期 + 时间组合确认按钮 ===== */
-.vtp-datetime-confirm {
-  text-align: center;
-  line-height: 48px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  background: var(--van-primary-color, #d71920);
-  cursor: pointer;
-}
-.vtp-datetime-confirm:active {
-  opacity: 0.85;
 }
 </style>

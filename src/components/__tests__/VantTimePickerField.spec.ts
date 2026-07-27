@@ -8,15 +8,21 @@ const stubs = {
   'van-popup': { template: '<div><slot /></div>' },
   'van-time-picker': true,
   'van-date-picker': true,
+  'van-picker-group': true,
   'van-icon': true,
 }
 
 describe('VantTimePickerField', () => {
-  it('isTime 随 type 变化', () => {
+  it('isTime / isDateTime 随 type 变化', () => {
     const t = shallowMount(VantTimePickerField, { global: { stubs }, props: { type: 'time' } })
     expect((t.vm as any).isTime).toBe(true)
+    expect((t.vm as any).isDateTime).toBe(false)
     const d = shallowMount(VantTimePickerField, { global: { stubs }, props: { type: 'date' } })
     expect((d.vm as any).isTime).toBe(false)
+    expect((d.vm as any).isDateTime).toBe(false)
+    const dt = shallowMount(VantTimePickerField, { global: { stubs }, props: { type: 'datetime' } })
+    expect((dt.vm as any).isTime).toBe(false)
+    expect((dt.vm as any).isDateTime).toBe(true)
   })
 
   it('displayText 直接回显 modelValue', () => {
@@ -27,14 +33,13 @@ describe('VantTimePickerField', () => {
     expect((wrapper.vm as any).displayText).toBe('09:30')
   })
 
-  it('open 按类型定位 pickerValue', () => {
+  it('open 按类型定位 timeValue / pickerValue', () => {
     const time = shallowMount(VantTimePickerField, {
       global: { stubs },
       props: { type: 'time', modelValue: '09:30' },
     })
-    time.vm.open?.()
     ;(time.vm as any).open()
-    expect((time.vm as any).pickerValue).toEqual(['09', '30'])
+    expect((time.vm as any).timeValue).toEqual(['09', '30'])
 
     const date = shallowMount(VantTimePickerField, {
       global: { stubs },
@@ -69,6 +74,27 @@ describe('VantTimePickerField', () => {
     })
     ;(wrapper.vm as any).onConfirm({ selectedValues: ['2026', '07'] })
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2026-07'])
+  })
+
+  it('open 按 datetime 拆分定位 pickerValue + timeValue', () => {
+    const wrapper = shallowMount(VantTimePickerField, {
+      global: { stubs },
+      props: { type: 'datetime', modelValue: '2026-07-27 09:30:00' },
+    })
+    ;(wrapper.vm as any).open()
+    expect((wrapper.vm as any).pickerValue).toEqual(['2026', '07', '27'])
+    expect((wrapper.vm as any).timeValue).toEqual(['09', '30'])
+  })
+
+  it('onDateTimeConfirm 组合 date+time 返回 YYYY-MM-DD HH:mm:ss', () => {
+    const wrapper = shallowMount(VantTimePickerField, {
+      global: { stubs },
+      props: { type: 'datetime' },
+    })
+    ;(wrapper.vm as any).pickerValue = ['2026', '07', '27']
+    ;(wrapper.vm as any).timeValue = ['09', '30']
+    ;(wrapper.vm as any).onDateTimeConfirm()
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2026-07-27 09:30:00'])
   })
 
   it('onClear 清空值', () => {

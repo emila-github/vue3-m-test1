@@ -279,7 +279,7 @@ const props = withDefaults(
     rowKey: 'id',
     title: '',
     permissionPrefix: '',
-  freeActions: () => [],
+    freeActions: () => [],
     searchPlaceholder: '搜索',
     keywordKey: 'keyword',
     showSearch: true,
