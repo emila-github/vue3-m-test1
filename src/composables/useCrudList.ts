@@ -82,6 +82,8 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
   const finished = ref(false)
   const list = ref<T[]>([])
   const page = ref(1)
+  /** 请求在飞标志：防止 van-list 的 @load 与 @refresh 并发导致同一页请求发两次（新增/编辑后刷新时易触发） */
+  const requesting = ref(false)
 
   // ==================== 查询条件 ====================
   const query = reactive({ ...(options.initialQuery ?? ({} as Q)) }) as Q & Record<string, any>
@@ -216,6 +218,9 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
 
   // ==================== 列表加载 ====================
   async function fetchList(reset = false) {
+    // 防重入：同一时刻只允许一个列表请求在飞，避免 load 与 refresh 并发造成重复请求
+    if (requesting.value) return
+    requesting.value = true
     try {
       // 请求分页参数名映射（适配后端入参命名，如 current/size）
       const pageKey = options.requestMap?.page ?? 'page'
@@ -266,14 +271,18 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
       }
     } catch {
       finished.value = true
+    } finally {
+      requesting.value = false
     }
   }
 
   async function onRefresh() {
     refreshing.value = true
+    loading.value = true // 阻止 van-list 在刷新期间并发触发 @load，避免重复请求
     page.value = 1
     finished.value = false
     await fetchList(true)
+    loading.value = false
     refreshing.value = false
   }
 
@@ -287,7 +296,10 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
     page.value = 1
     finished.value = false
     list.value = []
-    fetchList(true)
+    loading.value = true // 阻止 van-list 在搜索期间并发触发 @load
+    fetchList(true).finally(() => {
+      loading.value = false
+    })
   }
 
   // ==================== 操作日志 ====================
