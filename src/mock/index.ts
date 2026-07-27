@@ -22,7 +22,10 @@ import demoMapRoutes from './demo-map'
 import loginRoutes from './login'
 import ydlRenewalRoutes from './ydl-renewal'
 import siteAuthRoutes from './ydl-site-auth'
-import ydlInsSourceRoutes from './ydl-ins-source'
+import ydlMyInsuranceSourceRoutes from './ydl-my-insurance-source'
+import ydlMyInsuranceActiveRoutes from './ydl-my-insurance-active'
+import ydlMyInsuranceResultRoutes from './ydl-my-insurance-result'
+import ydlDictRoutes from './ydl-dict'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -48,6 +51,10 @@ const allRoutes: MockRoute[] = [
   ...loginRoutes,
   ...ydlRenewalRoutes,
   ...siteAuthRoutes,
+  ...ydlMyInsuranceSourceRoutes,
+  ...ydlMyInsuranceActiveRoutes,
+  ...ydlMyInsuranceResultRoutes,
+  ...ydlDictRoutes,
 ]
 
 // ===== 匹配并返回响应 =====

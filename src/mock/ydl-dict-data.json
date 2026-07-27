@@ -1,0 +1,116 @@
+{
+  "sysDepartTree": [
+    {
+      "orgCode": "3500",
+      "title": "福建省分公司",
+      "parentId": "0",
+      "children": [
+        {
+          "orgCode": "3501",
+          "title": "福州市分公司",
+          "parentId": "3500",
+          "children": [
+            { "orgCode": "350101", "title": "鼓楼支公司", "parentId": "3501", "children": [] },
+            { "orgCode": "350102", "title": "台江支公司", "parentId": "3501", "children": [] },
+            { "orgCode": "350103", "title": "仓山支公司", "parentId": "3501", "children": [] }
+          ]
+        },
+        {
+          "orgCode": "3502",
+          "title": "泉州市分公司",
+          "parentId": "3500",
+          "children": [
+            { "orgCode": "350201", "title": "鲤城支公司", "parentId": "3502", "children": [] },
+            { "orgCode": "350202", "title": "丰泽支公司", "parentId": "3502", "children": [] }
+          ]
+        },
+        {
+          "orgCode": "3503",
+          "title": "漳州市分公司",
+          "parentId": "3500",
+          "children": [
+            { "orgCode": "350301", "title": "芗城支公司", "parentId": "3503", "children": [] }
+          ]
+        }
+      ]
+    }
+  ],
+  "dictItems": {
+    "source_channel": [
+      { "value": "01", "text": "直销" },
+      { "value": "02", "text": "中介" },
+      { "value": "03", "text": "代销" },
+      { "value": "04", "text": "网销" }
+    ],
+    "project_flag": [
+      { "value": "0", "text": "否" },
+      { "value": "1", "text": "是" }
+    ]
+  },
+  "labelTypeAll": [
+    { "id": "1", "name": "重点客户" },
+    { "id": "2", "name": "潜在客户" },
+    { "id": "3", "name": "已成交客户" },
+    { "id": "4", "name": "集团客户" },
+    { "id": "5", "name": "战略客户" }
+  ],
+  "labelTypeNode": [
+    { "id": "1", "name": "重点客户" },
+    { "id": "2", "name": "潜在客户" },
+    { "id": "3", "name": "已成交客户" }
+  ],
+  "customerType": [
+    {
+      "id": "C01",
+      "title": "企业客户",
+      "parentId": "0",
+      "children": [
+        { "id": "C0101", "title": "国有企业", "parentId": "C01", "children": [] },
+        { "id": "C0102", "title": "民营企业", "parentId": "C01", "children": [] },
+        { "id": "C0103", "title": "外商投资企业", "parentId": "C01", "children": [] }
+      ]
+    },
+    {
+      "id": "C02",
+      "title": "个人客户",
+      "parentId": "0",
+      "children": [
+        { "id": "C0201", "title": "个体工商户", "parentId": "C02", "children": [] },
+        { "id": "C0202", "title": "自然人", "parentId": "C02", "children": [] }
+      ]
+    }
+  ],
+  "productLine": [
+    { "id": "1", "name": "财产保险" },
+    { "id": "2", "name": "责任保险" },
+    { "id": "3", "name": "信用保证保险" },
+    { "id": "4", "name": "意外伤害保险" },
+    { "id": "5", "name": "健康保险" },
+    { "id": "6", "name": "农业保险" },
+    { "id": "7", "name": "船舶货运保险" }
+  ],
+  "lhzjCustomerType": [
+    {
+      "id": "T01",
+      "title": "大型企业",
+      "parentId": "0",
+      "children": [
+        { "id": "T0101", "title": "央企", "parentId": "T01", "children": [] },
+        { "id": "T0102", "title": "省属国企", "parentId": "T01", "children": [] }
+      ]
+    },
+    {
+      "id": "T02",
+      "title": "中小企业",
+      "parentId": "0",
+      "children": [
+        { "id": "T0201", "title": "中型企业", "parentId": "T02", "children": [] },
+        { "id": "T0202", "title": "小微企业", "parentId": "T02", "children": [] }
+      ]
+    }
+  ],
+  "jcDates": {
+    "dates": ["202601", "202602", "202603", "202604", "202605", "202606", "202607"],
+    "currOrgCode": "3501"
+  }
+}

@@ -78,7 +78,7 @@ export interface YdlRenewalForm {
   attach?: string[]
 }
 
-// ==================== 领域选项 / 树数据 ====================
+// ==================== 领域选项 / 树数据（非 §1.6 枚举，属业务选项，保留在 API 服务层） ====================
 
 /** 承保公司可选项（同时供 VantSearchField / VantSearch 联想） */
 export const YDL_INSURERS = [

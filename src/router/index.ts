@@ -64,6 +64,19 @@ const manualRoutes = [
     component: () => import('../views/ydl/MyInsuranceSource.vue'),
     meta: { title: '我的保源' },
   },
+  // ====== ydl 模块：我的保源详情子功能（按 sourceId 进入）======
+  {
+    path: '/ydl/my-insurance-active',
+    name: 'ydl-my-insurance-active',
+    component: () => import('../views/ydl/MyInsuranceActive.vue'),
+    meta: { title: '活动量' },
+  },
+  {
+    path: '/ydl/my-insurance-result',
+    name: 'ydl-my-insurance-result',
+    component: () => import('../views/ydl/MyInsuranceResult.vue'),
+    meta: { title: '销售结果' },
+  },
   {
     path: '/about',
     name: 'about',

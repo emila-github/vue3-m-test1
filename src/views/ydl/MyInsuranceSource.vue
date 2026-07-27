@@ -10,10 +10,11 @@
  *   - 新增 / 编辑 表单：通过 #form 插槽提供，提交由 api.create / api.update 完成，提交后自动刷新列表
  *   - 挂载时团队校验，无团队弹窗提示
  *
- * 数据模型 / 接口统一来自 @/api（ydl-ins-source 模块），
- * mock 模式下经 /ydl-api 前缀由 src/mock/ydl-ins-source.ts 拦截。
+ * 数据模型 / 接口统一来自 @/api（ydl-my-insurance-source 模块），
+ * mock 模式下经 /ydl-api 前缀由 src/mock/ydl-my-insurance-source.ts 拦截。
  */
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { showDialog, showToast } from 'vant'
 import VantList from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
@@ -64,6 +65,18 @@ const initialForm: YdlInsSourceForm = {
 
 // 列表分页字段映射：ydl 返回 records/total/size
 const responseMap = { list: 'records', total: 'total', pageSize: 'size' }
+
+// ==================== 更多项：活动量 / 销售结果（按 sourceId 跳转子功能页） ====================
+const router = useRouter()
+const moreActions = [
+  { key: 'active', name: '活动量', icon: 'notes-o' },
+  { key: 'result', name: '销售结果', icon: 'gold-coin-o' },
+]
+function onAction({ key, item }: { key: string; item: YdlInsSource }) {
+  const query = { sourceId: item.id, name: item.customerName }
+  if (key === 'active') router.push({ path: '/ydl/my-insurance-active', query })
+  else if (key === 'result') router.push({ path: '/ydl/my-insurance-result', query })
+}
 
 // ==================== 待点评标签样式 ====================
 // 更新时间最早可选：3 年前（避免选到过久的历史日期）
@@ -157,9 +170,13 @@ onMounted(async () => {
       search-placeholder="搜索客户名称"
       more-filter-title="高级搜索"
       add-text="新增保源"
+      :free-actions="['create']"
       :show-delete="false"
       :before-submit="beforeSubmit"
+      show-more
+      :actions="moreActions"
       @detail="onDetail"
+      @action="onAction"
     >
       <!-- ==================== 高级搜索 ==================== -->
       <template #filters="{ query }">

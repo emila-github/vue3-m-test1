@@ -2,7 +2,7 @@
  * 我的保源（MyInsuranceSource）API 模块 —— ydl（JeecgBoot 风格）
  *
  * 对应需求文档：md/ydl/MyInsuranceSource开发文档.md
- * 请求经 ydlClient（baseURL 默认 /ydl-api）发出，mock 模式下由 src/mock/ydl-ins-source.ts 拦截。
+ * 请求经 ydlClient（baseURL 默认 /ydl-api）发出，mock 模式下由 src/mock/ydl-my-insurance-source.ts 拦截。
  *
  * 命名约定：模块内 API 统一以 ydl- 前缀的文件承载，导出函数以 ydl 前缀区分。
  *
@@ -77,18 +77,8 @@ export interface YdlInsSourceQuery {
   pageSize?: number
 }
 
-// ==================== 枚举字典（dataConfig） ====================
-
-/** 待点评（WAIT_COMMENTS）：1=待点评 2=新增 */
-export const YDL_WAIT_COMMENTS: Record<number, string> = {
-  1: '待点评',
-  2: '新增',
-}
-
-/** 取待点评文案（仅 1/2 有值） */
-export function ydlWaitCommentsText(v: number | undefined | null): string {
-  return v != null ? (YDL_WAIT_COMMENTS[v] ?? '') : ''
-}
+// ==================== 枚举字典（统一收敛到 src/enums/ydl，见需求文档 §1.6） ====================
+export { YDL_WAIT_COMMENTS, ydlWaitCommentsText } from '@/enums/ydl'
 
 // ==================== 工具：本周一 ~ 本周日 ====================
 
@@ -161,12 +151,6 @@ export function getYdlInsSourceDetail(id: string) {
 
 // ==================== 新增 / 编辑 保源（MyInsuranceSourceAdd） ====================
 
-/** 下拉选项（产品线下拉 / 标签下拉） */
-export interface YdlOption {
-  id: string
-  name: string
-}
-
 /** 客户名称重名检测：返回疑似重复的已收录列表 */
 export interface YdlDuplicateItem {
   departName: string
@@ -196,16 +180,6 @@ export interface YdlInsSourceSubmit {
   contactsPhone: string
   productLine: string
   customerLabel: string
-}
-
-/** 产品线下拉 */
-export function getYdlProductLineTypes() {
-  return ydlGet<YdlOption[]>('/arch/productLineType/pullDown')
-}
-
-/** 保源标签下拉 */
-export function getYdlLabelTypePullDownAll() {
-  return ydlGet<YdlOption[]>('/data/labelType/pullDownAll')
 }
 
 /** 客户名称重名检测（失焦触发）：返回疑似重复列表，非空即疑似重复 */

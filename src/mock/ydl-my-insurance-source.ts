@@ -73,6 +73,31 @@ const LABEL_OPTIONS: { id: string; name: string }[] = [
   { id: 'LB04', name: '需回访' },
 ]
 
+// 产品线 → 对应推荐险种（详情「已保险种 / 推荐险种」按所选产品线生成，保证与列表选择一致）
+const PL_RISKY: Record<string, string[]> = {
+  PL01: ['财产综合险', '雇主责任险', '公众责任险'],
+  PL02: ['机动车损失险', '第三者责任险'],
+  PL03: ['种植业保险', '养殖业保险'],
+  PL04: ['意外伤害险', '健康险'],
+}
+// 城市 → 区号（详情单位电话按所属城市生成，更真实）
+const CITY_AREA: Record<string, string> = {
+  杭州市: '0571',
+  宁波市: '0574',
+  温州市: '0577',
+  南京市: '025',
+  苏州市: '0512',
+  上海市: '021',
+}
+const BRANCHES = [
+  '杭州分公司',
+  '宁波分公司',
+  '温州分公司',
+  '南京分公司',
+  '苏州分公司',
+  '上海分公司',
+]
+
 // ==================== 种子数据 ====================
 const CITIES = ['杭州市', '宁波市', '温州市', '南京市', '苏州市', '上海市']
 const STREETS = ['科技大道', '解放路', '中山北路', '人民广场', '滨江大道', '文一西路']
@@ -89,13 +114,24 @@ function pad(n: number, len = 2): string {
   return String(n).padStart(len, '0')
 }
 
+// 本周一 00:00（作为 updateTime 基准，保证"近期"(本周)过滤稳定有数据，与前端 ydlThisWeekRange 同口径）
+function weekMonday(): Date {
+  const n = new Date()
+  const wd = n.getDay() || 7 // 周日 0 → 7
+  const m = new Date(n)
+  m.setDate(n.getDate() - wd + 1)
+  m.setHours(0, 0, 0, 0)
+  return m
+}
+const WEEK_MONDAY = weekMonday()
+
 function buildRecord(i: number): SourceRecord {
-  const surname = SURNAMES[i % SURNAMES.length]
-  const city = CITIES[i % CITIES.length]
-  const street = STREETS[i % STREETS.length]
-  // 近 30 天内的更新时间
-  const d = new Date()
-  d.setDate(d.getDate() - (i % 30))
+  const surname = SURNAMES[i % SURNAMES.length] ?? '王'
+  const city = CITIES[i % CITIES.length] ?? '杭州市'
+  const street = STREETS[i % STREETS.length] ?? '科技大道'
+  // 更新时间分布在本周 周一~周日（i%7 → 0~6 天偏移），确保"近期"过滤有数据
+  const d = new Date(WEEK_MONDAY)
+  d.setDate(WEEK_MONDAY.getDate() + (i % 7))
   const updateTime = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(9 + (i % 8))}:${pad((i * 7) % 60)}:00`
   // waitComments：约 1/3 为待点评(1)，1/6 为新增(2)，其余 0
   const waitComments = i % 3 === 0 ? 1 : i % 6 === 5 ? 2 : 0
@@ -126,31 +162,38 @@ const data: SourceRecord[] = Array.from({ length: 34 }, (_, i) => buildRecord(i)
 
 // ==================== 详情构造（列表项 → 完整详情） ====================
 const INDUSTRIES = ['批发和零售业', '制造业', '建筑业', '交通运输业', '住宿和餐饮业']
-const PRODUCT_LINES = ['团财险', '车险', '农险', '意健险']
-const RISKY = ['财产综合险', '雇主责任险', '公众责任险', '货物运输险']
-const LABELS = ['重点客户', '续保客户', '高潜力', '需回访']
 
 function buildDetail(item: SourceRecord) {
   const idx = data.indexOf(item)
+  // 产品线 / 标签 / 险种：全部以该记录实际勾选的数组为准（避免与列表选择脱节）
+  const plNames = item.productLine
+    .map((id) => PRODUCT_LINE_OPTIONS.find((o) => o.id === id)?.name)
+    .filter(Boolean)
+  const lbNames = item.customerLabel
+    .map((id) => LABEL_OPTIONS.find((o) => o.id === id)?.name)
+    .filter(Boolean)
+  const riskys: string[] = item.productLine.flatMap((id) => PL_RISKY[id] ?? [])
+  const city = item.customerAddress.slice(0, 3)
+  const area = CITY_AREA[city] ?? '0571'
   return {
-    socialCreditCode: `9133${pad((idx * 999983) % 100000000000000, 14)}`.slice(0, 18),
+    socialCreditCode: item.socialCreditCode,
     customerName: item.customerName,
     customerAddress: item.customerAddress,
     industryTypeName: INDUSTRIES[idx % INDUSTRIES.length],
     registerCapital: `${(idx % 20) * 50 + 100}万元`,
-    companyPhone: `0571-8${pad((idx * 7919) % 1000000, 7)}`.slice(0, 12),
+    companyPhone: `${area}-8${pad((idx * 7919) % 1000000, 7)}`.slice(0, 13),
     contactsDepartment: ['行政部', '财务部', '业务部', '综合办'][idx % 4],
     contactsPosition: ['经理', '主管', '总监', '专员'][idx % 4],
     contactsName: item.contactsName,
     contactsPhone: item.contactsPhone,
-    productLineStr: PRODUCT_LINES.slice(0, (idx % 3) + 1).join('、'),
-    yriskyTypeStr: RISKY.slice(0, (idx % 2) + 1).join('、'),
+    productLineStr: plNames.join('、'),
+    yriskyTypeStr: riskys.join('、'),
     remark: idx % 4 === 0 ? '客户有较强续保意向，建议一周内跟进。' : '',
-    labelList: LABELS.slice(0, (idx % 3) + 1).map((labelName, li) => ({
+    labelList: lbNames.map((labelName, li) => ({
       id: `${item.id}-L${li}`,
       labelName,
     })),
-    recommends: RISKY.slice(0, (idx % 3) + 1).map((riskyName, ri) => ({
+    recommends: riskys.slice(0, 3).map((riskyName, ri) => ({
       id: `${item.id}-R${ri}`,
       riskyName,
       fee: `${(ri + 1) * 1200 + (idx % 5) * 300}`,
@@ -241,7 +284,7 @@ const routes: MockRoute[] = [
       if (!name) return ok([])
       const matched = data.filter((d) => d.customerName.includes(name))
       const result = matched.map((d) => ({
-        departName: d.customerAddress,
+        departName: BRANCHES[String(d.id).length % BRANCHES.length],
         taskUserRealName: d.contactsName,
       }))
       return ok(result)
