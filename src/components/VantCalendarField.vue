@@ -121,7 +121,13 @@ const displayText = computed(() => {
   return `已选 ${arr.length} 个日期`
 })
 
-const minDateVal = computed(() => (props.minDate ? toDate(props.minDate) : undefined))
+const minDateVal = computed(() => {
+  if (props.minDate) return toDate(props.minDate)
+  // 默认最早可选：一年前的今天
+  const d = new Date()
+  d.setFullYear(d.getFullYear() - 1)
+  return d
+})
 const maxDateVal = computed(() => (props.maxDate ? toDate(props.maxDate) : undefined))
 
 // 打开时定位日期
