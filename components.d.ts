@@ -72,6 +72,9 @@ declare module 'vue' {
     VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
     VantUpload: typeof import('./src/components/VantUpload.vue')['default']
     VanUploader: typeof import('vant/es')['Uploader']
+    YdlJcDecision: typeof import('./src/components/ydl/YdlJcDecision.vue')['default']
+    YdlStatBoard: typeof import('./src/components/ydl/YdlStatBoard.vue')['default']
+    YdlXbBoard: typeof import('./src/components/ydl/YdlXbBoard.vue')['default']
   }
 }
 
@@ -137,4 +140,7 @@ declare global {
   const VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
   const VantUpload: typeof import('./src/components/VantUpload.vue')['default']
   const VanUploader: typeof import('vant/es')['Uploader']
+  const YdlJcDecision: typeof import('./src/components/ydl/YdlJcDecision.vue')['default']
+  const YdlStatBoard: typeof import('./src/components/ydl/YdlStatBoard.vue')['default']
+  const YdlXbBoard: typeof import('./src/components/ydl/YdlXbBoard.vue')['default']
 }

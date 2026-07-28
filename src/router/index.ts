@@ -192,6 +192,97 @@ const manualRoutes = [
     component: () => import('../views/ydl/SiteLoginView.vue'),
     meta: { title: '站点登录', public: true },
   },
+  // ====== ydl 模块：数据统计（§3 机构维度看板）======
+  {
+    path: '/analysis',
+    name: 'ydl-analysis',
+    component: () => import('../views/ydl/AnalysisView.vue'),
+    meta: { title: '数据汇总' },
+  },
+  {
+    path: '/track-summary',
+    name: 'ydl-track-summary',
+    component: () => import('../views/ydl/TrackSummaryView.vue'),
+    meta: { title: '跟踪统计' },
+  },
+  {
+    path: '/user-summary',
+    name: 'ydl-user-summary',
+    component: () => import('../views/ydl/UserSummaryView.vue'),
+    meta: { title: '劳效统计' },
+  },
+  // ====== ydl 模块：数据统计明细（§3.4 / §3.5 分页大表）======
+  {
+    path: '/visit',
+    name: 'ydl-visit',
+    component: () => import('../views/ydl/VisitView.vue'),
+    meta: { title: '拜访明细' },
+  },
+  {
+    path: '/policy-summary',
+    name: 'ydl-policy-summary',
+    component: () => import('../views/ydl/PolicySummaryView.vue'),
+    meta: { title: '签单明细' },
+  },
+  // ====== ydl 模块：工作台（§4.2 / §4.3）======
+  {
+    path: '/fcdd-policy-main',
+    name: 'ydl-fcdd-policy-main',
+    component: () => import('../views/ydl/FcddPolicyMainView.vue'),
+    meta: { title: '非车待续保跟踪' },
+  },
+  {
+    path: '/monitor/track/visit',
+    name: 'ydl-track-visit',
+    component: () => import('../views/ydl/TrackVisitView.vue'),
+    meta: { title: '拜访汇总' },
+  },
+  // ====== ydl 模块：千万级企业决策（§5）======
+  {
+    path: '/JcEnterpriseItemList',
+    name: 'ydl-jc-JcEnterpriseItemList',
+    component: () => import('../views/ydl/JcEnterpriseItemListView.vue'),
+    meta: { title: '客户渗透率' },
+  },
+  {
+    path: '/JcEnterpriseRiskList',
+    name: 'ydl-jc-JcEnterpriseRiskList',
+    component: () => import('../views/ydl/JcEnterpriseRiskListView.vue'),
+    meta: { title: '新续企业增量保费' },
+  },
+  // ====== ydl 模块：续保管理（非车，§6）======
+  {
+    path: '/xb/renewedList',
+    name: 'ydl-xb-renewedList',
+    component: () => import('../views/ydl/XbRenewedListView.vue'),
+    meta: { title: '我的续保' },
+  },
+  {
+    path: '/xb/questionList',
+    name: 'ydl-xb-questionList',
+    component: () => import('../views/ydl/XbQuestionListView.vue'),
+    meta: { title: '问题项目' },
+  },
+  {
+    path: '/xb/endList',
+    name: 'ydl-xb-endList',
+    component: () => import('../views/ydl/XbEndListView.vue'),
+    meta: { title: '项目终止' },
+  },
+  // ====== ydl 模块：车险续保管理（§7）======
+  {
+    path: '/xbCar/renewedList',
+    name: 'ydl-xbCar-renewedList',
+    component: () => import('../views/ydl/XbCarRenewedListView.vue'),
+    meta: { title: '车险我的续保' },
+  },
+  // ====== ydl 模块：领航足迹（§8）======
+  {
+    path: '/lhzj',
+    name: 'ydl-lhzj',
+    component: () => import('../views/ydl/LhzjView.vue'),
+    meta: { title: '我的领航' },
+  },
 ]
 
 const router = createRouter({

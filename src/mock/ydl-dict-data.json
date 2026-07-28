@@ -45,6 +45,125 @@
     "project_flag": [
       { "value": "0", "text": "否" },
       { "value": "1", "text": "是" }
+    ],
+    "PROJECT_FLAG": [
+      { "value": "0", "text": "否" },
+      { "value": "1", "text": "是" }
+    ],
+    "VISIT_TYPE": [
+      { "value": "0", "text": "电话拜访" },
+      { "value": "1", "text": "微信拜访" },
+      { "value": "2", "text": "上门拜访" }
+    ],
+    "VISIT_PROCESS_STATUS": [
+      { "value": "1", "text": "初次接洽" },
+      { "value": "2", "text": "需求确认" },
+      { "value": "3", "text": "方案报价" },
+      { "value": "4", "text": "促成签单" }
+    ],
+    "LEADER_COMMENT_LEVEL": [
+      { "value": "1", "text": "一般" },
+      { "value": "2", "text": "良好" },
+      { "value": "3", "text": "优秀" }
+    ],
+    "UP_FLAG": [
+      { "value": "Y", "text": "是" },
+      { "value": "N", "text": "否" }
+    ],
+    "PROJECT_LEVEL": [
+      { "value": "1", "text": "一级" },
+      { "value": "2", "text": "二级" },
+      { "value": "3", "text": "三级" }
+    ],
+    "FCDD_FEEDBACK_FLAG": [
+      { "value": "0", "text": "未反馈" },
+      { "value": "1", "text": "已反馈" },
+      { "value": "2", "text": "跟进中" }
+    ],
+    "FCDD_RENEWAL_STATUS": [
+      { "value": "0", "text": "待续保" },
+      { "value": "1", "text": "已续保" },
+      { "value": "2", "text": "已终止" }
+    ],
+    "FCDD_REASON": [
+      { "value": "1", "text": "客户续保意向强" },
+      { "value": "2", "text": "价格因素" },
+      { "value": "3", "text": "同业竞争" },
+      { "value": "4", "text": "客户流失" }
+    ],
+    "FCDD_DAY_TYPE": [
+      { "value": "0", "text": "全部" },
+      { "value": "1", "text": "30天内" },
+      { "value": "2", "text": "60天内" },
+      { "value": "3", "text": "90天内" }
+    ],
+    "RENEWED_STATUS": [
+      { "value": "0", "text": "待续保" },
+      { "value": "1", "text": "已续保" },
+      { "value": "2", "text": "问题项目" },
+      { "value": "3", "text": "已终止" }
+    ],
+    "QUESTION_STATUS": [
+      { "value": "0", "text": "待处理" },
+      { "value": "1", "text": "处理中" },
+      { "value": "2", "text": "已解决" }
+    ],
+    "END_STATUS": [
+      { "value": "0", "text": "待终止" },
+      { "value": "1", "text": "已终止" },
+      { "value": "2", "text": "审批中" }
+    ],
+    "YN_FLAG": [
+      { "value": "0", "text": "否" },
+      { "value": "1", "text": "是" }
+    ],
+    "RENEWED_STATUS2": [
+      { "value": "0", "text": "待续保" },
+      { "value": "1", "text": "已续保" },
+      { "value": "2", "text": "已退保" },
+      { "value": "3", "text": "已终止" }
+    ],
+    "SHOW_STATUS": [
+      { "value": "1", "text": "有效" },
+      { "value": "2", "text": "已续保" },
+      { "value": "3", "text": "已终止" },
+      { "value": "4", "text": "已退保" }
+    ],
+    "COMDNAME": [
+      { "value": "福州", "text": "福州" },
+      { "value": "泉州", "text": "泉州" },
+      { "value": "厦门", "text": "厦门" }
+    ],
+    "VISIT_POSITION": [
+      { "value": "1", "text": "支公司经理室" },
+      { "value": "2", "text": "市公司部门经理" },
+      { "value": "3", "text": "柜面人员" }
+    ],
+    "RENEWED_QUESTION_INPUT_TYPE": [
+      { "value": "1", "text": "承保条件" },
+      { "value": "2", "text": "价格因素" },
+      { "value": "3", "text": "同业竞争" }
+    ],
+    "END_TYPE": [
+      { "value": "1", "text": "客户原因" },
+      { "value": "2", "text": "公司原因" },
+      { "value": "3", "text": "其他原因" }
+    ],
+    "SALES_RESULT_STATUS": [
+      { "value": "Y", "text": "成功" },
+      { "value": "N", "text": "失败" }
+    ],
+    "SALE_TYPE": [
+      { "value": "1", "text": "新保" },
+      { "value": "2", "text": "续保" }
+    ],
+    "WAIT_COMMENTS": [
+      { "value": "1", "text": "待点评" },
+      { "value": "2", "text": "已点评" }
+    ],
+    "BUSSINESS_BELONG_TYPE": [
+      { "value": "1", "text": "我司承保" },
+      { "value": "2", "text": "同业投保" }
     ]
   },
   "labelTypeAll": [
