@@ -53,7 +53,8 @@ const routes: MockRoute[] = [
       const ln = q.licenseno
       if (pn) list = list.filter((r) => r.policyno.includes(pn))
       if (ln) list = list.filter((r) => r.licenseno.includes(ln))
-      if (q.frameno) list = list.filter((r) => r.frameno.includes(q.frameno))
+      const fn = q.frameno ?? ''
+      if (fn) list = list.filter((r) => r.frameno.includes(fn))
       if (q.energyflag !== undefined && q.energyflag !== '')
         list = list.filter((r) => String(r.energyflag) === q.energyflag)
       if (q.renewedStatus !== undefined && q.renewedStatus !== '')
@@ -63,6 +64,35 @@ const routes: MockRoute[] = [
       const start = (page - 1) * size
       return ok({ records: list.slice(start, start + size), total: list.length, current: page, size })
     },
+  },
+  {
+    // 续保反馈回显
+    url: '/xb/xbFeedbackData/getCurrentFeedbackCarData',
+    method: 'GET',
+    response: (req) => {
+      const q = parseQuery(req.url)
+      return ok({ content: `历史反馈（保单${q.policyNo || ''}）：客户暂未确认续保意向，持续跟进中` })
+    },
+  },
+  {
+    url: '/xb/xbExtendInfoCar/endInput',
+    method: 'POST',
+    response: () => ok({ message: '项目终止提交成功' }),
+  },
+  {
+    url: '/xb/xbExtendInfoCar/endPass',
+    method: 'POST',
+    response: () => ok({ message: '取消终止成功' }),
+  },
+  {
+    url: '/xb/xbExtendInfoCar/back',
+    method: 'POST',
+    response: () => ok({ message: '退回业务提交成功' }),
+  },
+  {
+    url: '/xb/xbExtendInfoCar/renewedInput',
+    method: 'POST',
+    response: () => ok({ message: '续保录入成功' }),
   },
 ]
 

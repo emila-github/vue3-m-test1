@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
  * 车险我的续保（需求文档 §7.1 `/xbCar/renewedList`）
- * 车险续保保单列表 → 详情（基本信息）→ 续保反馈。
+ * 车险续保保单列表 → 详情（基本信息 / 反馈回显）→ 行内操作：
+ * 续保反馈 / 项目终止 / 取消终止 / 退回业务 / 续保录入（均按需求 §7.1 按钮权限与操作）。
  */
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -15,6 +16,11 @@ import type { DeptNode } from '@/api/modules/ydl/dict'
 import { useYdlDict } from '@/composables/ydl/useYdlDict'
 import {
   getYdlXbCarRenewedList,
+  getYdlXbCarCurrentFeedback,
+  postYdlXbCarEndInput,
+  postYdlXbCarEndPass,
+  postYdlXbCarBack,
+  postYdlXbCarRenewedInput,
   type YdlXbCarRow,
 } from '@/api/modules/ydl/ydl-xb-car'
 import { postYdlXbFeedback, XB_FEEDBACK_API } from '@/api/modules/ydl/ydl-xb'
@@ -24,18 +30,6 @@ const { loadDeptTree, loadDictItems } = useYdlDict()
 
 const api: CrudApi<YdlXbCarRow, any, any> = {
   list: getYdlXbCarRenewedList,
-}
-
-function lastMonthFirst(): string {
-  const d = new Date()
-  d.setDate(1)
-  d.setMonth(d.getMonth() - 1)
-  return d.toISOString().slice(0, 10)
-}
-function yesterday(): string {
-  const d = new Date()
-  d.setDate(d.getDate() - 1)
-  return d.toISOString().slice(0, 10)
 }
 
 const initialQuery = reactive({
@@ -55,6 +49,7 @@ const deptTreeData = ref<DeptNode[]>([])
 const energyOptions = ref<{ text: string; value: string }[]>([])
 const renewedStatusOptions = ref<{ text: string; value: string }[]>([])
 const showStatusOptions = ref<{ text: string; value: string }[]>([])
+const endTypeOptions = ref<{ text: string; value: string }[]>([])
 
 const showStatusMap = reactive<Record<string, Record<string, string>>>({})
 const energyMap = reactive<Record<string, Record<string, string>>>({})
@@ -62,16 +57,18 @@ const renewedStatusMap = reactive<Record<string, Record<string, string>>>({})
 
 onMounted(async () => {
   try {
-    const [tree, en, rs, ss] = await Promise.all([
+    const [tree, en, rs, ss, et] = await Promise.all([
       loadDeptTree(),
       loadDictItems('YN_FLAG'),
       loadDictItems('RENEWED_STATUS2'),
       loadDictItems('SHOW_STATUS'),
+      loadDictItems('CAR_RENEWED_END_INPUT_TYPE'),
     ])
     deptTreeData.value = tree
     energyOptions.value = en.map((c) => ({ text: c.text, value: c.value }))
     renewedStatusOptions.value = rs.map((c) => ({ text: c.text, value: c.value }))
     showStatusOptions.value = ss.map((c) => ({ text: c.text, value: c.value }))
+    endTypeOptions.value = et.map((c) => ({ text: c.text, value: c.value }))
     energyMap['YN_FLAG'] = Object.fromEntries(en.map((c) => [String(c.value), c.text]))
     renewedStatusMap['RENEWED_STATUS2'] = Object.fromEntries(rs.map((c) => [String(c.value), c.text]))
     showStatusMap['SHOW_STATUS'] = Object.fromEntries(ss.map((c) => [String(c.value), c.text]))
@@ -80,30 +77,175 @@ onMounted(async () => {
   }
 })
 
-// ==================== 详情 + 反馈 ====================
+// ==================== 详情（基本信息 / 反馈回显） ====================
 const detailItem = ref<YdlXbCarRow | null>(null)
-const fbContent = ref('')
-const fbSubmitting = ref(false)
-
+const detailEcho = ref('')
 async function onDetail(item: YdlXbCarRow) {
   detailItem.value = item
-  fbContent.value = ''
+  detailEcho.value = '加载中...'
+  try {
+    const res = await getYdlXbCarCurrentFeedback({ policyNo: item.policyno })
+    detailEcho.value = res?.content || '暂无反馈'
+  } catch {
+    detailEcho.value = '暂无反馈'
+  }
 }
 
+// ==================== 续保反馈（权限 Feedback，带回显） ====================
+const fbVisible = ref(false)
+const fbEcho = ref('')
+const fbContent = ref('')
+const fbItem = ref<YdlXbCarRow | null>(null)
+const fbSubmitting = ref(false)
+async function openFeedback(item: YdlXbCarRow) {
+  fbItem.value = item
+  fbContent.value = ''
+  fbEcho.value = '加载中...'
+  fbVisible.value = true
+  try {
+    const res = await getYdlXbCarCurrentFeedback({ policyNo: item.policyno })
+    fbEcho.value = res?.content || '暂无历史反馈'
+  } catch {
+    fbEcho.value = '暂无历史反馈'
+  }
+}
 async function onSubmitFeedback() {
-  if (!fbContent.value || fbContent.value.trim().length < 5) {
-    showToast('反馈内容至少 5 个字')
+  if (!fbContent.value || fbContent.value.trim().length < 10) {
+    showToast('反馈内容至少 10 个字')
     return
   }
-  if (!detailItem.value) return
+  if (!fbItem.value) return
   fbSubmitting.value = true
   showLoadingToast({ message: '提交中', forbidClick: true })
   try {
     await postYdlXbFeedback(XB_FEEDBACK_API.renewed, {
-      id: detailItem.value.id,
+      id: fbItem.value.id,
       content: fbContent.value,
     } as any)
     showToast('反馈提交成功')
+    fbVisible.value = false
+  } catch {
+    showToast('提交失败')
+  } finally {
+    fbSubmitting.value = false
+    closeToast()
+  }
+}
+
+// ==================== 项目终止（权限 RenewedEndInput & endBtnStatus===1） ====================
+const endVisible = ref(false)
+const endForm = reactive({ type: '', content: '' })
+const endItem = ref<YdlXbCarRow | null>(null)
+function openEnd(item: YdlXbCarRow) {
+  endItem.value = item
+  Object.assign(endForm, { type: '', content: '' })
+  endVisible.value = true
+}
+async function onSubmitEnd() {
+  if (!endForm.type) {
+    showToast('请选择终止原因')
+    return
+  }
+  if (!endForm.content || endForm.content.trim().length < 10) {
+    showToast('说明至少 10 个字')
+    return
+  }
+  if (!endItem.value) return
+  fbSubmitting.value = true
+  showLoadingToast({ message: '提交中', forbidClick: true })
+  try {
+    await postYdlXbCarEndInput({ id: endItem.value.id, type: endForm.type, content: endForm.content })
+    showToast('项目终止提交成功')
+    endVisible.value = false
+  } catch {
+    showToast('提交失败')
+  } finally {
+    fbSubmitting.value = false
+    closeToast()
+  }
+}
+
+// ==================== 取消终止（权限 RenewedEndInput & endBtnStatus===2，直接调用） ====================
+async function onCancelEnd(item: YdlXbCarRow) {
+  fbSubmitting.value = true
+  showLoadingToast({ message: '提交中', forbidClick: true })
+  try {
+    await postYdlXbCarEndPass({ pass: 3, id: item.id })
+    showToast('已取消终止')
+  } catch {
+    showToast('操作失败')
+  } finally {
+    fbSubmitting.value = false
+    closeToast()
+  }
+}
+
+// ==================== 退回业务（权限 RenewedBack） ====================
+const backVisible = ref(false)
+const backContent = ref('')
+const backItem = ref<YdlXbCarRow | null>(null)
+function openBack(item: YdlXbCarRow) {
+  backItem.value = item
+  backContent.value = ''
+  backVisible.value = true
+}
+async function onSubmitBack() {
+  if (!backContent.value || backContent.value.trim().length < 10) {
+    showToast('退回原因至少 10 个字')
+    return
+  }
+  if (!backItem.value) return
+  fbSubmitting.value = true
+  showLoadingToast({ message: '提交中', forbidClick: true })
+  try {
+    await postYdlXbCarBack({ id: backItem.value.id, content: backContent.value })
+    showToast('退回业务提交成功')
+    backVisible.value = false
+  } catch {
+    showToast('提交失败')
+  } finally {
+    fbSubmitting.value = false
+    closeToast()
+  }
+}
+
+// ==================== 续保录入（无权限限制） ====================
+const inputVisible = ref(false)
+const inputForm = reactive({ renewedPolicyNo: '', renewedStart: '', renewedEnd: '', renewedFee: '' })
+const inputItem = ref<YdlXbCarRow | null>(null)
+function openInput(item: YdlXbCarRow) {
+  inputItem.value = item
+  Object.assign(inputForm, {
+    renewedPolicyNo: item.policyno,
+    renewedStart: '',
+    renewedEnd: '',
+    renewedFee: '',
+  })
+  inputVisible.value = true
+}
+async function onSubmitInput() {
+  if (
+    !inputForm.renewedPolicyNo ||
+    !inputForm.renewedStart ||
+    !inputForm.renewedEnd ||
+    !inputForm.renewedFee
+  ) {
+    showToast('请填写完整录入信息')
+    return
+  }
+  if (!inputItem.value) return
+  fbSubmitting.value = true
+  showLoadingToast({ message: '提交中', forbidClick: true })
+  try {
+    await postYdlXbCarRenewedInput({
+      id: inputItem.value.id,
+      renewedPolicyNo: inputForm.renewedPolicyNo,
+      renewedStart: inputForm.renewedStart,
+      renewedEnd: inputForm.renewedEnd,
+      renewedFee: inputForm.renewedFee,
+    })
+    showToast('续保录入成功')
+    inputVisible.value = false
   } catch {
     showToast('提交失败')
   } finally {
@@ -141,21 +283,21 @@ function endBtnText(v: any): string {
   if (n === 2) return '可取消终止'
   return '-'
 }
-// 列表项字段（对齐需求 §7.1 列表字段）
+// 列表项字段（对齐需求 §7.1 列表字段）；full 字段独占整行，其余两列网格
 function carItemMeta(item: YdlXbCarRow) {
   return [
     { label: '地市', value: item.comdname },
     { label: '支公司', value: item.comzname },
     { label: '服务经理', value: item.dutyName },
+    { label: '终止', value: endBtnText(item.endBtnStatus) },
     { label: '车牌号', value: item.licenseno },
     { label: '车架号', value: item.frameno },
-    { label: '新能源', value: energyMap['YN_FLAG']?.[String(item.energyflag)] ?? String(item.energyflag) },
     { label: '被保险人', value: item.insuredname },
-    { label: '我方净保费', value: '¥' + Number(item.coinsnetpremium).toLocaleString('zh-CN') },
+    { label: '新能源', value: energyMap['YN_FLAG']?.[String(item.energyflag)] ?? String(item.energyflag) },
     { label: '起保', value: item.startdate },
     { label: '终保', value: item.enddate },
-    { label: '保单号', value: item.policyno },
-    { label: '终止按钮状态', value: endBtnText(item.endBtnStatus) },
+    { label: '保单号', value: item.policyno, full: true },
+    { label: '我方净保费', value: '¥' + Number(item.coinsnetpremium).toLocaleString('zh-CN'), full: true },
   ]
 }
 </script>
@@ -236,9 +378,50 @@ function carItemMeta(item: YdlXbCarRow) {
             {{ statusText(item.showStatus) }}
           </van-tag>
         </div>
-        <div v-for="m in carItemMeta(item)" :key="m.label" class="r-meta">
-          <span class="r-label">{{ m.label }}：</span>{{ m.value }}
+        <div class="r-grid">
+          <div
+            v-for="m in carItemMeta(item)"
+            :key="m.label"
+            class="r-cell"
+            :class="{ 'r-cell--full': m.full }"
+          >
+            <span class="r-label">{{ m.label }}</span>
+            <span class="r-value">{{ m.value }}</span>
+          </div>
         </div>
+      </template>
+
+      <!-- 行内操作按钮：权限 + endBtnStatus 双重门禁 -->
+      <template #row-actions="{ item }">
+        <van-button
+          v-permission="'xbCarRenewedList:Feedback'"
+          size="small"
+          type="primary"
+          @click="openFeedback(item)"
+          >续保反馈</van-button
+        >
+        <van-button
+          v-permission="'xbCarRenewedList:RenewedEndInput'"
+          v-if="item.endBtnStatus === 1"
+          size="small"
+          type="danger"
+          @click="openEnd(item)"
+          >项目终止</van-button
+        >
+        <van-button
+          v-permission="'xbCarRenewedList:RenewedEndInput'"
+          v-if="item.endBtnStatus === 2"
+          size="small"
+          @click="onCancelEnd(item)"
+          >取消终止</van-button
+        >
+        <van-button
+          v-permission="'xbCarRenewedList:RenewedBack'"
+          size="small"
+          @click="openBack(item)"
+          >退回业务</van-button
+        >
+        <van-button size="small" @click="openInput(item)">续保录入</van-button>
       </template>
 
       <template #detail="{ item }">
@@ -249,23 +432,103 @@ function carItemMeta(item: YdlXbCarRow) {
           </van-cell>
         </van-cell-group>
 
-        <van-cell-group inset title="续保反馈" class="picc-card">
+        <van-cell-group inset title="反馈" class="picc-card">
+          <van-cell title="历史反馈" :label="detailEcho" />
+        </van-cell-group>
+      </template>
+    </VantList>
+
+    <!-- 续保反馈弹层（回显 + 提交） -->
+    <van-popup v-model:show="fbVisible" position="bottom" round :style="{ height: '70%' }" closeable>
+      <div class="op-popup">
+        <h3 class="op-title">续保反馈</h3>
+        <van-cell-group inset>
+          <van-cell title="历史反馈" :label="fbEcho" />
           <van-field
             v-model="fbContent"
             label="反馈内容"
             type="textarea"
-            rows="2"
+            rows="3"
             autosize
-            placeholder="请输入反馈内容（≥5字）"
+            placeholder="请输入反馈内容（≥10字）"
           />
-          <div class="fb-submit">
-            <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitFeedback">
-              提交反馈
-            </van-button>
-          </div>
         </van-cell-group>
-      </template>
-    </VantList>
+        <div class="fb-submit">
+          <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitFeedback">
+            提交反馈
+          </van-button>
+        </div>
+      </div>
+    </van-popup>
+
+    <!-- 项目终止弹层 -->
+    <van-popup v-model:show="endVisible" position="bottom" round :style="{ height: '70%' }" closeable>
+      <div class="op-popup">
+        <h3 class="op-title">项目终止</h3>
+        <van-cell-group inset>
+          <VantSelectField
+            v-model="endForm.type"
+            :options="endTypeOptions"
+            label="终止原因"
+            title="选择终止原因"
+            placeholder="请选择"
+          />
+          <van-field
+            v-model="endForm.content"
+            label="说明"
+            type="textarea"
+            rows="3"
+            autosize
+            placeholder="请输入说明（≥10字）"
+          />
+        </van-cell-group>
+        <div class="fb-submit">
+          <van-button type="danger" block round :loading="fbSubmitting" @click="onSubmitEnd">
+            提交终止
+          </van-button>
+        </div>
+      </div>
+    </van-popup>
+
+    <!-- 退回业务弹层 -->
+    <van-popup v-model:show="backVisible" position="bottom" round :style="{ height: '60%' }" closeable>
+      <div class="op-popup">
+        <h3 class="op-title">退回业务</h3>
+        <van-cell-group inset>
+          <van-field
+            v-model="backContent"
+            label="退回原因"
+            type="textarea"
+            rows="3"
+            autosize
+            placeholder="请输入退回原因（≥10字）"
+          />
+        </van-cell-group>
+        <div class="fb-submit">
+          <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitBack">
+            提交退回
+          </van-button>
+        </div>
+      </div>
+    </van-popup>
+
+    <!-- 续保录入弹层 -->
+    <van-popup v-model:show="inputVisible" position="bottom" round :style="{ height: '75%' }" closeable>
+      <div class="op-popup">
+        <h3 class="op-title">续保录入</h3>
+        <van-cell-group inset>
+          <van-field v-model="inputForm.renewedPolicyNo" label="上年保单号" placeholder="上年保单号" />
+          <van-field v-model="inputForm.renewedStart" label="续保起期" placeholder="如 2026-08-01" />
+          <van-field v-model="inputForm.renewedEnd" label="续保止期" placeholder="如 2027-08-01" />
+          <van-field v-model="inputForm.renewedFee" label="续保保费" type="digit" placeholder="续保保费金额" />
+        </van-cell-group>
+        <div class="fb-submit">
+          <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitInput">
+            提交录入
+          </van-button>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -296,7 +559,49 @@ function carItemMeta(item: YdlXbCarRow) {
 .r-label {
   color: #999;
 }
+.r-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.r-cell {
+  width: 50%;
+  display: flex;
+  align-items: baseline;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 1px 0;
+}
+.r-cell--full {
+  width: 100%;
+}
+.r-cell .r-label {
+  color: #999;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+.r-cell .r-value {
+  color: #333;
+  word-break: break-all;
+}
 .fb-submit {
   padding: 14px 4px 4px;
+}
+.op-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 0 40px;
+  box-sizing: border-box;
+}
+.op-title {
+  text-align: center;
+  font-size: 17px;
+  margin: 0 0 12px;
+  color: #1a1a1a;
+}
+.op-popup :deep(.van-cell-group) {
+  flex: 1;
+  overflow-y: auto;
 }
 </style>
