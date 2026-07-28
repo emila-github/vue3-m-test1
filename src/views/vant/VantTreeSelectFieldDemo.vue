@@ -124,6 +124,9 @@ const unevenTree = [
 
 // ⑩ 父节点可选（selectParent）
 const parentVal = ref('')
+
+// ⑪ 仅显示目标节点文本（onlySelectedLabel）
+const onlyLabelVal = ref('')
 </script>
 
 <template>
@@ -308,6 +311,24 @@ const parentVal = ref('')
           >（进入「省」列后，点末尾「选择「浙江省」」即直接选中省级，无需下钻到区）
         </p>
       </div>
+
+      <!-- ⑪ 仅显示目标节点文本（onlySelectedLabel）-->
+      <div class="section-title">⑪ 仅显示目标节点文本（onlySelectedLabel）</div>
+      <div class="card">
+        <VantTreeSelectField
+          v-model="onlyLabelVal"
+          :options="regionTree"
+          only-selected-label
+          label="地区"
+          title="选择地区（只显示末级）"
+          placeholder="回显仅末级节点"
+          @change="onChange"
+        />
+        <p class="hint">
+          当前值：<code>{{ onlyLabelVal || '（空）' }}</code
+          >（van-field 只显示选中的末级，如「西湖区」；完整路径仍在 change(path) 中）
+        </p>
+      </div>
     </div>
   </div>
 
@@ -327,7 +348,8 @@ const parentVal = ref('')
         options：树型数据（children 表示下级）<br />
         valueKey / labelKey / childrenKey：字段映射（默认 value/text/children）<br />
         maxDepth：最大可选层级 · selectParent：父节点可直接选中<br />
-        separator 路径分隔符（默认 ' / '）· clearable / disabled / readonly / required
+        separator 路径分隔符（默认 ' / '）· onlySelectedLabel：van-field 仅回显末级节点文本<br />
+        clearable / disabled / readonly / required
       </p>
       <p class="hint"><b>事件</b>：update:modelValue · change(value, path[])</p>
     </div>

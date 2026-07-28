@@ -52,6 +52,8 @@ const props = withDefaults(
     required?: boolean
     /** 路径文本分隔符 */
     separator?: string
+    /** van-field 回显是否只显示目标节点文本（默认 false，显示完整路径） */
+    onlySelectedLabel?: boolean
   }>(),
   {
     modelValue: '',
@@ -72,6 +74,7 @@ const props = withDefaults(
     leftIcon: '',
     required: false,
     separator: ' / ',
+    onlySelectedLabel: false,
   },
 )
 
@@ -96,8 +99,22 @@ const fieldNames = computed(() => ({
 // 树型深度不一致时，原本没有子级的「浅叶节点」保持为叶子，van-cascader 点击即 finish（原生可选）。
 // 若开启 selectParent：为每个仍含子级的父节点追加一个「选择本级」虚拟子项，其 value 与父级相同，
 // 点击它即等同于选中该父节点（级联面板原生只有无 children 的节点才触发 finish）。
+// 归一化树：children 为 null 或空数组时删除该字段，
+// 使 van-cascader 将其作为叶子节点处理（不渲染下一级）。
+const normalizeTree = (nodes: TreeNode[]): TreeNode[] =>
+  nodes.map((node) => {
+    const children = node[props.childrenKey]
+    const hasChildren = Array.isArray(children) && children.length > 0
+    if (!hasChildren) {
+      const clone = { ...node }
+      delete clone[props.childrenKey]
+      return clone
+    }
+    return { ...node, [props.childrenKey]: normalizeTree(children as TreeNode[]) }
+  })
+
 const processedOptions = computed<TreeNode[]>(() => {
-  let tree: TreeNode[] = props.options
+  let tree: TreeNode[] = normalizeTree(props.options)
 
   if (props.maxDepth && props.maxDepth > 0) {
     const prune = (nodes: TreeNode[], depth: number): TreeNode[] =>
@@ -163,6 +180,11 @@ const pathOptions = computed<TreeNode[]>(() => findPathByValue(props.modelValue)
 
 const displayText = computed(() => {
   if (!pathOptions.value.length) return ''
+  // onlySelectedLabel=true 时仅显示目标（末级）节点文本
+  if (props.onlySelectedLabel) {
+    const last = pathOptions.value[pathOptions.value.length - 1]
+    return (last?.[props.labelKey] ?? '') as string
+  }
   return pathOptions.value.map((n) => n[props.labelKey]).join(props.separator)
 })
 
