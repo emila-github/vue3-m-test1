@@ -164,6 +164,12 @@
     "BUSSINESS_BELONG_TYPE": [
       { "value": "1", "text": "我司承保" },
       { "value": "2", "text": "同业投保" }
+    ],
+    "FEE_RANGE": [
+      { "value": "1", "text": "0-10万" },
+      { "value": "2", "text": "10-50万" },
+      { "value": "3", "text": "50-100万" },
+      { "value": "4", "text": "100万以上" }
     ]
   },
   "labelTypeAll": [

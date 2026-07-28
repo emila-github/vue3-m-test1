@@ -2,12 +2,13 @@
 /**
  * YdlXbBoard —— 续保管理（非车）通用看板（§6 我的续保 / 问题项目 / 项目终止 共用）
  *
- * 通过 props 区分三类的「状态字段 + 状态枚举 + 反馈接口 + 反馈表单」：
+ * 通过 props 区分三类的「状态字段 + 状态枚举 + 反馈接口 + 反馈表单」，并通过 `queryFields`
+ * 声明式配置各自的查询条件（严格对齐需求文档 §6.x）：
  *   - 我的续保 renewedList     → 状态 renewedStatus / RENEWED_STATUS / 续保反馈
  *   - 问题项目 questionList    → 状态 questionStatus / QUESTION_STATUS / 问题反馈（含是否解决）
  *   - 项目终止 endList         → 状态 endStatus / END_STATUS / 终止反馈
  *
- * 列表筛选：分支公司(树) + 到期时间 range + 状态 + 保单号；点击行进入详情 → 反馈提交。
+ * 查询条件（更多查询面板）由各视图通过 `:query-fields` 传入，点击行进入详情 → 反馈提交。
  */
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -16,8 +17,18 @@ import VantList from '@/components/VantList.vue'
 import type { CrudApi } from '@/composables/useCrudList'
 import VantSelectField from '@/components/VantSelectField.vue'
 import VantCalendarField from '@/components/VantCalendarField.vue'
+import VantTreeSelectField from '@/components/VantTreeSelectField.vue'
 import { useYdlDict } from '@/composables/ydl/useYdlDict'
 import { postYdlXbFeedback, type YdlXbRow } from '@/api/modules/ydl/ydl-xb'
+import type { XbQueryField } from './xb-types'
+
+/** 默认查询条件（兼容未传 queryFields 的旧调用）：分支公司 / 到期时间 / 状态 / 保单号 */
+const DEFAULT_QUERY_FIELDS: XbQueryField[] = [
+  { type: 'org', key: 'comcode', label: '分支公司' },
+  { type: 'dateRange', key: 'enddate', label: '到期时间' },
+  { type: 'status', key: 'renewedStatus', label: '续保' },
+  { type: 'text', key: 'policyno', label: '上年保单号' },
+]
 
 const props = defineProps<{
   title: string
@@ -36,12 +47,38 @@ const props = defineProps<{
   feedbackTypeLabel?: string
   /** 是否显示「是否解决」开关（问题项目） */
   showResolve?: boolean
+  /**
+   * 查询条件声明式配置（决定「更多查询」面板渲染哪些筛选，并按需求决定参数名）。
+   * 不传则用默认四件套。各视图应严格按需求文档 §6.x 传入，例如：
+   *  问题项目(§6.2)：comcode / enddate(range→begin,end) / feeRange(FEE_RANGE) / appliname
+   *  我的续保(§6.1)：comcode / enddate(range) / renewedStatus / policyno
+   */
+  queryFields?: XbQueryField[]
 }>()
 
 const router = useRouter()
 const { loadDeptTree, loadDictItems } = useYdlDict()
 
-const api: CrudApi<YdlXbRow, any, any> = { list: props.apiFn }
+/**
+ * query 包装：把 dateRange 类型的 [起,止] 数组拆成 `${key}_begin` / `${key}_end`，
+ * 以匹配后端参数命名（如 enddate → enddate_begin / enddate_end）。其余字段透传。
+ */
+function transformQuery(q: Record<string, any>): Record<string, any> {
+  const fields = props.queryFields ?? DEFAULT_QUERY_FIELDS
+  const p: Record<string, any> = {}
+  for (const [k, v] of Object.entries(q)) {
+    const f = fields.find((x) => x.key === k && x.type === 'dateRange')
+    if (f && Array.isArray(v) && v.length === 2) {
+      p[`${k}_begin`] = v[0]
+      p[`${k}_end`] = v[1]
+    } else {
+      p[k] = v
+    }
+  }
+  return p
+}
+
+const api: CrudApi<YdlXbRow, any, any> = { list: (q) => props.apiFn(transformQuery(q)) }
 
 // 到期时间默认 上月月初 ~ 昨天
 function lastMonthFirst(): string {
@@ -56,37 +93,48 @@ function yesterday(): string {
   return d.toISOString().slice(0, 10)
 }
 
-const initialQuery = reactive({
-  orgCode: '',
-  enddateRange: [] as string[],
-  status: '',
-  policyno: '',
-})
+// 按 queryFields 动态构建初始查询（dateRange 初始为空数组，其余为空串），并保留顶部关键字 policyno
+const initialQuery = reactive<Record<string, any>>(
+  Object.fromEntries([
+    ...(props.queryFields ?? DEFAULT_QUERY_FIELDS).map((f) => [
+      f.key,
+      f.type === 'dateRange' ? [] : '',
+    ]),
+    ['policyno', ''],
+  ]),
+)
 
 const responseMap = { list: 'records', total: 'total', pageSize: 'size' }
 
-const deptOptions = ref<{ text: string; value: string }[]>([])
+const deptTree = ref<any[]>([])
 const statusOptions = ref<{ text: string; value: string }[]>([])
 const statusMap = reactive<Record<string, Record<string, string>>>({})
-
-function flattenDept(nodes: any[], prefix = ''): { text: string; value: string }[] {
-  const out: { text: string; value: string }[] = []
-  for (const n of nodes) {
-    out.push({ text: prefix + n.title, value: n.orgCode })
-    if (n.children?.length) out.push(...flattenDept(n.children, prefix + n.title + ' / '))
-  }
-  return out
-}
+// dict 类型筛选的字典选项（key = 字典编码，如 FEE_RANGE）
+const dictOptionsMap = reactive<Record<string, { text: string; value: string }[]>>({})
 
 onMounted(async () => {
   try {
     const [tree, status] = await Promise.all([loadDeptTree(), loadDictItems(props.statusDict)])
-    deptOptions.value = flattenDept(tree)
+    deptTree.value = tree
     statusOptions.value = status.map((c) => ({ text: c.text, value: c.value }))
     statusMap[props.statusDict] = Object.fromEntries(status.map((c) => [String(c.value), c.text]))
   } catch {
     /* 下拉加载失败不阻塞 */
   }
+  // 加载 dict 类型筛选所需的字典（如 上年保费规模 FEE_RANGE）
+  const dictFields = (props.queryFields ?? DEFAULT_QUERY_FIELDS).filter(
+    (f) => f.type === 'dict' && f.dict,
+  )
+  await Promise.all(
+    dictFields.map(async (f) => {
+      try {
+        const items = await loadDictItems(f.dict!)
+        dictOptionsMap[f.dict!] = items.map((c) => ({ text: c.text, value: c.value }))
+      } catch {
+        dictOptionsMap[f.dict!] = []
+      }
+    }),
+  )
 })
 
 // ==================== 详情 + 反馈 ====================
@@ -174,30 +222,53 @@ const baseInfo = (row: YdlXbRow) => [
     >
       <template #filters="{ query }">
         <van-cell-group inset class="f-group">
-          <VantSelectField
-            v-model="query.orgCode"
-            :options="deptOptions"
-            label="分支公司"
-            title="选择分支公司"
-            placeholder="全部机构"
-            clearable
-          />
-          <VantCalendarField
-            v-model="query.enddateRange"
-            type="range"
-            label="到期时间"
-            title="选择到期时间区间"
-            placeholder="选择时间区间"
-          />
-          <VantSelectField
-            v-model="query.status"
-            :options="statusOptions"
-            :label="title + '状态'"
-            :title="'选择' + title + '状态'"
-            placeholder="全部"
-            clearable
-          />
-          <van-field v-model="query.policyno" label="保单号" placeholder="输入保单号" input-align="right" />
+          <template v-for="f in (queryFields ?? DEFAULT_QUERY_FIELDS)" :key="f.key">
+            <VantTreeSelectField
+              v-if="f.type === 'org'"
+              v-model="query[f.key]"
+              :options="deptTree"
+              value-key="orgCode"
+              label-key="title"
+              :label="f.label"
+              :title="'选择' + f.label"
+              placeholder="全部机构"
+              clearable
+              only-selected-label
+            />
+            <VantCalendarField
+              v-else-if="f.type === 'dateRange'"
+              v-model="query[f.key]"
+              type="range"
+              :label="f.label"
+              :title="'选择' + f.label + '区间'"
+              placeholder="选择时间区间"
+            />
+            <VantSelectField
+              v-else-if="f.type === 'dict'"
+              v-model="query[f.key]"
+              :options="(f.dict && dictOptionsMap[f.dict]) || []"
+              :label="f.label"
+              :title="'选择' + f.label"
+              :placeholder="'全部' + f.label"
+              clearable
+            />
+            <VantSelectField
+              v-else-if="f.type === 'status'"
+              v-model="query[f.key]"
+              :options="statusOptions"
+              :label="(f.label || title) + '状态'"
+              :title="'选择' + (f.label || title) + '状态'"
+              placeholder="全部"
+              clearable
+            />
+            <van-field
+              v-else-if="f.type === 'text'"
+              v-model="query[f.key]"
+              :label="f.label"
+              :placeholder="'输入' + f.label"
+              input-align="right"
+            />
+          </template>
         </van-cell-group>
       </template>
 

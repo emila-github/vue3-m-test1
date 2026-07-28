@@ -39,6 +39,33 @@ const deptTreeData = ref<DeptNode[]>([])
 const channelOptions = ref<{ text: string; value: string }[]>([])
 const labelOptions = ref<{ text: string; value: string }[]>([])
 
+// ==================== 枚举字典（列表/详情映射） ====================
+// 拜访类型 / 拜访进程 属拜访数据域共享枚举（需求 §1.6、§3.4），需映射为文案
+const dictMaps = reactive<Record<string, Record<string, string>>>({})
+async function loadDictMap(type: string) {
+  if (dictMaps[type]) return
+  try {
+    const items = await loadDictItems(type)
+    dictMaps[type] = Object.fromEntries(items.map((i) => [String(i.value), i.text]))
+  } catch {
+    dictMaps[type] = {}
+  }
+}
+function dmap(type: string, v: any): string {
+  if (v == null || v === '') return '-'
+  return dictMaps[type]?.[String(v)] ?? String(v)
+}
+
+// 统计时间必选：未选区间时拦截搜索（由 VantList 的 beforeSearch 钩子调用）
+function beforeSearch(q: Record<string, any>): boolean {
+  const range = q.visitTimeRange as string[] | undefined
+  return !!(range && Array.isArray(range) && range.length === 2)
+}
+// VantList 因 beforeSearch 拦截搜索时回调，给出提示
+function onSearchBlocked() {
+  showToast('请先选择统计时间')
+}
+
 onMounted(async () => {
   try {
     const [tree, channel, labels] = await Promise.all([
@@ -52,6 +79,8 @@ onMounted(async () => {
   } catch {
     /* 下拉加载失败不阻塞 */
   }
+  // 预载拜访类型 / 拜访进程枚举字典
+  await Promise.all([loadDictMap('VISIT_TYPE'), loadDictMap('VISIT_PROCESS_STATUS')])
 })
 
 function summary(item: YdlVisitTrackRow): { label: string; value: string }[] {
@@ -60,16 +89,21 @@ function summary(item: YdlVisitTrackRow): { label: string; value: string }[] {
     { label: '业务员', value: item.realName },
     { label: '机构', value: item.createOrg },
     { label: '拜访时间', value: item.visitTime },
-    { label: '拜访类型', value: String(item.visitTypeCode) },
-    { label: '拜访进程', value: String(item.visitProcess) },
+    { label: '拜访类型', value: dmap('VISIT_TYPE', item.visitTypeCode) },
+    { label: '拜访进程', value: dmap('VISIT_PROCESS_STATUS', item.visitProcess) },
   ]
 }
 
 async function onPush(q: Record<string, any>) {
+  const range = q.visitTimeRange as string[] | undefined
+  // 统计时间必选：未选区间禁止推送
+  if (!range || range.length !== 2) {
+    showToast('请先选择统计时间')
+    return
+  }
   const p = { ...q }
-  const range = p.visitTimeRange as string[] | undefined
   delete p.visitTimeRange
-  const [b, e] = range || []
+  const [b, e] = range
   if (b) p.visitTime_begin = b
   if (e) p.visitTime_end = e
   showLoadingToast({ message: '推送中…', forbidClick: true })
@@ -87,7 +121,13 @@ async function onPush(q: Record<string, any>) {
 
 <template>
   <div class="ydl-detail-page">
-    <van-nav-bar title="拜访汇总" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="router.back()" />
+    <van-nav-bar
+      title="拜访汇总"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="router.back()"
+    />
 
     <VantList
       :api="api"
@@ -101,6 +141,8 @@ async function onPush(q: Record<string, any>) {
       :show-delete="false"
       show-more
       :free-actions="['view']"
+      :before-search="beforeSearch"
+      @search-blocked="onSearchBlocked"
       @detail="() => {}"
     >
       <template #filters="{ query }">
@@ -112,6 +154,7 @@ async function onPush(q: Record<string, any>) {
             label-key="title"
             children-key="children"
             select-parent
+            only-selected-label
             label="分支公司"
             title="选择分支公司"
             placeholder="全部机构"
@@ -123,6 +166,7 @@ async function onPush(q: Record<string, any>) {
             label="统计时间"
             title="选择统计时间区间"
             placeholder="选择时间区间"
+            required
           />
           <VantSelectField
             v-model="query.labelName"
