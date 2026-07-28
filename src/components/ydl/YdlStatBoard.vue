@@ -101,7 +101,12 @@ function fmt(col: StatColumn, row: Record<string, any>): string {
   if (v == null || v === '') return '-'
   if (col.money) {
     const n = Number(v)
-    return '¥' + (isNaN(n) ? v : n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+    return (
+      '¥' +
+      (isNaN(n)
+        ? v
+        : n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+    )
   }
   return String(v)
 }
@@ -125,7 +130,13 @@ onMounted(async () => {
 
 <template>
   <div class="ydl-stat picc-page">
-    <van-nav-bar :title="title" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="$router.back()" />
+    <van-nav-bar
+      :title="title"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <!-- 筛选 -->
     <van-cell-group inset class="picc-card s-filter">
@@ -136,6 +147,7 @@ onMounted(async () => {
         label-key="title"
         children-key="children"
         select-parent
+        only-selected-label
         label="分支公司"
         title="选择分支公司"
         placeholder="全部机构"
