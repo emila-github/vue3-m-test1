@@ -9,7 +9,9 @@
 import { ref, onMounted } from 'vue'
 import { showLoadingToast, closeToast, showToast } from 'vant'
 import VantSelectField from '../VantSelectField.vue'
+import VantTreeSelectField from '../VantTreeSelectField.vue'
 import { useYdlDict } from '@/composables/ydl/useYdlDict'
+import type { DeptNode } from '@/api/modules/ydl/dict'
 import { getYdlJcEnterpriseItemSelectDates } from '@/api/modules/ydl/dict'
 
 export interface JcColumn {
@@ -35,21 +37,13 @@ const query = ref<Record<string, any>>({
   reporttype: '全量',
 })
 
-const deptOptions = ref<{ text: string; value: string }[]>([])
+// 分支公司树（sys/sysDepart/queryTreeListAll 原始树，直接喂给 VantTreeSelectField）
+const deptTreeData = ref<DeptNode[]>([])
 const dateOptions = ref<{ text: string; value: string }[]>([])
 const typeOptions = [
   { text: '全量', value: '全量' },
   { text: '商团', value: '商团' },
 ]
-
-function flattenDept(nodes: any[], prefix = ''): { text: string; value: string }[] {
-  const out: { text: string; value: string }[] = []
-  for (const n of nodes) {
-    out.push({ text: prefix + n.title, value: n.orgCode })
-    if (n.children?.length) out.push(...flattenDept(n.children, prefix + n.title + ' / '))
-  }
-  return out
-}
 
 const rows = ref<Record<string, any>[]>([])
 const loading = ref(false)
@@ -84,7 +78,7 @@ function fmt(col: JcColumn, row: Record<string, any>): string {
 onMounted(async () => {
   try {
     const [tree, dates] = await Promise.all([loadDeptTree(), getYdlJcEnterpriseItemSelectDates()])
-    deptOptions.value = flattenDept(tree)
+    deptTreeData.value = tree
     const ds = dates?.dates || []
     dateOptions.value = ds.map((d: string) => ({ text: d, value: d }))
     if (ds.length) query.value.reportdate = ds[ds.length - 1] // 默认最后一项
@@ -100,9 +94,13 @@ onMounted(async () => {
     <van-nav-bar :title="title" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="$router.back()" />
 
     <van-cell-group inset class="picc-card s-filter">
-      <VantSelectField
+      <VantTreeSelectField
         v-model="query.comdcode"
-        :options="deptOptions"
+        :options="deptTreeData"
+        value-key="orgCode"
+        label-key="title"
+        children-key="children"
+        select-parent
         label="分支公司"
         title="选择分支公司"
         placeholder="全部机构"
