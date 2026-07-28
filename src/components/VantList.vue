@@ -274,6 +274,13 @@ const props = withDefaults(
      * 用于「投保人未填写 / 未核验」等业务强约束，避免依赖 Vant 字段注册而漏校验。
      */
     beforeSubmit?: (form: any, isEdit: boolean) => boolean | Promise<boolean>
+    /**
+     * 搜索前自定义校验钩子（业务页强校验门禁，独立于筛选面板）。
+     * 入参为当前 query；返回 false / 抛出 则阻断搜索并触发 @search-blocked 事件。
+     * 用于「统计时间必选」等业务强约束。仅拦截用户主动触发的搜索
+     * （顶部搜索栏 + 更多查询「应用筛选」），不影响进入页面时的初始列表加载。
+     */
+    beforeSearch?: (query: any) => boolean | Promise<boolean>
   }>(),
   {
     rowKey: 'id',
@@ -311,6 +318,7 @@ const emit = defineEmits<{
   edit: [item: any]
   detail: [item: any]
   action: [payload: { key: string; item: any }]
+  searchBlocked: []
 }>()
 
 const router = useRouter()
@@ -416,8 +424,32 @@ function filterDisplay(f: ListFilter): string {
 }
 
 function onMoreFilterApply() {
-  showMoreFilter.value = false
+  // 仅当搜索通过（beforeSearch 未拦截）才关闭面板；被拦截时保持打开，便于用户补选
+  runSearch().then((allowed) => {
+    if (allowed) showMoreFilter.value = false
+  })
+}
+
+/**
+ * 受 beforeSearch 钩子门禁的搜索入口（顶部搜索栏 + 更多查询「应用筛选」共用）。
+ * 返回 false / 抛错 → 仅触发 @search-blocked，不发起查询，并返回 false；否则正常 onSearch 并返回 true。
+ * 注意：进入页面的初始加载（van-list 的 @load）不经过此处，确保首屏正常且避免无限加载。
+ */
+async function runSearch(): Promise<boolean> {
+  if (props.beforeSearch) {
+    try {
+      const ok = await props.beforeSearch(query)
+      if (ok === false) {
+        emit('searchBlocked')
+        return false
+      }
+    } catch {
+      emit('searchBlocked')
+      return false
+    }
+  }
   onSearch()
+  return true
 }
 function onMoreFilterReset() {
   Object.assign(query, props.initialQuery)
@@ -563,11 +595,11 @@ defineExpose({
           :placeholder="searchPlaceholder"
           shape="round"
           show-action
-          @search="onSearch"
-          @clear="onSearch"
+          @search="runSearch"
+          @clear="runSearch"
         >
           <template #action>
-            <span class="vl-search-action" @click="onSearch">搜索</span>
+            <span class="vl-search-action" @click="runSearch">搜索</span>
           </template>
         </van-search>
       </div>
