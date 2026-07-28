@@ -67,6 +67,8 @@ const props = withDefaults(
     readonly?: boolean
     leftIcon?: string
     required?: boolean
+    /** 是否显示字段底边线（默认显示，与 van-field 列表 UI 一致） */
+    border?: boolean
   }>(),
   {
     modelValue: '',
@@ -90,6 +92,7 @@ const props = withDefaults(
     readonly: false,
     leftIcon: '',
     required: false,
+    border: true,
   },
 )
 
@@ -219,6 +222,7 @@ function onClear() {
       :left-icon="leftIcon"
       :required="required"
       :disabled="disabled"
+      :border="border"
       is-link
       readonly
       class="vant-calendar__field"
@@ -262,6 +266,14 @@ function onClear() {
 /* 第1层：van-cell 主容器 —— 保证 title(label)、value(含body+x)、right-icon(箭头) 垂直居中 */
 .vant-calendar__field :deep(.van-cell) {
   align-items: center;
+}
+
+/* 组件外裹了一层 div，导致内部 van-cell 成为该 div 的 :last-child，
+   Vant 的 `.van-cell:last-child:after{display:none}` 会据此隐藏底边线。
+   这里按 border 状态显式补回底边线，与 van-cell-group 内其余裸 van-field 保持一致；
+   当 border=false（内部 van-cell 带 van-cell--borderless 类）时不补，维持隐藏。 */
+.vant-calendar :deep(.van-cell:not(.van-cell--borderless))::after {
+  display: block;
 }
 
 /* 第2层：value 容器 —— 保证内部的 body 不把整列撑高 */
