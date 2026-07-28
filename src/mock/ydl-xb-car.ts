@@ -13,6 +13,7 @@ const rows = Array.from({ length: 13 }, (_, i) => ({
   licenseno: `闽A${10000 + i * 37}`,
   frameno: `LFV${10000000000 + i}`,
   energyflag: i % 3 === 0 ? 1 : 0,
+  renewedStatus: i % 3,
   appliname: ['张三', '李四', '王五', '赵六'][i % 4],
   insuredname: ['张三', '李四', '王五', '赵六'][i % 4],
   coinsnetpremium: 3200 + i * 280,
@@ -52,12 +53,13 @@ const routes: MockRoute[] = [
       const ln = q.licenseno
       if (pn) list = list.filter((r) => r.policyno.includes(pn))
       if (ln) list = list.filter((r) => r.licenseno.includes(ln))
+      if (q.frameno) list = list.filter((r) => r.frameno.includes(q.frameno))
       if (q.energyflag !== undefined && q.energyflag !== '')
         list = list.filter((r) => String(r.energyflag) === q.energyflag)
+      if (q.renewedStatus !== undefined && q.renewedStatus !== '')
+        list = list.filter((r) => String(r.renewedStatus) === q.renewedStatus)
       if (q.showStatus !== undefined && q.showStatus !== '')
         list = list.filter((r) => String(r.showStatus) === q.showStatus)
-      if (q.renewedStatus !== undefined && q.renewedStatus !== '')
-        list = list.filter((r) => String(r.showStatus) === q.renewedStatus)
       const start = (page - 1) * size
       return ok({ records: list.slice(start, start + size), total: list.length, current: page, size })
     },

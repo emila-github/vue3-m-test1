@@ -10,7 +10,7 @@
  *
  * 查询条件（更多查询面板）由各视图通过 `:query-fields` 传入，点击行进入详情 → 反馈提交。
  */
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showLoadingToast, closeToast } from 'vant'
 import VantList from '@/components/VantList.vue'
@@ -47,6 +47,17 @@ const props = defineProps<{
   feedbackTypeLabel?: string
   /** 是否显示「是否解决」开关（问题项目） */
   showResolve?: boolean
+  /** 顶部搜索框占位文案（默认「搜索保单号」） */
+  searchPlaceholder?: string
+  /** 顶部搜索关键字字段名（默认 policyno，问题项目用 appliname） */
+  keywordKey?: string
+  /**
+   * 列表项字段声明式配置（对齐需求「列表字段」）。不传则使用默认卡片布局。
+   * 例（问题项目 §6.2）：投保人(title) / 问题状态(status) / 问题逾期状态(tag) /
+   *  地市·支公司·上年保单号·产品·到期·团队类型·服务经理·预审核意见·剩余反馈时间·问题内容·问题反馈(text) /
+   *  上年保费(money) / 问题类型(tag)。
+   */
+  listFields?: XbListField[]
   /**
    * 查询条件声明式配置（决定「更多查询」面板渲染哪些筛选，并按需求决定参数名）。
    * 不传则用默认四件套。各视图应严格按需求文档 §6.x 传入，例如：
@@ -111,6 +122,8 @@ const statusOptions = ref<{ text: string; value: string }[]>([])
 const statusMap = reactive<Record<string, Record<string, string>>>({})
 // dict 类型筛选的字典选项（key = 字典编码，如 FEE_RANGE）
 const dictOptionsMap = reactive<Record<string, { text: string; value: string }[]>>({})
+// 列表项 tag/status 字段所需的字典映射（dict → value→text）
+const labelMap = reactive<Record<string, Record<string, string>>>({})
 
 onMounted(async () => {
   try {
@@ -135,7 +148,57 @@ onMounted(async () => {
       }
     }),
   )
+  // 加载列表项 tag/status 字段所需字典（去重）
+  const listDicts = [
+    ...new Set(
+      (props.listFields ?? [])
+        .filter((f) => (f.kind === 'status' || f.kind === 'tag') && f.dict)
+        .map((f) => (f as { dict: string }).dict),
+    ),
+  ]
+  await Promise.all(
+    listDicts.map(async (d) => {
+      try {
+        const items = await loadDictItems(d)
+        labelMap[d] = Object.fromEntries(items.map((c) => [String(c.value), c.text]))
+      } catch {
+        labelMap[d] = {}
+      }
+    }),
+  )
 })
+
+/** 列表项 tag/status 字段文案：dict 映射，缺失则返回原值 */
+function dictText(dict: string | undefined, value: any): string {
+  if (value == null) return '-'
+  if (dict && labelMap[dict]?.[String(value)]) return labelMap[dict][String(value)]
+  return String(value)
+}
+
+// ===== 列表项按 listFields 配置渲染的辅助函数 =====
+function titleValue(item: Record<string, any>): string {
+  const t = (props.listFields ?? []).find((f) => f.kind === 'title')
+  return t ? (item[t.key] ?? '') : (item.appliname ?? '')
+}
+function tagFields(item: Record<string, any>) {
+  return (props.listFields ?? [])
+    .filter((f) => f.kind === 'status' || f.kind === 'tag')
+    .map((f) => {
+      const raw = (item as any)[f.key]
+      const color = f.kind === 'status' ? statusColor(raw) : '#1989fa'
+      return { key: f.key, text: dictText(f.dict, raw), color }
+    })
+}
+function metaFields(item: Record<string, any>) {
+  return (props.listFields ?? [])
+    .filter((f) => f.kind === 'text' || f.kind === 'money')
+    .map((f) => {
+      let value: any = (item as any)[f.key]
+      if (f.kind === 'money') value = '¥' + Number(value || 0).toLocaleString('zh-CN')
+      return { key: f.key, label: f.label || f.key, value }
+    })
+}
+const hasListFields = computed(() => (props.listFields?.length ?? 0) > 0)
 
 // ==================== 详情 + 反馈 ====================
 const detailItem = ref<YdlXbRow | null>(null)
@@ -211,8 +274,8 @@ const baseInfo = (row: YdlXbRow) => [
       :title="''"
       :initial-query="initialQuery"
       :response-map="responseMap"
-      search-placeholder="搜索保单号"
-      keyword-key="policyno"
+      :search-placeholder="searchPlaceholder || '搜索保单号'"
+      :keyword-key="keywordKey || 'policyno'"
       :show-add="false"
       :show-edit="false"
       :show-delete="false"
@@ -273,15 +336,35 @@ const baseInfo = (row: YdlXbRow) => [
       </template>
 
       <template #item="{ item }">
-        <div class="r-head">
-          <span class="r-name">{{ item.appliname }}</span>
-          <van-tag :color="statusColor((item as any)[statusField])" text-color="#fff" size="medium">
-            {{ statusText((item as any)[statusField]) }}
-          </van-tag>
+        <div v-if="hasListFields" class="r-card">
+          <div class="r-head">
+            <span class="r-name">{{ titleValue(item) }}</span>
+            <span class="r-tags">
+              <van-tag
+                v-for="t in tagFields(item)"
+                :key="t.key"
+                :color="t.color"
+                text-color="#fff"
+                size="medium"
+                class="r-tag"
+              >{{ t.text }}</van-tag>
+            </span>
+          </div>
+          <div v-for="m in metaFields(item)" :key="m.key" class="r-meta">
+            <span class="r-label">{{ m.label }}：</span>{{ m.value }}
+          </div>
         </div>
-        <div class="r-meta">保单号：{{ item.policyno }}</div>
-        <div class="r-meta">险种：{{ item.riskcname }} ｜ 到期：{{ item.enddate }}</div>
-        <div class="r-meta">上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}</div>
+        <div v-else class="r-card">
+          <div class="r-head">
+            <span class="r-name">{{ item.appliname }}</span>
+            <van-tag :color="statusColor((item as any)[statusField])" text-color="#fff" size="medium">
+              {{ statusText((item as any)[statusField]) }}
+            </van-tag>
+          </div>
+          <div class="r-meta">保单号：{{ item.policyno }}</div>
+          <div class="r-meta">险种：{{ item.riskcname }} ｜ 到期：{{ item.enddate }}</div>
+          <div class="r-meta">上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}</div>
+        </div>
       </template>
 
       <template #detail="{ item }">
@@ -350,6 +433,17 @@ const baseInfo = (row: YdlXbRow) => [
   font-size: 13px;
   color: #666;
   margin-top: 3px;
+}
+.r-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.r-tag {
+  margin-left: 0;
+}
+.r-label {
+  color: #999;
 }
 .fb-submit {
   padding: 14px 4px 4px;

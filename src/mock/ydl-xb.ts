@@ -20,13 +20,33 @@ function base(i: number, extra: Record<string, any> = {}) {
 }
 
 const renewedList = Array.from({ length: 14 }, (_, i) =>
-  base(i, { renewedStatus: i % 4 }),
+  base(i, { renewedStatus: i % 3 }),
 )
 const questionList = Array.from({ length: 11 }, (_, i) =>
-  base(i, { questionStatus: i % 3, questionType: (i % 3) + 1, delayStatus: i % 2 }),
+  base(i, {
+    questionStatus: i % 3,
+    questionType: (i % 4) + 1,
+    questionDelayStatus: i % 2,
+    teamFlag: i % 2,
+    dutyName: ['张经理', '李经理', '王经理'][i % 3],
+    auditContent: i % 2 ? '建议优先跟进' : '正常推进',
+    remainDay: 5 + (i % 10),
+    questionContent: `客户对${['价格', '承保条件', '同业竞争', '客户流失'][i % 4]}存在疑虑`,
+    questionFeedback: i % 2 ? '已电话沟通，持续跟进' : '',
+  }),
 )
 const endList = Array.from({ length: 9 }, (_, i) =>
-  base(i, { endStatus: i % 3, endType: (i % 3) + 1, delayStatus: i % 2 }),
+  base(i, {
+    endStatus: i % 3,
+    endType: (i % 3) + 1,
+    endDelayStatus: i % 2,
+    teamFlag: i % 2,
+    dutyName: ['张经理', '李经理', '王经理'][i % 3],
+    auditContent: i % 2 ? '建议优先跟进' : '正常推进',
+    endCommitDate: `2026-${String(((i % 12) + 1)).padStart(2, '0')}-${String(((i * 5) % 27) + 1).padStart(2, '0')}`,
+    remainDay: 3 + (i % 12),
+    endContent: `客户因${['经营调整', '预算缩减', '转投同业'][i % 3]}申请终止`,
+  }),
 )
 
 function ok<T>(result: T) {

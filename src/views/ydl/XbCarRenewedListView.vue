@@ -42,8 +42,10 @@ const initialQuery = reactive({
   orgCode: '',
   enddateRange: [] as string[],
   licenseno: '',
+  frameno: '',
   policyno: '',
   energyflag: '',
+  renewedStatus: '',
   showStatus: '',
 })
 
@@ -51,22 +53,27 @@ const responseMap = { list: 'records', total: 'total', pageSize: 'size' }
 
 const deptTreeData = ref<DeptNode[]>([])
 const energyOptions = ref<{ text: string; value: string }[]>([])
+const renewedStatusOptions = ref<{ text: string; value: string }[]>([])
 const showStatusOptions = ref<{ text: string; value: string }[]>([])
 
 const showStatusMap = reactive<Record<string, Record<string, string>>>({})
 const energyMap = reactive<Record<string, Record<string, string>>>({})
+const renewedStatusMap = reactive<Record<string, Record<string, string>>>({})
 
 onMounted(async () => {
   try {
-    const [tree, en, ss] = await Promise.all([
+    const [tree, en, rs, ss] = await Promise.all([
       loadDeptTree(),
       loadDictItems('YN_FLAG'),
+      loadDictItems('RENEWED_STATUS2'),
       loadDictItems('SHOW_STATUS'),
     ])
     deptTreeData.value = tree
     energyOptions.value = en.map((c) => ({ text: c.text, value: c.value }))
+    renewedStatusOptions.value = rs.map((c) => ({ text: c.text, value: c.value }))
     showStatusOptions.value = ss.map((c) => ({ text: c.text, value: c.value }))
     energyMap['YN_FLAG'] = Object.fromEntries(en.map((c) => [String(c.value), c.text]))
+    renewedStatusMap['RENEWED_STATUS2'] = Object.fromEntries(rs.map((c) => [String(c.value), c.text]))
     showStatusMap['SHOW_STATUS'] = Object.fromEntries(ss.map((c) => [String(c.value), c.text]))
   } catch {
     /* 下拉加载失败不阻塞 */
@@ -128,6 +135,29 @@ function statusColor(v: any): string {
   if (n === 3 || n === 4) return '#ee0a24'
   return '#ff976a'
 }
+function endBtnText(v: any): string {
+  const n = Number(v)
+  if (n === 1) return '可终止'
+  if (n === 2) return '可取消终止'
+  return '-'
+}
+// 列表项字段（对齐需求 §7.1 列表字段）
+function carItemMeta(item: YdlXbCarRow) {
+  return [
+    { label: '地市', value: item.comdname },
+    { label: '支公司', value: item.comzname },
+    { label: '服务经理', value: item.dutyName },
+    { label: '车牌号', value: item.licenseno },
+    { label: '车架号', value: item.frameno },
+    { label: '新能源', value: energyMap['YN_FLAG']?.[String(item.energyflag)] ?? String(item.energyflag) },
+    { label: '被保险人', value: item.insuredname },
+    { label: '我方净保费', value: '¥' + Number(item.coinsnetpremium).toLocaleString('zh-CN') },
+    { label: '起保', value: item.startdate },
+    { label: '终保', value: item.enddate },
+    { label: '保单号', value: item.policyno },
+    { label: '终止按钮状态', value: endBtnText(item.endBtnStatus) },
+  ]
+}
 </script>
 
 <template>
@@ -170,12 +200,21 @@ function statusColor(v: any): string {
             placeholder="选择时间区间"
           />
           <van-field v-model="query.licenseno" label="车牌号" placeholder="输入车牌号" input-align="right" />
+          <van-field v-model="query.frameno" label="车架号" placeholder="输入车架号" input-align="right" />
           <van-field v-model="query.policyno" label="保单号" placeholder="输入保单号" input-align="right" />
           <VantSelectField
             v-model="query.energyflag"
             :options="energyOptions"
             label="新能源"
             title="是否新能源"
+            placeholder="全部"
+            clearable
+          />
+          <VantSelectField
+            v-model="query.renewedStatus"
+            :options="renewedStatusOptions"
+            label="续保状态"
+            title="选择续保状态"
             placeholder="全部"
             clearable
           />
@@ -197,9 +236,9 @@ function statusColor(v: any): string {
             {{ statusText(item.showStatus) }}
           </van-tag>
         </div>
-        <div class="r-meta">车牌：{{ item.licenseno }} ｜ 保单：{{ item.policyno }}</div>
-        <div class="r-meta">新能源：{{ energyMap['YN_FLAG']?.[String(item.energyflag)] ?? String(item.energyflag) }} ｜ 终保：{{ item.enddate }}</div>
-        <div class="r-meta">我方净保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}</div>
+        <div v-for="m in carItemMeta(item)" :key="m.label" class="r-meta">
+          <span class="r-label">{{ m.label }}：</span>{{ m.value }}
+        </div>
       </template>
 
       <template #detail="{ item }">
@@ -253,6 +292,9 @@ function statusColor(v: any): string {
   font-size: 13px;
   color: #666;
   margin-top: 3px;
+}
+.r-label {
+  color: #999;
 }
 .fb-submit {
   padding: 14px 4px 4px;

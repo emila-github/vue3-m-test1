@@ -108,10 +108,24 @@
       { "value": "1", "text": "处理中" },
       { "value": "2", "text": "已解决" }
     ],
+    "QUESTION_TYPE": [
+      { "value": "1", "text": "承保条件" },
+      { "value": "2", "text": "价格因素" },
+      { "value": "3", "text": "同业竞争" },
+      { "value": "4", "text": "客户流失" }
+    ],
+    "QUESTION_DELAY_STATUS": [
+      { "value": "0", "text": "未逾期" },
+      { "value": "1", "text": "已逾期" }
+    ],
     "END_STATUS": [
       { "value": "0", "text": "待终止" },
       { "value": "1", "text": "已终止" },
       { "value": "2", "text": "审批中" }
+    ],
+    "END_DELAY_STATUS": [
+      { "value": "0", "text": "未逾期" },
+      { "value": "1", "text": "已逾期" }
     ],
     "YN_FLAG": [
       { "value": "0", "text": "否" },

@@ -12,3 +12,19 @@ export interface XbQueryField {
   /** dict 类型：字典编码（如 FEE_RANGE）；其余类型忽略 */
   dict?: string
 }
+
+/**
+ * 续保管理（非车）看板列表项字段声明式配置（§6 三类共用，对齐需求「列表字段」）。
+ * 通过 listFields prop 传入后，列表卡片按配置渲染；不传则使用默认卡片布局。
+ */
+export type XbListField =
+  /** 主标题（如投保人名称） */
+  | { kind: 'title'; key: string }
+  /** 状态 tag：用 statusColor 上色 + dict 映射文案（如 questionStatus→QUESTION_STATUS） */
+  | { kind: 'status'; key: string; dict: string }
+  /** 普通字典 tag：蓝色 + dict 映射文案（如 questionType→QUESTION_TYPE） */
+  | { kind: 'tag'; key: string; dict: string }
+  /** 金额：自动前缀 ¥ 并千分位 */
+  | { kind: 'money'; key: string; label?: string }
+  /** 普通文本：label：value */
+  | { kind: 'text'; key: string; label?: string }
