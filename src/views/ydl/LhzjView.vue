@@ -104,6 +104,7 @@ onMounted(async () => {
 })
 
 const detailFields = (item: YdlLhzjVisit) => [
+  { label: '地市', value: item.comdname },
   { label: '拜访机构', value: item.comzname || item.comzcode },
   { label: '拜访人', value: item.visitName },
   { label: '拜访人职务', value: item.visitPosition },
@@ -150,6 +151,7 @@ const detailFields = (item: YdlLhzjVisit) => [
             label-key="title"
             children-key="children"
             select-parent
+            only-selected-label
             label="拜访机构"
             title="选择拜访机构"
             placeholder="请选择拜访机构"
@@ -170,8 +172,18 @@ const detailFields = (item: YdlLhzjVisit) => [
             title="选择职务"
             placeholder="请选择职务"
           />
-          <van-field v-model="query.visitName" label="拜访人" placeholder="输入拜访人" input-align="right" />
-          <van-field v-model="query.customerName" label="客户名称" placeholder="输入客户名称" input-align="right" />
+          <van-field
+            v-model="query.visitName"
+            label="拜访人"
+            placeholder="输入拜访人"
+            input-align="right"
+          />
+          <van-field
+            v-model="query.customerName"
+            label="客户名称"
+            placeholder="输入客户名称"
+            input-align="right"
+          />
           <VantTreeSelectField
             v-model="query.customerTypeId"
             :options="customerTypeTreeData"
@@ -190,13 +202,22 @@ const detailFields = (item: YdlLhzjVisit) => [
       <template #item="{ item }">
         <div class="r-title">{{ item.customerName }}</div>
         <div class="r-meta">拜访人：{{ item.visitName }} ｜ {{ item.visitTime }}</div>
-        <div class="r-meta">机构：{{ item.comzname }} ｜ 客户分类：{{ item.customerTypeName || item.customerTypeId }}</div>
+        <div class="r-meta">
+          机构：{{ item.comdname }} / {{ item.comzname }} ｜ 客户分类：{{
+            item.customerTypeName || item.customerTypeId
+          }}
+        </div>
         <div class="r-meta">拜访内容：{{ item.visitContent }}</div>
       </template>
 
       <template #detail="{ item }">
         <van-cell-group inset title="拜访详情" class="picc-card">
-          <van-cell v-for="c in detailFields(item)" :key="c.label" :title="c.label" :value="c.value" />
+          <van-cell
+            v-for="c in detailFields(item)"
+            :key="c.label"
+            :title="c.label"
+            :value="c.value"
+          />
         </van-cell-group>
       </template>
 
@@ -214,7 +235,12 @@ const detailFields = (item: YdlLhzjVisit) => [
             placeholder="请选择拜访机构"
             required
           />
-          <van-field v-model="form.visitName" label="拜访人" placeholder="请输入拜访人" :rules="[{ required: true, message: '请填写拜访人' }]" />
+          <van-field
+            v-model="form.visitName"
+            label="拜访人"
+            placeholder="请输入拜访人"
+            :rules="[{ required: true, message: '请填写拜访人' }]"
+          />
           <VantSelectMultipleField
             v-model="form.visitPosition"
             :options="positionOptions"
@@ -224,7 +250,12 @@ const detailFields = (item: YdlLhzjVisit) => [
             title="选择职务"
             placeholder="请选择职务"
           />
-          <van-field v-model="form.customerName" label="客户名称" placeholder="请输入客户名称" :rules="[{ required: true, message: '请填写客户名称' }]" />
+          <van-field
+            v-model="form.customerName"
+            label="客户名称"
+            placeholder="请输入客户名称"
+            :rules="[{ required: true, message: '请填写客户名称' }]"
+          />
           <VantTreeSelectField
             v-model="form.customerTypeId"
             :options="customerTypeTreeData"
@@ -238,8 +269,18 @@ const detailFields = (item: YdlLhzjVisit) => [
             placeholder="请选择客户分类"
             required
           />
-          <van-field v-model="form.targetName" label="拜访对象" placeholder="请输入拜访对象" :rules="[{ required: true, message: '请填写拜访对象' }]" />
-          <van-field v-model="form.targetPosition" label="对象职务" placeholder="请输入对象职务" :rules="[{ required: true, message: '请填写对象职务' }]" />
+          <van-field
+            v-model="form.targetName"
+            label="拜访对象"
+            placeholder="请输入拜访对象"
+            :rules="[{ required: true, message: '请填写拜访对象' }]"
+          />
+          <van-field
+            v-model="form.targetPosition"
+            label="对象职务"
+            placeholder="请输入对象职务"
+            :rules="[{ required: true, message: '请填写对象职务' }]"
+          />
           <VantCalendarField
             v-model="form.visitTime"
             type="single"

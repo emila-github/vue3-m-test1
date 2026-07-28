@@ -55,6 +55,18 @@ const query = ref<Record<string, any>>({
   labelName: '',
 })
 
+// 统计时间区间（range）→ query.begin / query.end
+const statTimeRange = ref<string[]>([lastMonthFirst(), yesterday()])
+function onStatTimeChange(val: string[] | string) {
+  if (Array.isArray(val) && val.length === 2) {
+    query.value.begin = val[0]
+    query.value.end = val[1]
+  } else {
+    query.value.begin = ''
+    query.value.end = ''
+  }
+}
+
 // 分支公司树（sys/sysDepart/queryTreeListAll 原始树，直接喂给 VantTreeSelectField）
 const deptTreeData = ref<DeptNode[]>([])
 const channelOptions = ref<{ text: string; value: string }[]>([])
@@ -131,20 +143,13 @@ onMounted(async () => {
         @change="onSearch"
       />
       <VantCalendarField
-        v-model="query.begin"
-        type="single"
-        label="统计起"
-        title="统计开始日期"
-        placeholder="开始日期"
-        @change="onSearch"
-      />
-      <VantCalendarField
-        v-model="query.end"
-        type="single"
-        label="统计止"
-        title="统计结束日期"
-        placeholder="结束日期"
-        @change="onSearch"
+        v-model="statTimeRange"
+        type="range"
+        label="统计时间"
+        title="统计时间区间"
+        placeholder="开始 ~ 结束"
+        clearable
+        @change="onStatTimeChange"
       />
       <VantSelectField
         v-model="query.sourceChannel"
