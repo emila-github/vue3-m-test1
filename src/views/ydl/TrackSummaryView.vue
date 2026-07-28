@@ -18,5 +18,5 @@ const columns = [
 </script>
 
 <template>
-  <YdlStatBoard title="跟踪统计" :api-fn="getYdlTrackSummary" :columns="columns" />
+  <YdlStatBoard title="跟踪统计" :api-fn="getYdlTrackSummary" :columns="columns" :show-label="true" />
 </template>

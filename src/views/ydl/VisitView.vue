@@ -103,7 +103,12 @@ function summary(item: YdlVisitTrackRow): { label: string; value: string }[] {
 }
 
 // ==================== 详情字段（全部） ====================
-const visitDetailFields: { label: string; key: string; dict?: string; map?: Record<string, string> }[] = [
+const visitDetailFields: {
+  label: string
+  key: string
+  dict?: string
+  map?: Record<string, string>
+}[] = [
   { label: '上级机构', key: 'parentOrg' },
   { label: '保源机构', key: 'createOrg' },
   { label: '客户名称', key: 'customerName' },
@@ -139,13 +144,20 @@ const projectDetailFields: { label: string; key: string }[] = [
   { label: '项目进度', key: 'projectProgress' },
   { label: '建设单位', key: 'projectUnit' },
   { label: '上级单位', key: 'projectParentUnit' },
-  { label: '项目级别', key: 'projectLevel', },
+  { label: '项目级别', key: 'projectLevel' },
 ]
-function detailValue(f: { key: string; dict?: string; map?: Record<string, string> }, item: YdlVisitTrackRow): string {
+function detailValue(
+  f: { key: string; dict?: string; map?: Record<string, string> },
+  item: YdlVisitTrackRow,
+): string {
   const v = (item as any)[f.key]
   if (v == null || v === '') return '-'
   if (f.dict) return dmap(f.dict, v)
-  if (f.key === 'planAmount') return '¥' + Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  if (f.key === 'planAmount')
+    return (
+      '¥' +
+      Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    )
   return String(v)
 }
 
@@ -171,7 +183,13 @@ async function onExport(q: Record<string, any>) {
 
 <template>
   <div class="ydl-detail-page">
-    <van-nav-bar title="拜访明细" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="router.back()" />
+    <van-nav-bar
+      title="拜访明细"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="router.back()"
+    />
 
     <VantList
       :api="api"
@@ -197,6 +215,7 @@ async function onExport(q: Record<string, any>) {
             label-key="title"
             children-key="children"
             select-parent
+            only-selected-label
             label="分支公司"
             title="选择分支公司"
             placeholder="全部机构"
@@ -236,8 +255,8 @@ async function onExport(q: Record<string, any>) {
           <VantSelectField
             v-model="query.isLastRecord"
             :options="lastRecordOptions"
-            label="最后拜访"
-            title="是否最后拜访"
+            label="最后一次拜访"
+            title="是否最后一次拜访"
             placeholder="全部"
           />
         </van-cell-group>
@@ -269,7 +288,12 @@ async function onExport(q: Record<string, any>) {
             :value="detailValue(f, item)"
           />
         </van-cell-group>
-        <van-cell-group v-if="item.projectArea || item.projectContent" inset title="工程项目" class="picc-card">
+        <van-cell-group
+          v-if="item.projectArea || item.projectContent"
+          inset
+          title="工程项目"
+          class="picc-card"
+        >
           <van-cell
             v-for="f in projectDetailFields"
             :key="f.key"

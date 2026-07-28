@@ -72,18 +72,42 @@ onMounted(async () => {
   }
 })
 
+// 统计时间区间（range）→ query.begin / query.end
+function onStatTimeChange(val: string[] | string, q: Record<string, any>) {
+  if (Array.isArray(val) && val.length === 2) {
+    q.begin = val[0]
+    q.end = val[1]
+  } else {
+    q.begin = ''
+    q.end = ''
+  }
+}
+
 function summary(item: YdlPolicySummaryRow): { label: string; value: string }[] {
   return [
     { label: '客户', value: item.customerName },
     { label: '保单号', value: item.policyNo },
     { label: '业务员', value: item.taskUserRealName },
     { label: '续保/新保', value: renewMap[String(item.renewFlag)] || String(item.renewFlag) },
-    { label: '我方净保费', value: '¥' + Number(item.policyFee).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
+    {
+      label: '我方净保费',
+      value:
+        '¥' +
+        Number(item.policyFee).toLocaleString('zh-CN', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+    },
     { label: '起保时间', value: item.bgnDate },
   ]
 }
 
-const policyDetailFields: { label: string; key: string; map?: Record<string, string>; money?: boolean }[] = [
+const policyDetailFields: {
+  label: string
+  key: string
+  map?: Record<string, string>
+  money?: boolean
+}[] = [
   { label: '上级机构', key: 'parentName' },
   { label: '机构名称', key: 'departName' },
   { label: '业务员', key: 'taskUserRealName' },
@@ -97,11 +121,18 @@ const policyDetailFields: { label: string; key: string; map?: Record<string, str
   { label: '被保人', key: 'insuredName' },
   { label: '投/被保一致', key: 'isCustomerMatch', map: matchMap },
 ]
-function detailValue(f: { key: string; map?: Record<string, string>; money?: boolean }, item: YdlPolicySummaryRow): string {
+function detailValue(
+  f: { key: string; map?: Record<string, string>; money?: boolean },
+  item: YdlPolicySummaryRow,
+): string {
   const v = (item as any)[f.key]
   if (v == null || v === '') return '-'
   if (f.map) return f.map[String(v)] ?? String(v)
-  if (f.money) return '¥' + Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  if (f.money)
+    return (
+      '¥' +
+      Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    )
   return String(v)
 }
 
@@ -121,7 +152,13 @@ async function onExport(q: Record<string, any>) {
 
 <template>
   <div class="ydl-detail-page">
-    <van-nav-bar title="签单明细" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="router.back()" />
+    <van-nav-bar
+      title="签单明细"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="router.back()"
+    />
 
     <VantList
       :api="api"
@@ -146,24 +183,20 @@ async function onExport(q: Record<string, any>) {
             label-key="title"
             children-key="children"
             select-parent
+            only-selected-label
             label="分支公司"
             title="选择分支公司"
             placeholder="全部机构"
             clearable
           />
           <VantCalendarField
-            v-model="query.begin"
-            type="single"
-            label="统计起"
-            title="统计开始日期"
-            placeholder="开始日期"
-          />
-          <VantCalendarField
-            v-model="query.end"
-            type="single"
-            label="统计止"
-            title="统计结束日期"
-            placeholder="结束日期"
+            :model-value="query.begin && query.end ? [query.begin, query.end] : []"
+            type="range"
+            label="统计时间"
+            title="统计时间区间"
+            placeholder="开始 ~ 结束"
+            clearable
+            @change="(v) => onStatTimeChange(v, query)"
           />
           <VantSelectField
             v-model="query.labelName"
