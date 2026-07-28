@@ -31,7 +31,40 @@ const api: CrudApi<YdlLhzjVisit, any, any> = {
   remove: (id: number) => deleteYdlLhzj(id),
 }
 
-const initialQuery = reactive({ customerName: '', visitName: '' })
+// 拜访时间默认本周一 ~ 本周日（可清空）
+function fmtDate(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+}
+const now = new Date()
+const weekday = now.getDay() || 7
+const weekMonday = new Date(now)
+weekMonday.setDate(now.getDate() - weekday + 1)
+const weekSunday = new Date(now)
+weekSunday.setDate(now.getDate() - weekday + 7)
+
+const initialQuery = reactive({
+  visitTime_begin: fmtDate(weekMonday),
+  visitTime_end: fmtDate(weekSunday),
+  comzcode: '',
+  comdname: '',
+  visitPosition: '',
+  visitName: '',
+  customerName: '',
+  customerTypeId: '',
+})
+
+// 拜访时间区间（range）→ query.visitTime_begin / visitTime_end
+const visitTimeRange = ref<string[]>([fmtDate(weekMonday), fmtDate(weekSunday)])
+function onVisitTimeChange(query: Record<string, any>, val: string[] | string) {
+  if (Array.isArray(val) && val.length === 2) {
+    query.visitTime_begin = val[0]
+    query.visitTime_end = val[1]
+  } else {
+    query.visitTime_begin = ''
+    query.visitTime_end = ''
+  }
+}
 
 const initialForm = reactive({
   comzcode: '',
@@ -49,27 +82,22 @@ const responseMap = { list: 'records', total: 'total', pageSize: 'size' }
 
 const deptTreeData = ref<DeptNode[]>([])
 const positionOptions = ref<{ text: string; value: string }[]>([])
-const customerTypeOptions = ref<{ text: string; value: string }[]>([])
-
-function flattenCustomer(nodes: any[], prefix = ''): { text: string; value: string }[] {
-  const out: { text: string; value: string }[] = []
-  for (const n of nodes) {
-    out.push({ text: prefix + n.title, value: n.id })
-    if (n.children?.length) out.push(...flattenCustomer(n.children, prefix + n.title + ' / '))
-  }
-  return out
-}
+const comdnameOptions = ref<{ text: string; value: string }[]>([])
+// 客户分类原始树（直接喂给 VantTreeSelectField）
+const customerTypeTreeData = ref<any[]>([])
 
 onMounted(async () => {
   try {
-    const [tree, pos, ct] = await Promise.all([
+    const [tree, pos, ct, comd] = await Promise.all([
       loadDeptTree(),
       loadDictItems('VISIT_POSITION'),
       loadLhzjCustomerType(),
+      loadDictItems('COMDNAME'),
     ])
     deptTreeData.value = tree
     positionOptions.value = pos.map((c) => ({ text: c.text, value: c.value }))
-    customerTypeOptions.value = flattenCustomer(ct)
+    customerTypeTreeData.value = ct
+    comdnameOptions.value = comd.map((c) => ({ text: c.text, value: c.value }))
   } catch {
     /* 下拉加载失败不阻塞 */
   }
@@ -93,8 +121,8 @@ const detailFields = (item: YdlLhzjVisit) => [
     <VantList
       :api="api"
       title="我的领航"
-      permission-prefix="lhzj"
-      :free-actions="['create', 'edit', 'delete', 'view']"
+      permission-prefix="lhVisitInfo"
+      :permission-actions="{ create: 'add' }"
       add-text="添加拜访"
       :initial-query="initialQuery"
       :initial-form="initialForm"
@@ -106,8 +134,56 @@ const detailFields = (item: YdlLhzjVisit) => [
     >
       <template #filters="{ query }">
         <van-cell-group inset class="f-group">
-          <van-field v-model="query.customerName" label="客户名称" placeholder="输入客户名称" input-align="right" />
+          <VantCalendarField
+            v-model="visitTimeRange"
+            type="range"
+            label="拜访时间"
+            title="选择拜访时间"
+            placeholder="本周（可清空）"
+            clearable
+            @change="onVisitTimeChange(query, $event)"
+          />
+          <VantTreeSelectField
+            v-model="query.comzcode"
+            :options="deptTreeData"
+            value-key="orgCode"
+            label-key="title"
+            children-key="children"
+            select-parent
+            label="拜访机构"
+            title="选择拜访机构"
+            placeholder="请选择拜访机构"
+          />
+          <VantSelectField
+            v-model="query.comdname"
+            :options="comdnameOptions"
+            label="地市"
+            title="选择地市"
+            placeholder="请选择地市"
+          />
+          <VantSelectField
+            v-model="query.visitPosition"
+            :options="positionOptions"
+            value-key="value"
+            label-key="text"
+            label="拜访人职务"
+            title="选择职务"
+            placeholder="请选择职务"
+          />
           <van-field v-model="query.visitName" label="拜访人" placeholder="输入拜访人" input-align="right" />
+          <van-field v-model="query.customerName" label="客户名称" placeholder="输入客户名称" input-align="right" />
+          <VantTreeSelectField
+            v-model="query.customerTypeId"
+            :options="customerTypeTreeData"
+            value-key="id"
+            label-key="title"
+            children-key="children"
+            select-parent
+            only-selected-label
+            label="客户分类"
+            title="选择客户分类"
+            placeholder="请选择客户分类"
+          />
         </van-cell-group>
       </template>
 
@@ -149,9 +225,14 @@ const detailFields = (item: YdlLhzjVisit) => [
             placeholder="请选择职务"
           />
           <van-field v-model="form.customerName" label="客户名称" placeholder="请输入客户名称" :rules="[{ required: true, message: '请填写客户名称' }]" />
-          <VantSelectField
+          <VantTreeSelectField
             v-model="form.customerTypeId"
-            :options="customerTypeOptions"
+            :options="customerTypeTreeData"
+            value-key="id"
+            label-key="title"
+            children-key="children"
+            select-parent
+            only-selected-label
             label="客户分类"
             title="选择客户分类"
             placeholder="请选择客户分类"
