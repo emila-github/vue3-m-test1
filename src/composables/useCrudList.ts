@@ -52,6 +52,12 @@ export interface UseCrudListOptions<T, F, Q> {
   permissionPrefix?: string
   /** 自定义权限操作码映射（覆盖默认 create/edit/view/delete 后缀） */
   permissionActions?: Partial<Record<CrudAction, string>>
+  /**
+   * 免权限动作：列出的动作不受权限门禁限制，按钮始终可见（对应 v-permission 的空值恒可见规则）。
+   * 例：freeActions: ['view'] → 详情按钮任何角色都能看，无需 ydl:view 权限码。
+   * 适用于「只读/查看人人可进」或「后端未配置该动作权限」的场景。
+   */
+  freeActions?: CrudAction[]
   /** 是否启用操作日志，默认 false */
   enableLog?: boolean
   /** 列表响应字段映射（适配不同后端字段命名）。
@@ -76,6 +82,8 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
   const finished = ref(false)
   const list = ref<T[]>([])
   const page = ref(1)
+  /** 请求在飞标志：防止 van-list 的 @load 与 @refresh 并发导致同一页请求发两次（新增/编辑后刷新时易触发） */
+  const requesting = ref(false)
 
   // ==================== 查询条件 ====================
   const query = reactive({ ...(options.initialQuery ?? ({} as Q)) }) as Q & Record<string, any>
@@ -91,11 +99,13 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
   // 权限 / 角色变化时触发根组件重渲染，使 v-permission 指令 updated 重新求值
   const permTick = computed(() => `${currentRole.value}|${permissions.value.join(',')}`)
 
-  // 权限码：prefix + action
+  // 权限码：prefix + action；freeActions 中的动作解析为空串（v-permission 对空值恒可见）
+  const freeSet = new Set(options.freeActions ?? [])
   const permCodes = computed<Record<CrudAction, string>>(() => {
     const prefix = options.permissionPrefix ?? ''
     const custom = options.permissionActions ?? {}
     const build = (action: CrudAction) => {
+      if (freeSet.has(action)) return '' // 不需要权限：空码令 v-permission 始终放行
       const suffix = custom[action] ?? action
       return prefix ? `${prefix}:${suffix}` : suffix
     }
@@ -107,9 +117,13 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
     }
   })
 
-  /** 权限判断（支持单个码或码数组，OR 逻辑） */
+  /**
+   * 权限判断（支持单个码或码数组，OR 逻辑）。
+   * 空串表示免权限动作（来自 freeActions），恒放行——与 v-permission 指令对空值恒可见一致。
+   */
   function hasPerm(...codes: (string | string[])[]): boolean {
     const flat = codes.flat()
+    if (flat.includes('')) return true
     return hasAny(...flat)
   }
 
@@ -208,6 +222,9 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
 
   // ==================== 列表加载 ====================
   async function fetchList(reset = false) {
+    // 防重入：同一时刻只允许一个列表请求在飞，避免 load 与 refresh 并发造成重复请求
+    if (requesting.value) return
+    requesting.value = true
     try {
       // 请求分页参数名映射（适配后端入参命名，如 current/size）
       const pageKey = options.requestMap?.page ?? 'page'
@@ -258,14 +275,18 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
       }
     } catch {
       finished.value = true
+    } finally {
+      requesting.value = false
     }
   }
 
   async function onRefresh() {
     refreshing.value = true
+    loading.value = true // 阻止 van-list 在刷新期间并发触发 @load，避免重复请求
     page.value = 1
     finished.value = false
     await fetchList(true)
+    loading.value = false
     refreshing.value = false
   }
 
@@ -279,7 +300,10 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
     page.value = 1
     finished.value = false
     list.value = []
-    fetchList(true)
+    loading.value = true // 阻止 van-list 在搜索期间并发触发 @load
+    fetchList(true).finally(() => {
+      loading.value = false
+    })
   }
 
   // ==================== 操作日志 ====================

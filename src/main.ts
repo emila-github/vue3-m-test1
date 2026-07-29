@@ -13,6 +13,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { initDevToken } from './api/core/token'
 import {
   permissionDirective,
   permissionAllDirective,
@@ -20,6 +21,10 @@ import {
   menuDirective,
   menuAllDirective,
 } from './directives/permission'
+
+// 开发期预置 token（VITE_DEV_TOKEN）：后端不可用时跳过登录，后续请求自动带 token。
+// 需在挂载前执行，确保首屏发起的请求即可携带。生产环境不配置该变量则为空操作。
+initDevToken()
 
 const app = createApp(App)
 

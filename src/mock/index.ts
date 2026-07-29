@@ -20,8 +20,6 @@ import demoClaimRoutes from './demo-claim'
 import demoCustomerRoutes from './demo-customer'
 import demoMapRoutes from './demo-map'
 import loginRoutes from './login'
-import ydlRenewalRoutes from './ydl-renewal'
-import siteAuthRoutes from './ydl-site-auth'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -45,9 +43,6 @@ const allRoutes: MockRoute[] = [
   ...demoCustomerRoutes,
   ...demoMapRoutes,
   ...loginRoutes,
-  ...ydlInsSourceRoutes,
-  ...ydlRenewalRoutes,
-  ...siteAuthRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
@@ -136,37 +131,6 @@ export function mockPlugin(): Plugin {
         }
       })
 
-      // ===== ydl 模块（JeecgBoot 风格）：对应 ydlClient 的 baseURL /ydl-api =====
-      server.middlewares.use('/ydl-api', async (req, res, next) => {
-        try {
-          console.log('[mock] 收到请求(ydl): %s %s', req.method, req.url)
-          const matched = await handleMock(req, res)
-          if (matched) {
-            console.log('[mock] ✅ 已拦截(ydl) %s %s', req.method, req.url)
-          } else {
-            console.log('[mock] ❌ 未匹配(ydl) %s %s，放行', req.method, req.url)
-            next()
-          }
-        } catch {
-          next()
-        }
-      })
-
-      // ===== 站点（旧站 / 福建源动力平台）模块：对应 siteClient 的 baseURL /site-api =====
-      server.middlewares.use('/site-api', async (req, res, next) => {
-        try {
-          console.log('[mock] 收到请求(site): %s %s', req.method, req.url)
-          const matched = await handleMock(req, res)
-          if (matched) {
-            console.log('[mock] ✅ 已拦截(site) %s %s', req.method, req.url)
-          } else {
-            console.log('[mock] ❌ 未匹配(site) %s %s，放行', req.method, req.url)
-            next()
-          }
-        } catch {
-          next()
-        }
-      })
     },
   }
 }

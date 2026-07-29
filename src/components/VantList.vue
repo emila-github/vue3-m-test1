@@ -1,49 +1,175 @@
 <script setup lang="ts">
 /**
- * VantList —— 通用 Vant4 列表控件（带查询 / 更多查询 / 增删改 / 扩展操作 / 权限控制）
- *
+ * VantList —— 通用 Vant4 列表控件（查询 / 更多查询 / 增删改 / 扩展操作 / 权限控制）
+ * ==================================================================
  * 内部复用 useCrudList 通用 Hook，外覆一层「搜索 + 更多查询 + 列表 + 操作按钮 +
- * 新增/编辑弹层 + 详情弹层 + 删除确认 + 更多(ActionSheet) + 权限门禁」的通用 UI，
- * 业务页只需通过 props 配置 api / 筛选 / 操作，并通过插槽提供列表行与表单内容即可。
+ * 新增/编辑弹层 + 详情弹层 + 删除确认 + 更多(ActionSheet) + 权限门禁」的通用 UI。
+ * 业务页只需配置 props（api / 筛选 / 操作），并通过插槽提供列表行与表单内容即可。
  *
- * Props:
- *   api            — CRUD 接口集合（list 必填，create/update/remove 缺省则对应功能不可用）
- *   permissionPrefix / permissionActions — 权限前缀与自定义操作码
- *   title          — 顶部导航栏标题（不传则不渲染导航栏）
- *   searchPlaceholder / showSearch / showAdd — 搜索框与悬浮新增按钮
- *   keywordKey      — 搜索关键字发送到后端的参数名，默认 'keyword'（可改为 q / search 等）
- *   filters        — 筛选配置数组，统一进入「更多查询」面板
- *   actions        — 自定义扩展操作（ActionSheet 内），可带 perm 进行权限门禁
- *   initialQuery / pageSize / enableLog
- *   rowPermission   — 行级自定义权限：在角色权限(v-permission)之上，再按 item 自身
- *                     标记决定 详情/编辑/删除 是否可用。返回对象中**未指定的项**沿用角色
- *                     权限结果；指定项与角色权限做「与」运算（两者皆通过才显示）。
- *                     函数签名： (item) => ({ view?, edit?, delete? })
- *                     例：仅当 item.status !== '已续保' 才允许编辑；标记为不可删时隐藏删除
- *                       rowPermission = (item) => ({
- *                         edit:   item.status !== '已续保',
- *                         delete: item.editable !== false,
- *                         view:   true,   // 不指定也可，缺省沿用角色权限
- *                       })
+ * ------------------------------------------------------------------
+ * 一、快速上手（最小可用）
+ * ------------------------------------------------------------------
+ *   <VantList :api="api" title="我的保源">
+ *     <template #item="{ item }">{{ item.name }}</template>
+ *     <template #form="{ form }">
+ *       <van-field v-model="form.name" label="名称" />
+ *     </template>
+ *   </VantList>
+ * 说明：
+ *   - api.list 必填；api.create / update / remove 缺省则该功能（新增/编辑/删除）不可用。
+ *   - 必须提供 #item 插槽渲染列表行；提供 #form 插槽才会启用内置新增/编辑弹层。
  *
- * Slots:
- *   #item(item,index)  — 列表行内容（必填）
- *   #filters(query)    — 「更多查询」面板内的自定义筛选字段（绑定到 query）
- *   #form(form,isEdit) — 新增/编辑弹层内的表单字段
- *   #detail(item)      — 详情弹层内容
- *   #row-actions(item) — 行内额外操作按钮
+ * ------------------------------------------------------------------
+ * 二、api 接口集合（CrudApi<T, F, Q>）约定
+ * ------------------------------------------------------------------
+ *   list:   (params: Q & 分页) => Promise<PageResult<T> | T[] | Record<string,any>>
+ *           · 标准分页：{ list, total, page, pageSize }
+ *           · 不分页：T[]（一次返回全部，自动 finished）
+ *           · 自定义字段：配合 responseMap 指定 list/total 等字段名
+ *   create: (data: F)      => Promise<any>   新增（悬浮 FAB 触发）
+ *   update: (data: F)      => Promise<any>   编辑（表单自带 id，与本项目 car 模块一致）
+ *   remove: (id: number)   => Promise<any>   删除（缺省则无删除能力）
+ *   detail: (id: number)   => Promise<T>     可选，点击详情时拉完整信息
  *
- * Events: create / edit(item) / detail(item) / action({key,item})
+ * ------------------------------------------------------------------
+ * 三、Props 全量
+ * ------------------------------------------------------------------
+ * 1) 数据与分页
+ *   api             CrudApi              必填
+ *   rowKey          string              列表项主键字段，默认 'id'
+ *   initialQuery    Record<string,any>  初始查询条件（reset 可复位），默认 {}
+ *   initialForm     Record<string,any>  新增表单初始值（openCreate 时重置），默认 {}
+ *   pageSize        number              每页条数，默认 10
+ *   responseMap     {list?,total?,page?,pageSize?}  响应字段映射（适配后端命名）
+ *                  例：后端返回 { records, totalCount } → { list:'records', total:'totalCount' }
+ *   requestMap      {page?,pageSize?}   请求分页参数名映射
+ *                  例：后端要求 current/size → { page:'current', pageSize:'size' }
+ *   enableLog       boolean             开启操作日志面板，默认 false
+ *   skeletonCount   number              骨架屏条目数（>0 启用），默认 8
  *
- * 使用示例（行级权限）：
+ * 2) 顶部与搜索
+ *   title            string             导航栏标题，不传则不渲染导航栏
+ *   showSearch       boolean            是否显示搜索框，默认 true
+ *   searchPlaceholder string            搜索框占位，默认 '搜索'
+ *   keywordKey       string             搜索关键字发往后端的参数名，默认 'keyword'
+ *
+ * 3) 新增 / 编辑 / 详情 / 删除 按钮门控
+ *   showAdd          boolean            是否显示悬浮新增按钮，默认 true（还需 api.create 存在）
+ *   addText          string             新增按钮文案，默认 '新增'
+ *   showDetail       boolean            是否显示详情，默认 true（仍需 view 权限码）
+ *   showEdit         boolean            是否显示编辑，默认 true（仍需 edit 权限码）
+ *   showDelete       boolean            是否显示删除，默认 true（还需 api.remove + delete 权限码）
+ *   detailText/editText/deleteText string 各按钮文案，默认 '详情'/'编辑'/'删除'
+ *   showMore         boolean            是否显示行内「更多」按钮（聚合详情/编辑/删除+自定义 actions），默认 false
+ *   moreFilterTitle  string             「更多查询」面板标题，默认 '更多查询'
+ *   finishedText     string             列表触底完成文案，默认 '没有更多了'
+ *
+ * 4) 筛选
+ *   filters          ListFilter[]       配置式筛选（select/radio/date/text/number），进入「更多查询」面板
+ *                   ListFilter = { key, label, type, options?, min?, max?, placeholder? }
+ *   （另有 #filters 插槽：自定义筛选字段，绑定到同一 query 对象，与 filters 并存）
+ *
+ * 5) 扩展操作
+ *   actions          ListAction[]       自定义操作（点「更多」后在 ActionSheet 内出现）
+ *                   ListAction = { key, name, icon?, danger?, perm? }
+ *                   · perm 缺省 → 始终可见（不需要权限）
+ *                   · perm 为码或码数组 → 走 v-permission 门禁（OR 逻辑）
+ *
+ * 6) 权限（详见第四节）
+ *   permissionPrefix  string            权限前缀，如 'ydl' → ydl:create / ydl:edit ...
+ *   permissionActions Partial<Record<CrudAction,string>>  覆盖各动作后缀（可含冒号拼自定义码）
+ *   freeActions       CrudAction[]      免权限动作（create/edit/view/delete），列出者不受门禁、始终可见
+ *   rowPermission      (item)=>({view?,edit?,delete?})   行级自定义权限（与角色权限做「与」运算）
+ *
+ * 7) 提交校验
+ *   beforeSubmit      (form, isEdit)=>boolean|Promise<boolean>
+ *                  提交前业务强校验钩子，独立于 van-field 的 :rules；返回 false / 抛错则阻断提交
+ *
+ * ------------------------------------------------------------------
+ * 四、权限控制（三套机制 + 一套门禁）
+ * ------------------------------------------------------------------
+ * 【权限码生成规则】 在 useCrudList 内：
+ *   suffix = permissionActions[action] ?? action
+ *   有 prefix → `${prefix}:${suffix}`；无 prefix → 直接用 suffix
+ *   若 action ∈ freeActions → 权限码解析为空串 ''（v-permission 对空值恒可见）
+ *
+ * 1) permissionPrefix + permissionActions（标准 / 自定义码）
+ *    · 标准：permission-prefix="ydl" → ydl:create / ydl:edit / ydl:view / ydl:delete
+ *    · 自定义后缀：:permission-actions="{ create:'insSource:add' }"
+ *        → ydl:insSource:add（后缀可含冒号，拼任意层级码，不局限于 prefix:action）
+ *    · 完全自定义（不带前缀）：permission-prefix 留空 + :permission-actions 写全码
+ *
+ * 2) freeActions（不需要权限，始终可见）
+ *    :free-actions="['view']"  → 详情按钮人人可看；可任意组合
+ *    freeActions 优先于 permissionActions/permissionPrefix：进 freeActions 的动作码为空，恒放行
+ *
+ * 3) rowPermission（行级权限，与角色权限「与」运算）
+ *    在角色权限(v-permission) 之上，再按 item 自身标记决定 详情/编辑/删除 是否可用。
+ *    返回对象中未指定的项 → 沿用角色权限结果；指定项 → 与角色权限「且」关系（两者皆通过才显示）。
+ *      :row-permission="(item) => ({
+ *        edit:   item.status !== '已续保',   // 已续保不可编辑
+ *        delete: item.editable !== false,    // 标记不可删则隐藏
+ *        // view 不指定 → 沿用角色权限
+ *      })"
+ *
+ * 4) actions[].perm（自定义扩展操作的门禁）
+ *    perm 缺省 → 始终可见；perm 为码/码数组 → v-permission 门禁（OR 逻辑）
+ *
+ * 注：v-permission 指令家族（同文件 directives/permission.ts）
+ *    v-permission     拥有任意一个即可见（OR）
+ *    v-permission-all 必须拥有全部才可见（AND）
+ *    v-permission-none 拥有任意一个就隐藏
+ *    值为空 / undefined / '' → 不限制，始终可见
+ *
+ * ------------------------------------------------------------------
+ * 五、Slots
+ * ------------------------------------------------------------------
+ *   #item(item, index)        列表行内容（必填）
+ *   #filters(query)           「更多查询」面板内自定义筛选字段（双向绑定 query）
+ *   #form(form, isEdit)       新增/编辑弹层内表单字段（提供后才启用内置弹层）
+ *   #detail(item)             详情弹层内容
+ *   #row-actions(item)        行内额外操作按钮（出现在详情/编辑/删除右侧）
+ *   #skeleton                 自定义骨架屏（否则用默认 van-skeleton 卡片）
+ *
+ * ------------------------------------------------------------------
+ * 六、Events
+ * ------------------------------------------------------------------
+ *   @create            点击悬浮新增按钮（已由内部 openCreate 处理弹层，可额外监听做副作用）
+ *   @edit(item)        点击行内编辑（已由内部 openEdit 处理弹层）
+ *   @detail(item)      点击行内详情（已由内部 openDetail 处理弹层）
+ *   @action({key,item}) 点击自定义扩展操作（actions 中定义的 key）
+ *
+ * ------------------------------------------------------------------
+ * 七、暴露方法（ref 调用）
+ * ------------------------------------------------------------------
+ *   refresh()    重新拉取第一页列表（新增/编辑/删除后自动调用，亦可手动触发）
+ *   openCreate() 命令式打开新增弹层
+ *   openEdit()   命令式打开编辑弹层
+ *   例：const listRef = ref(); listRef.value?.refresh()
+ *
+ * ------------------------------------------------------------------
+ * 八、完整示例
+ * ------------------------------------------------------------------
  *   <VantList
+ *     ref="listRef"
  *     :api="api"
- *     permission-prefix="renewal"
- *     :row-permission="(item) => ({
- *       edit:   item.status !== '已续保',
- *       delete: item.editable !== false,
- *     })"
- *   />
+ *     title="我的保源"
+ *     permission-prefix="ydl"
+ *     :permission-actions="{ create:'insSource:add', edit:'insSource:edit', view:'insSource:view' }"
+ *     :free-actions="['view']"
+ *     :row-permission="(item) => ({ edit: item.status !== '已续保' })"
+ *     :actions="[{ key:'audit', name:'审核', icon:'certificate', perm:'ydl:audit' }]"
+ *     :filters="[{ key:'type', label:'类型', type:'select', options:[{text:'个人',value:1},{text:'企业',value:2}] }]"
+ *     :before-submit="(f) => !!f.name"
+ *     :initial-query="initialQuery"
+ *     :initial-form="initialForm"
+ *     :response-map="{ list:'records', total:'total' }"
+ *     @action="onAction"
+ *   >
+ *     <template #item="{ item }"><div>{{ item.name }}</div></template>
+ *     <template #form="{ form }"><van-field v-model="form.name" label="名称" /></template>
+ *     <template #detail="{ item }"><van-cell :title="item.name" /></template>
+ *   </VantList>
  */
 import { ref, computed, nextTick, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
@@ -83,6 +209,11 @@ const props = withDefaults(
     title?: string
     permissionPrefix?: string
     permissionActions?: Partial<Record<CrudAction, string>>
+    /**
+     * 免权限动作：列出的内置动作（create/edit/view/delete）不受权限门禁限制，始终可见。
+     * 例：freeActions="['view']" → 详情按钮人人可看。依赖 useCrudList 的 freeActions 支持。
+     */
+    freeActions?: CrudAction[]
     searchPlaceholder?: string
     /** 搜索关键字发送到后端的参数名，默认 'keyword'（可改为 q / search 等） */
     keywordKey?: string
@@ -143,11 +274,19 @@ const props = withDefaults(
      * 用于「投保人未填写 / 未核验」等业务强约束，避免依赖 Vant 字段注册而漏校验。
      */
     beforeSubmit?: (form: any, isEdit: boolean) => boolean | Promise<boolean>
+    /**
+     * 搜索前自定义校验钩子（业务页强校验门禁，独立于筛选面板）。
+     * 入参为当前 query；返回 false / 抛出 则阻断搜索并触发 @search-blocked 事件。
+     * 用于「统计时间必选」等业务强约束。仅拦截用户主动触发的搜索
+     * （顶部搜索栏 + 更多查询「应用筛选」），不影响进入页面时的初始列表加载。
+     */
+    beforeSearch?: (query: any) => boolean | Promise<boolean>
   }>(),
   {
     rowKey: 'id',
     title: '',
     permissionPrefix: '',
+    freeActions: () => [],
     searchPlaceholder: '搜索',
     keywordKey: 'keyword',
     showSearch: true,
@@ -179,6 +318,7 @@ const emit = defineEmits<{
   edit: [item: any]
   detail: [item: any]
   action: [payload: { key: string; item: any }]
+  searchBlocked: []
 }>()
 
 const router = useRouter()
@@ -193,6 +333,7 @@ const crud = useCrudList<any, any, any>({
   pageSize: props.pageSize,
   permissionPrefix: props.permissionPrefix,
   permissionActions: props.permissionActions,
+  freeActions: props.freeActions,
   enableLog: props.enableLog,
   responseMap: props.responseMap,
   requestMap: props.requestMap,
@@ -283,8 +424,32 @@ function filterDisplay(f: ListFilter): string {
 }
 
 function onMoreFilterApply() {
-  showMoreFilter.value = false
+  // 仅当搜索通过（beforeSearch 未拦截）才关闭面板；被拦截时保持打开，便于用户补选
+  runSearch().then((allowed) => {
+    if (allowed) showMoreFilter.value = false
+  })
+}
+
+/**
+ * 受 beforeSearch 钩子门禁的搜索入口（顶部搜索栏 + 更多查询「应用筛选」共用）。
+ * 返回 false / 抛错 → 仅触发 @search-blocked，不发起查询，并返回 false；否则正常 onSearch 并返回 true。
+ * 注意：进入页面的初始加载（van-list 的 @load）不经过此处，确保首屏正常且避免无限加载。
+ */
+async function runSearch(): Promise<boolean> {
+  if (props.beforeSearch) {
+    try {
+      const ok = await props.beforeSearch(query)
+      if (ok === false) {
+        emit('searchBlocked')
+        return false
+      }
+    } catch {
+      emit('searchBlocked')
+      return false
+    }
+  }
   onSearch()
+  return true
 }
 function onMoreFilterReset() {
   Object.assign(query, props.initialQuery)
@@ -295,13 +460,18 @@ function onMoreFilterReset() {
 const showActionSheet = ref(false)
 const sheetItem = ref<any>(null)
 const sheetActions = computed(() => {
-  const base: { name: string; value: string; perm?: string | string[]; icon: string }[] = []
+  const base: { name: string; value: string; perm: string | string[]; icon: string }[] = []
   if (props.showDetail)
     base.push({ name: props.detailText, value: 'view', perm: permCodes.value.view, icon: 'eye-o' })
   if (props.showEdit)
     base.push({ name: props.editText, value: 'edit', perm: permCodes.value.edit, icon: 'edit' })
   if (props.showDelete)
-    base.push({ name: props.deleteText, value: 'delete', perm: permCodes.value.delete, icon: 'delete-o' })
+    base.push({
+      name: props.deleteText,
+      value: 'delete',
+      perm: permCodes.value.delete,
+      icon: 'delete-o',
+    })
   const baseFiltered = base.filter((a) => hasPerm(a.perm))
   const custom = props.actions
     .filter((a) => !a.perm || hasPerm(a.perm))
@@ -402,7 +572,6 @@ defineExpose({
   openCreate,
   openEdit,
 })
-
 </script>
 
 <template>
@@ -426,11 +595,11 @@ defineExpose({
           :placeholder="searchPlaceholder"
           shape="round"
           show-action
-          @search="onSearch"
-          @clear="onSearch"
+          @search="runSearch"
+          @clear="runSearch"
         >
           <template #action>
-            <span class="vl-search-action" @click="onSearch">搜索</span>
+            <span class="vl-search-action" @click="runSearch">搜索</span>
           </template>
         </van-search>
       </div>

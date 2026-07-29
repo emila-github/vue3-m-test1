@@ -97,14 +97,25 @@ export function loginByWecom(code?: string) {
   return post<LoginResult>('/login/wecom', { code })
 }
 
-/** 微信扫码授权地址（真实或演示降级由后端决定；demo=true 强制演示降级） */
-export function getWechatAuthorizeUrl(demo = false) {
-  return get<{ url: string; real: boolean }>(`/login/wechat/authorize${demo ? '?demo=1' : ''}`)
+/**
+ * 微信扫码授权地址（真实或演示降级由后端决定；demo=true 强制演示降级）
+ * @param returnUrl 登录页当前地址，由后端写入 state 带回，解决跨域回跳问题
+ */
+export function getWechatAuthorizeUrl(demo = false, returnUrl = '') {
+  const q = new URLSearchParams()
+  if (demo) q.set('demo', '1')
+  if (returnUrl) q.set('return', returnUrl)
+  const qs = q.toString()
+  return get<{ url: string; real: boolean }>(`/login/wechat/authorize${qs ? `?${qs}` : ''}`)
 }
 
 /** 企业微信扫码授权地址 */
-export function getWecomAuthorizeUrl(demo = false) {
-  return get<{ url: string; real: boolean }>(`/login/wecom/authorize${demo ? '?demo=1' : ''}`)
+export function getWecomAuthorizeUrl(demo = false, returnUrl = '') {
+  const q = new URLSearchParams()
+  if (demo) q.set('demo', '1')
+  if (returnUrl) q.set('return', returnUrl)
+  const qs = q.toString()
+  return get<{ url: string; real: boolean }>(`/login/wecom/authorize${qs ? `?${qs}` : ''}`)
 }
 
 /** 退出登录（通知后端销毁会话；前端仍以清除本地 token 为准） */

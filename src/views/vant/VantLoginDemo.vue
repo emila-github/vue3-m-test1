@@ -34,7 +34,7 @@ const enabledMethods = computed<LoginMethod[]>(() => allMethods.filter((m) => en
 
 const smsCountdown = ref(60)
 /** 演示模式：本地预览用，强制降级返回模拟登录信息（无需 https / 可信域名） */
-const demoMode = ref(true)
+const demoMode = ref(false)
 /** 是否展示「忘记密码」入口（可配置，默认开启） */
 const forgotPassword = ref(true)
 
@@ -42,9 +42,7 @@ const result = ref<LoginResult | null>(null)
 const showRaw = ref(false)
 
 /** 是否真实 OAuth 返回（非演示降级）。后端在 raw 里带有 _real 标记 */
-const isReal = computed(
-  () => !!result.value?.userInfo.raw && (result.value.userInfo.raw as any)._real === true,
-)
+const isReal = computed(() => result.value?.userInfo.raw?._real === true)
 
 /** 登录信息卡片展示的字段：仅展示有值的字段 */
 const infoRows = computed<{ label: string; value: string }[]>(() => {

@@ -101,4 +101,52 @@ describe('VantTreeSelectField', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
     expect(wrapper.emitted('change')?.[0]).toEqual(['', []])
   })
+
+  it('displayText 默认显示完整路径（onlySelectedLabel=false）', () => {
+    const wrapper = shallowMount(VantTreeSelectField, {
+      global: { stubs },
+      props: { options: tree, modelValue: 'hz' },
+    })
+    expect((wrapper.vm as any).displayText).toBe('浙江 / 杭州')
+  })
+
+  it('onlySelectedLabel=true 时 van-field 只显示目标（末级）节点文本', () => {
+    const wrapper = shallowMount(VantTreeSelectField, {
+      global: { stubs },
+      props: { options: tree, modelValue: 'hz', onlySelectedLabel: true },
+    })
+    expect((wrapper.vm as any).displayText).toBe('杭州')
+  })
+
+  it('onlySelectedLabel 不影响 change 事件的完整路径', () => {
+    const wrapper = shallowMount(VantTreeSelectField, {
+      global: { stubs },
+      props: { options: tree, modelValue: 'hz', onlySelectedLabel: true },
+    })
+    ;(wrapper.vm as any).onFinish({ value: 'hz', selectedOptions: [] })
+    const path = wrapper.emitted('change')?.[0]?.[1] as any[]
+    expect(path.map((n: any) => n.text)).toEqual(['浙江', '杭州'])
+  })
+
+  it('children 为 null 或 [] 时归一化为叶子（不渲染下一级）', () => {
+    const treeWithEmpty = [
+      { text: 'A', value: 'a', children: null },
+      { text: 'B', value: 'b', children: [] },
+      {
+        text: 'C',
+        value: 'c',
+        children: [{ text: 'C1', value: 'c1', children: null }],
+      },
+    ]
+    const wrapper = shallowMount(VantTreeSelectField, {
+      global: { stubs },
+      props: { options: treeWithEmpty },
+    })
+    const out = (wrapper.vm as any).processedOptions
+    expect(out[0].children).toBeUndefined()
+    expect(out[0].text).toBe('A')
+    expect(out[1].children).toBeUndefined()
+    expect(out[2].children[0].children).toBeUndefined()
+    expect(out[2].children[0].text).toBe('C1')
+  })
 })

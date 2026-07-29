@@ -75,10 +75,7 @@ export function useSmsLogin(core: LoginCore, countdownSeconds: number) {
       core.toast('请输入 6 位验证码')
       return
     }
-    await core.doLogin(
-      () => loginBySms(smsForm.value.phone, smsForm.value.code),
-      'sms',
-    )
+    await core.doLogin(() => loginBySms(smsForm.value.phone, smsForm.value.code), 'sms')
   }
 
   return {

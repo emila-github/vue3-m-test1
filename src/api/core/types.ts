@@ -48,8 +48,16 @@ export interface ClientOptions {
 /** 一个 API 客户端对外暴露的方法集合 */
 export interface ApiClient {
   instance: AxiosInstance
-  get: <T = any>(url: string, params?: Record<string, any>, config?: AxiosRequestConfig) => Promise<T>
-  post: <T = any>(url: string, data?: Record<string, any>, config?: AxiosRequestConfig) => Promise<T>
+  get: <T = any>(
+    url: string,
+    params?: Record<string, any>,
+    config?: AxiosRequestConfig,
+  ) => Promise<T>
+  post: <T = any>(
+    url: string,
+    data?: Record<string, any>,
+    config?: AxiosRequestConfig,
+  ) => Promise<T>
   put: <T = any>(url: string, data?: Record<string, any>, config?: AxiosRequestConfig) => Promise<T>
   del: <T = any>(url: string, config?: AxiosRequestConfig) => Promise<T>
   /** 分页请求，自动按 pagination adapter 转换出入参，返回通用 PageResult<T> */

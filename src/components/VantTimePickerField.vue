@@ -7,18 +7,20 @@
  *   - 'time'       时分选择，返回 "HH:mm"
  *   - 'date'       日期选择，返回 format 格式化字符串（默认 YYYY-MM-DD）
  *   - 'year-month' 年月，返回默认 YYYY-MM
+ *   - 'datetime'   日期 + 时分选择，返回 "YYYY-MM-DD HH:mm:ss"
  *
  * 用法：
  *   <VantTimePickerField v-model="form.startTime" type="time" label="起保时间" />
  *   <VantTimePickerField v-model="day" type="date" label="投保日期" />
  *   <VantTimePickerField v-model="ym" type="year-month" label="账期" />
+ *   <VantTimePickerField v-model="ts" type="datetime" label="拜访时间" />
  *
  * 注：Vant 4.9 已将原 van-datetime-picker 拆分为 van-time-picker 与 van-date-picker，
  *     本组件对内自动选择对应底层组件，对外仍保持统一的字符串 v-model。
  */
 import { ref, computed } from 'vue'
 
-export type TimePickerType = 'time' | 'date' | 'year-month'
+export type TimePickerType = 'time' | 'date' | 'year-month' | 'datetime'
 
 const props = withDefaults(
   defineProps<{
@@ -81,15 +83,19 @@ const emit = defineEmits<{
 }>()
 
 const show = ref(false)
-// van-time-picker / van-date-picker 的 v-model 均为 string[]（如 ['09','30'] / ['2026','07','10']）
+// van-date-picker 的 v-model（日期部分）：['2026','07','10']
 const pickerValue = ref<string[]>([])
+// van-time-picker 的 v-model（时间部分）：['09','30']
+const timeValue = ref<string[]>([])
 
 const isTime = computed(() => props.type === 'time')
+const isDateTime = computed(() => props.type === 'datetime')
 
 const defaultFormatMap: Record<TimePickerType, string> = {
   time: 'HH:mm',
   date: 'YYYY-MM-DD',
   'year-month': 'YYYY-MM',
+  datetime: 'YYYY-MM-DD HH:mm:ss',
 }
 const outFormat = computed(() => props.format || defaultFormatMap[props.type])
 
@@ -109,6 +115,7 @@ function formatDate(d: Date, fmt: string): string {
     .replace(/DD/g, pad(d.getDate()))
     .replace(/HH/g, pad(d.getHours()))
     .replace(/mm/g, pad(d.getMinutes()))
+    .replace(/ss/g, pad(d.getSeconds()))
 }
 
 const displayText = computed(() => (props.modelValue ? props.modelValue : ''))
@@ -118,7 +125,13 @@ const showClear = computed(() => props.clearable && !!props.modelValue)
 function open() {
   if (props.disabled || props.readonly) return
   if (isTime.value) {
-    pickerValue.value = props.modelValue ? props.modelValue.split(':') : ['00', '00']
+    timeValue.value = props.modelValue ? props.modelValue.split(':') : ['00', '00']
+  } else if (isDateTime.value) {
+    const parts = props.modelValue ? props.modelValue.split(' ') : []
+    const d = parts[0] ? parts[0].split('-') : ['2026', '01', '01']
+    const t = parts[1] ? parts[1].split(':') : ['00', '00']
+    pickerValue.value = d.slice(0, 3).length === 3 ? d.slice(0, 3) : ['2026', '01', '01']
+    timeValue.value = t.slice(0, 2).length === 2 ? t.slice(0, 2) : ['00', '00']
   } else {
     const arr = props.modelValue ? props.modelValue.split('-') : null
     if (props.type === 'year-month') {
@@ -130,21 +143,33 @@ function open() {
   show.value = true
 }
 
-function onConfirm(payload: any) {
-  // van-time-picker / van-date-picker 的 confirm 事件载荷为对象 { selectedValues, selectedOptions, selectedIndexes }
-  const val: string[] = Array.isArray(payload) ? payload : (payload?.selectedValues ?? [])
-  let out = ''
-  if (isTime.value) {
-    out = `${pad(val[0] ?? 0)}:${pad(val[1] ?? 0)}`
-  } else {
-    const y = Number(val[0])
-    const m = Number(val[1])
-    const d = props.type === 'year-month' ? 1 : Number(val[2] ?? 1)
-    out = formatDate(new Date(y, m - 1, d), outFormat.value)
-  }
+function emitValue(out: string) {
   emit('update:modelValue', out)
   emit('change', out)
   show.value = false
+}
+
+function onConfirm(payload: any) {
+  // van-time-picker / van-date-picker 的 confirm 事件载荷为对象 { selectedValues, selectedOptions, selectedIndexes }
+  const val: string[] = Array.isArray(payload) ? payload : (payload?.selectedValues ?? [])
+  if (isTime.value) {
+    emitValue(`${pad(val[0] ?? 0)}:${pad(val[1] ?? 0)}`)
+    return
+  }
+  const y = Number(val[0])
+  const m = Number(val[1])
+  const d = props.type === 'year-month' ? 1 : Number(val[2] ?? 1)
+  emitValue(formatDate(new Date(y, m - 1, d), outFormat.value))
+}
+
+// datetime：日期 + 时间两个选择器组合确认
+function onDateTimeConfirm() {
+  const y = Number(pickerValue.value[0] ?? 2026)
+  const m = Number(pickerValue.value[1] ?? 1)
+  const d = Number(pickerValue.value[2] ?? 1)
+  const hh = Number(timeValue.value[0] ?? 0)
+  const mm = Number(timeValue.value[1] ?? 0)
+  emitValue(formatDate(new Date(y, m - 1, d, hh, mm), outFormat.value))
 }
 
 function onClear() {
@@ -176,7 +201,7 @@ function onClear() {
   <van-popup v-model:show="show" position="bottom" round>
     <van-time-picker
       v-if="isTime"
-      v-model="pickerValue"
+      v-model="timeValue"
       :title="title"
       :min-hour="minHour"
       :max-hour="maxHour"
@@ -186,6 +211,28 @@ function onClear() {
       @confirm="onConfirm"
       @cancel="show = false"
     />
+    <van-picker-group
+      v-else-if="isDateTime"
+      :tabs="['选择日期', '选择时间']"
+      :title="title"
+      @confirm="onDateTimeConfirm"
+      @cancel="show = false"
+    >
+      <van-date-picker
+        v-model="pickerValue"
+        :columns-type="['year', 'month', 'day']"
+        :min-date="minDate"
+        :max-date="maxDate"
+      />
+      <van-time-picker
+        v-model="timeValue"
+        :columns-type="['hour', 'minute']"
+        :min-hour="minHour"
+        :max-hour="maxHour"
+        :min-minute="minMinute"
+        :max-minute="maxMinute"
+      />
+    </van-picker-group>
     <van-date-picker
       v-else
       v-model="pickerValue"

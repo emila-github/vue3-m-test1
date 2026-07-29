@@ -8,14 +8,23 @@ import { usePermission } from '@/composables/usePermission'
 
 // ==================== 手写路由（业务页接入方式） ====================
 const manualRoutes = [
-  // ====== 模块总入口：业务模块选择菜单（首页）======
+  // ====== 通用：模块总入口（业务模块选择菜单） + 关于 ======
   {
     path: '/',
     name: 'modules',
     component: () => import('../views/HomeView.vue'),
     meta: { title: '业务模块' },
   },
+  {
+    path: '/about',
+    name: 'about',
+    // route level code-splitting
+    component: () => import('../views/AboutView.vue'),
+  },
+
+  // ============================================================
   // ====== vant 模块：底部 tabbar（首页 / 我的）包裹 vant 子目录页 ======
+  // ============================================================
   {
     path: '/vant',
     component: () => import('../views/vant/MainLayout.vue'),
@@ -36,33 +45,7 @@ const manualRoutes = [
       },
     ],
   },
-  // ====== ydl 模块：子目录模块示例（福建源动力平台）======
-  {
-    path: '/ydl',
-    component: () => import('../views/ydl/MainLayout.vue'),
-    children: [
-      { path: '', name: 'ydl-home', component: () => import('../views/ydl/HomeView.vue') },
-      {
-        path: 'mine',
-        name: 'ydl-mine',
-        component: () => import('../views/ydl/MineView.vue'),
-        meta: { title: '我的' },
-      },
-    ],
-  },
-  // ====== ydl 模块：VantList 综合示例（ydl 数据格式）======
-  {
-    path: '/ydl/ydl-list-demo',
-    name: 'ydl-list-demo',
-    component: () => import('../views/ydl/YdlListDemo.vue'),
-    meta: { title: 'VantList 示例（ydl）' },
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    component: () => import('../views/AboutView.vue'),
-  },
+  // vant 业务组件演示（tabbar 框架外独立页）
   {
     path: '/vant/vant-select-field-demo',
     name: 'vant-select-field-demo',
@@ -165,13 +148,7 @@ const manualRoutes = [
     component: () => import('../views/vant/VantLoginDemo.vue'),
     meta: { title: 'VantLogin 登录', public: true },
   },
-  // ====== ydl 站点登录页（白名单，独立于 tabbar 框架） ======
-  {
-    path: '/ydl/login',
-    name: 'ydl-login',
-    component: () => import('../views/ydl/SiteLoginView.vue'),
-    meta: { title: '站点登录', public: true },
-  },
+
 ]
 
 const router = createRouter({
@@ -191,11 +168,13 @@ if (import.meta.hot) {
 const LOGIN_PATH = '/vant/vant-login-demo' // vant 模块登录页
 const SITE_LOGIN_PATH = '/ydl/login' // ydl 站点登录页
 const routeWhiteList: string[] = [
-  LOGIN_PATH, // 登录页自身必须可访问，否则未登录会无限重定向
-  SITE_LOGIN_PATH,
   '/', // 模块总入口（业务模块选择菜单）
   '/about',
+  // vant 白名单
+  LOGIN_PATH, // vant 登录页自身必须可访问，否则未登录会无限重定向
   '/vant/vant-ins-icon-demo',
+  // ydl 白名单
+  SITE_LOGIN_PATH, // ydl 站点登录页自身必须可访问
 ]
 
 // 扩展 RouteMeta 类型（title / public）
@@ -216,8 +195,11 @@ router.beforeEach(async (to) => {
     const login = to.path.startsWith('/ydl') ? SITE_LOGIN_PATH : LOGIN_PATH
     return { path: login, query: { redirect: to.fullPath } }
   }
-  // 已登录：进入 ydl 模块且菜单权限尚未加载时，用 token 拉一次真实权限树
-  if (to.path.startsWith('/ydl')) {
+  // 已登录：进入 ydl 站点模块（路由名以 ydl- 开头，含 /lhzj 等不以 /ydl 开头的页面）
+  // 且菜单权限尚未加载时，用 token 拉一次真实权限树。
+  // 注：仅凭 to.path.startsWith('/ydl') 会漏掉 /lhzj、/analysis 等独立路径的 ydl 页面，
+  // 导致刷新后权限单例清空却未重新拉取（useCrudList 会 fallback 到角色权限，丢失 lhVisitInfo:*）。
+  if (to.path.startsWith('/ydl') || to.name?.toString()?.startsWith('ydl-')) {
     const { menuAuth, loadPermissionsByToken } = usePermission()
     if (menuAuth.value.length === 0) {
       try {

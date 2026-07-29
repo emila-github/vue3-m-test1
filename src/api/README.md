@@ -24,13 +24,13 @@ src/api/
 
 ## 两种核心差异
 
-| 维度 | vant（默认） | ydl（JeecgBoot） |
-|---|---|---|
-| 响应包络 | `{ code, data, message }` | `{ success, message, code, result, timestamp }` |
-| 成功判定 | `code === 0 \| 200` | `success === true` |
-| 业务数据位置 | `data` | `result` |
-| 分页入参 | `page / pageSize` | `current / size` |
-| 分页出参 | `list / total / page / pageSize` | `records / total / current / size / pages` |
+| 维度         | vant（默认）                     | ydl（JeecgBoot）                                |
+| ------------ | -------------------------------- | ----------------------------------------------- |
+| 响应包络     | `{ code, data, message }`        | `{ success, message, code, result, timestamp }` |
+| 成功判定     | `code === 0 \| 200`              | `success === true`                              |
+| 业务数据位置 | `data`                           | `result`                                        |
+| 分页入参     | `page / pageSize`                | `current / size`                                |
+| 分页出参     | `list / total / page / pageSize` | `records / total / current / size / pages`      |
 
 ## 通用设计：适配器 + 工厂
 
@@ -57,14 +57,23 @@ src/api/
    }
    export const abcPagination: PaginationAdapter = {
      toParams: (p) => ({ idx: p.page, limit: p.pageSize }),
-     fromResult: (raw) => ({ list: raw?.rows ?? [], total: raw?.total ?? 0, page: raw?.idx ?? 1, pageSize: raw?.limit ?? 10 }),
+     fromResult: (raw) => ({
+       list: raw?.rows ?? [],
+       total: raw?.total ?? 0,
+       page: raw?.idx ?? 1,
+       pageSize: raw?.limit ?? 10,
+     }),
    }
    ```
 
 2. 建 `src/api/modules/abc/client.ts`：
 
    ```ts
-   export const abcClient = createClient({ adapter: abcFormat, pagination: abcPagination, baseURL: '/abc-api' })
+   export const abcClient = createClient({
+     adapter: abcFormat,
+     pagination: abcPagination,
+     baseURL: '/abc-api',
+   })
    export const { get: abcGet, post: abcPost, paginate: abcPaginate } = abcClient
    ```
 
@@ -80,7 +89,7 @@ import { get } from '@/api'
 get<LoginConfig>('/login/config')
 
 // ydl —— 分页自动转回通用 PageResult<YdlRenewal>
-import { getYdlRenewalList } from '@/api'   // 或 '@/api/modules/ydl/ydl-renewal'
+import { getYdlRenewalList } from '@/api' // 或 '@/api/modules/ydl/ydl-renewal'
 const { list, total } = await getYdlRenewalList({ page: 1, pageSize: 10 })
 
 // ydl 列表接口内部：ydlGet 解包出 result（records/current/size/total），
@@ -99,18 +108,18 @@ mock 由 `src/mock/ydl-renewal.ts` 在 `/ydl-api` 前缀下拦截。
 
 ### 导出清单
 
-| 导出 | 说明 | 后端接口（不含 /ydl-api 前缀） |
-|---|---|---|
-| `getYdlRenewalList(query & PageParams)` | 分页列表（多条件过滤） | `GET /data/renewal/list` |
-| `getYdlRenewalDetail(id)` | 详情 | `GET /data/renewal` |
-| `createYdlRenewal(form)` | 新增 | `POST /data/renewal` |
-| `updateYdlRenewal(form)` | 编辑（表单带 id） | `PUT /data/renewal` |
-| `deleteYdlRenewal(id)` | 删除（DELETE 带 body） | `DELETE /data/renewal` |
-| `searchYdlInsurers(keyword)` | 承保公司联想 | `GET /data/renewal/insurers` |
-| `verifyYdlApplicant(name)` | 投保人核验 | `GET /data/renewal/verify-applicant` |
-| `YDL_INSURERS / YDL_CHANNELS / YDL_INSURANCE_TYPE_OPTIONS / YDL_STATUS_OPTIONS` | 选项常量 | — |
-| `YDL_ORG_TREE / YDL_TAG_TREE / YDL_ORG_NAME` | 机构树 / 标签树 / 名称映射 | — |
-| `YDL_DEFAULT_RENEWAL_QUERY / YDL_DEFAULT_RENEWAL_FORM` | 初始查询 / 表单 | — |
+| 导出                                                                            | 说明                       | 后端接口（不含 /ydl-api 前缀）       |
+| ------------------------------------------------------------------------------- | -------------------------- | ------------------------------------ |
+| `getYdlRenewalList(query & PageParams)`                                         | 分页列表（多条件过滤）     | `GET /data/renewal/list`             |
+| `getYdlRenewalDetail(id)`                                                       | 详情                       | `GET /data/renewal`                  |
+| `createYdlRenewal(form)`                                                        | 新增                       | `POST /data/renewal`                 |
+| `updateYdlRenewal(form)`                                                        | 编辑（表单带 id）          | `PUT /data/renewal`                  |
+| `deleteYdlRenewal(id)`                                                          | 删除（DELETE 带 body）     | `DELETE /data/renewal`               |
+| `searchYdlInsurers(keyword)`                                                    | 承保公司联想               | `GET /data/renewal/insurers`         |
+| `verifyYdlApplicant(name)`                                                      | 投保人核验                 | `GET /data/renewal/verify-applicant` |
+| `YDL_INSURERS / YDL_CHANNELS / YDL_INSURANCE_TYPE_OPTIONS / YDL_STATUS_OPTIONS` | 选项常量                   | —                                    |
+| `YDL_ORG_TREE / YDL_TAG_TREE / YDL_ORG_NAME`                                    | 机构树 / 标签树 / 名称映射 | —                                    |
+| `YDL_DEFAULT_RENEWAL_QUERY / YDL_DEFAULT_RENEWAL_FORM`                          | 初始查询 / 表单            | —                                    |
 
 ### 关键约定（与 vant 默认模块的差异）
 
