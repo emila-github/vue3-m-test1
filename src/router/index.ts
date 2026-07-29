@@ -148,6 +148,12 @@ const manualRoutes = [
     component: () => import('../views/vant/VantLoginDemo.vue'),
     meta: { title: 'VantLogin 登录', public: true },
   },
+  {
+    path: '/vant/vant-slider-verify-demo',
+    name: 'vant-slider-verify-demo',
+    component: () => import('../views/vant/VantSliderVerifyDemo.vue'),
+    meta: { title: 'VantSliderVerify 滑块验证' },
+  },
 
 ]
 

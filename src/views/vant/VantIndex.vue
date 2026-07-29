@@ -149,6 +149,14 @@ const stages = ref([
     icon: '🔑',
     color: '#d71920',
   },
+  {
+    id: 'slider-verify',
+    title: '拖动滑块验证组件 VantSliderVerify',
+    desc: '拖到最右侧完成验证，v-model 暴露是否通过；常用于「获取验证码」前置校验，支持禁用态与重置',
+    path: '/vant/vant-slider-verify-demo',
+    icon: '🎚️',
+    color: '#ff976a',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -189,7 +197,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 18 个）</h2>
+      <h2>组件演示（共 19 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"
