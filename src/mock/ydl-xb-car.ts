@@ -66,12 +66,32 @@ const routes: MockRoute[] = [
     },
   },
   {
-    // 续保反馈回显
+    // 详情（基本信息）：GET /xb/xbExtendInfoCar/renewedSearchByPolicyNo?policyNo=xxx
+    url: '/xb/xbExtendInfoCar/renewedSearchByPolicyNo',
+    method: 'GET',
+    response: (req) => {
+      const q = parseQuery(req.url)
+      const row = rows.find((r) => r.policyno === q.policyNo) || rows[0]
+      return ok({ ...row, usenature: '家庭自用,非营业' })
+    },
+  },
+  {
+    // 续保反馈回显（返回 result.feedbackContent / result.dayFlag，-dayFlag 表示到期前天数）
     url: '/xb/xbFeedbackData/getCurrentFeedbackCarData',
     method: 'GET',
     response: (req) => {
       const q = parseQuery(req.url)
-      return ok({ content: `历史反馈（保单${q.policyNo || ''}）：客户暂未确认续保意向，持续跟进中` })
+      return ok({
+        id: q.id || 'mock-id',
+        policyNo: q.policyNo || '',
+        feedbackContent: '客户暂未确认续保意向，持续跟进中',
+        feedbackUsername: 'admin',
+        feedbackRealname: '系统管理员',
+        feedbackFlag: 0,
+        isLastRecord: 1,
+        dayFlag: -30,
+        isDelay: 1,
+      })
     },
   },
   {
@@ -92,7 +112,7 @@ const routes: MockRoute[] = [
   {
     url: '/xb/xbExtendInfoCar/renewedInput',
     method: 'POST',
-    response: () => ok({ message: '续保录入成功' }),
+    response: () => ok({ message: '提交成功' }),
   },
 ]
 

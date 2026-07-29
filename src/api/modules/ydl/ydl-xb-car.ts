@@ -1,7 +1,8 @@
 /**
  * 车险续保管理（ydl 模块，需求文档 §7）
  * 我的续保 GET /xb/xbExtendInfoCar/renewedList（分页 records/total/size）。
- * 反馈提交复用 /xb/xbFeedbackData/add（见 ydl-xb 的 XB_FEEDBACK_API.renewed）。
+ * 续保反馈（EditModalFeedback）提交 /xb/xbExtendInfoCar/renewedInput（renewedStart+feedback+dayFlag）。
+ * 详情 GET /xb/xbExtendInfoCar/renewedSearchByPolicyNo（需求 §7.1 详情·基本信息 tab）。
  * mock 由 src/mock/ydl-xb-car.ts 在 /ydl-api 前缀下拦截。
  */
 import { ydlGet, ydlPost } from './client'
@@ -34,9 +35,17 @@ export function getYdlXbCarRenewedList(params: Record<string, any>) {
   )
 }
 
-/** 续保反馈回显：GET /xb/xbFeedbackData/getCurrentFeedbackCarData（需求 §7.1 续保反馈） */
+/** 续保反馈回显：GET /xb/xbFeedbackData/getCurrentFeedbackCarData（需求 §7.1 续保反馈，result.feedbackContent / result.dayFlag 决定弹层标题） */
 export function getYdlXbCarCurrentFeedback(params: { policyNo: string }) {
-  return ydlGet<{ content?: string }>('/xb/xbFeedbackData/getCurrentFeedbackCarData', params)
+  return ydlGet<{ feedbackContent?: string; dayFlag?: number }>(
+    '/xb/xbFeedbackData/getCurrentFeedbackCarData',
+    params,
+  )
+}
+
+/** 详情（基本信息 tab）：GET /xb/xbExtendInfoCar/renewedSearchByPolicyNo（需求 §7.1 详情） */
+export function getYdlXbCarRenewedSearchByPolicyNo(params: { policyNo: string }) {
+  return ydlGet<YdlXbCarRow>('/xb/xbExtendInfoCar/renewedSearchByPolicyNo', params)
 }
 
 /** 项目终止提交：POST /xb/xbExtendInfoCar/endInput（权限 RenewedEndInput & endBtnStatus===1） */
@@ -54,13 +63,19 @@ export function postYdlXbCarBack(data: { id: any; content: string }) {
   return ydlPost<unknown>('/xb/xbExtendInfoCar/back', data)
 }
 
-/** 续保录入：POST /xb/xbExtendInfoCar/renewedInput（无权限限制） */
+/**
+ * 续保反馈提交：POST /xb/xbExtendInfoCar/renewedInput（需求 §7.1 EditModalFeedback）
+ * 字段：renewedStart(预计签单时间) + feedback + dayFlag。
+ */
 export function postYdlXbCarRenewedInput(data: {
   id: any
-  renewedPolicyNo: string
-  renewedStart: string
-  renewedEnd: string
-  renewedFee: string | number
+  renewedPolicyNo?: string
+  renewedStart?: string
+  renewedEnd?: string
+  renewedFee?: string | number
+  feedback?: string
+  /** 续保反馈提交携带（需求 §7.1）：dayFlag>=0 脱保，负=到期前天数 */
+  dayFlag?: number
 }) {
   return ydlPost<unknown>('/xb/xbExtendInfoCar/renewedInput', data)
 }

@@ -117,9 +117,13 @@ export function useCrudList<T extends { id: number }, F, Q extends Record<string
     }
   })
 
-  /** 权限判断（支持单个码或码数组，OR 逻辑） */
+  /**
+   * 权限判断（支持单个码或码数组，OR 逻辑）。
+   * 空串表示免权限动作（来自 freeActions），恒放行——与 v-permission 指令对空值恒可见一致。
+   */
   function hasPerm(...codes: (string | string[])[]): boolean {
     const flat = codes.flat()
+    if (flat.includes('')) return true
     return hasAny(...flat)
   }
 
