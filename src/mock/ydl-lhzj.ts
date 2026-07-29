@@ -12,7 +12,7 @@ const visits = Array.from({ length: 12 }, (_, i) => ({
   comzname: ['鼓楼支公司', '鲤城支公司', '思明支公司'][i % 3],
   visitName: ['李领航', '王领航', '陈领航'][i % 3],
   visitPosition: i % 2 ? '市公司部门经理' : '支公司经理室',
-  visitTime: `2026-07-${String(((i % 27) + 1)).padStart(2, '0')}`,
+  visitTime: `2026-07-${String((i % 27) + 1).padStart(2, '0')}`,
   customerName: `某某${['集团', '科技', '制造'][i % 3]}公司`,
   customerTypeId: ['T01', 'T02'][i % 2],
   customerTypeName: i % 2 ? '中小企业' : '大型企业',
@@ -53,7 +53,12 @@ const routes: MockRoute[] = [
       if (cn) list = list.filter((v) => (v.customerName ?? '').includes(cn))
       if (vn) list = list.filter((v) => (v.visitName ?? '').includes(vn))
       const start = (page - 1) * size
-      return ok({ records: list.slice(start, start + size), total: list.length, current: page, size })
+      return ok({
+        records: list.slice(start, start + size),
+        total: list.length,
+        current: page,
+        size,
+      })
     },
   },
   {

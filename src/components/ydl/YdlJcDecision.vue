@@ -71,7 +71,11 @@ function fmt(col: JcColumn, row: Record<string, any>): string {
   const v = row[col.key]
   if (v == null || v === '') return '-'
   if (col.percent) return (Number(v) * 100).toFixed(1) + '%'
-  if (col.money) return '¥' + Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  if (col.money)
+    return (
+      '¥' +
+      Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    )
   return String(v)
 }
 
@@ -91,7 +95,13 @@ onMounted(async () => {
 
 <template>
   <div class="ydl-jc picc-page">
-    <van-nav-bar :title="title" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="$router.back()" />
+    <van-nav-bar
+      :title="title"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <van-cell-group inset class="picc-card s-filter">
       <VantTreeSelectField
@@ -136,7 +146,11 @@ onMounted(async () => {
         <tbody>
           <tr v-for="(row, i) in rows" :key="i">
             <td class="s-sticky s-branch">{{ row.comzname }}</td>
-            <td v-for="col in columns" :key="col.key" :class="{ 'is-pct': col.percent, 'is-money': col.money }">
+            <td
+              v-for="col in columns"
+              :key="col.key"
+              :class="{ 'is-pct': col.percent, 'is-money': col.money }"
+            >
               {{ fmt(col, row) }}
             </td>
           </tr>

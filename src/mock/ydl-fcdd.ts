@@ -13,16 +13,24 @@ const policys = Array.from({ length: 17 }, (_, i) => {
     policyno: `PDDD2025${String(100000 + n)}`,
     appliname: `某某${['制造', '贸易', '科技', '物流', '建筑'][i % 5]}公司`,
     riskcname: ['企财险', '机器损坏险', '公众责任险', '货运险', '工程险'][i % 5],
-    enddate: `2026-${String(((n % 12) + 1)).padStart(2, '0')}-${String(((n * 3) % 27) + 1).padStart(2, '0')}`,
+    enddate: `2026-${String((n % 12) + 1).padStart(2, '0')}-${String(((n * 3) % 27) + 1).padStart(2, '0')}`,
     coinsnetpremium: 30000 + n * 4200,
     feedbackflag: feedback,
     renewalstatus: renewal,
   }
 })
 
-const feedbackHistory: Record<string, { id: number; reason: string; content: string; feedbackTime: string }[]> = {
+const feedbackHistory: Record<
+  string,
+  { id: number; reason: string; content: string; feedbackTime: string }[]
+> = {
   '2003': [
-    { id: 1, reason: '1', content: '客户续保意向强，已安排专人跟进', feedbackTime: '2026-07-20 10:00:00' },
+    {
+      id: 1,
+      reason: '1',
+      content: '客户续保意向强，已安排专人跟进',
+      feedbackTime: '2026-07-20 10:00:00',
+    },
   ],
 }
 
@@ -68,7 +76,12 @@ const routes: MockRoute[] = [
         })
       }
       const start = (page - 1) * size
-      return ok({ records: list.slice(start, start + size), total: list.length, current: page, size })
+      return ok({
+        records: list.slice(start, start + size),
+        total: list.length,
+        current: page,
+        size,
+      })
     },
   },
   {

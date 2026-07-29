@@ -186,5 +186,8 @@ export function getYdlPolicySummary(params: Record<string, any>) {
 
 /** 签单明细导出推送：GET /data/mainPageData/policySummaryExportWx */
 export function exportYdlPolicySummary(params: Record<string, any>) {
-  return ydlGet<{ success: boolean; message: string }>('/data/mainPageData/policySummaryExportWx', params)
+  return ydlGet<{ success: boolean; message: string }>(
+    '/data/mainPageData/policySummaryExportWx',
+    params,
+  )
 }

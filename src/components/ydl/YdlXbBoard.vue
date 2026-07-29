@@ -267,7 +267,13 @@ const baseInfo = (row: YdlXbRow) => [
 
 <template>
   <div class="ydl-detail-page">
-    <van-nav-bar :title="title" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="router.back()" />
+    <van-nav-bar
+      :title="title"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="router.back()"
+    />
 
     <VantList
       :api="api"
@@ -285,7 +291,7 @@ const baseInfo = (row: YdlXbRow) => [
     >
       <template #filters="{ query }">
         <van-cell-group inset class="f-group">
-          <template v-for="f in (queryFields ?? DEFAULT_QUERY_FIELDS)" :key="f.key">
+          <template v-for="f in queryFields ?? DEFAULT_QUERY_FIELDS" :key="f.key">
             <VantTreeSelectField
               v-if="f.type === 'org'"
               v-model="query[f.key]"
@@ -347,7 +353,8 @@ const baseInfo = (row: YdlXbRow) => [
                 text-color="#fff"
                 size="medium"
                 class="r-tag"
-              >{{ t.text }}</van-tag>
+                >{{ t.text }}</van-tag
+              >
             </span>
           </div>
           <div v-for="m in metaFields(item)" :key="m.key" class="r-meta">
@@ -357,13 +364,19 @@ const baseInfo = (row: YdlXbRow) => [
         <div v-else class="r-card">
           <div class="r-head">
             <span class="r-name">{{ item.appliname }}</span>
-            <van-tag :color="statusColor((item as any)[statusField])" text-color="#fff" size="medium">
+            <van-tag
+              :color="statusColor((item as any)[statusField])"
+              text-color="#fff"
+              size="medium"
+            >
               {{ statusText((item as any)[statusField]) }}
             </van-tag>
           </div>
           <div class="r-meta">保单号：{{ item.policyno }}</div>
           <div class="r-meta">险种：{{ item.riskcname }} ｜ 到期：{{ item.enddate }}</div>
-          <div class="r-meta">上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}</div>
+          <div class="r-meta">
+            上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}
+          </div>
         </div>
       </template>
 
@@ -396,11 +409,22 @@ const baseInfo = (row: YdlXbRow) => [
           />
           <van-field v-if="showResolve" label="是否解决">
             <template #input>
-              <van-switch v-model="fbForm.resolve" :active-value="1" :inactive-value="0" size="20" />
+              <van-switch
+                v-model="fbForm.resolve"
+                :active-value="1"
+                :inactive-value="0"
+                size="20"
+              />
             </template>
           </van-field>
           <div class="fb-submit">
-            <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitFeedback">
+            <van-button
+              type="primary"
+              block
+              round
+              :loading="fbSubmitting"
+              @click="onSubmitFeedback"
+            >
               提交反馈
             </van-button>
           </div>

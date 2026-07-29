@@ -13,15 +13,13 @@ function base(i: number, extra: Record<string, any> = {}) {
     policyno: `PDAA2025${String(100000 + i)}`,
     coinsnetpremium: 60000 + i * 3200,
     riskcname: ['企财险', '货运险', '机器损坏险', '公众责任险'][i % 4],
-    enddate: `2026-${String(((i % 12) + 1)).padStart(2, '0')}-${String(((i * 3) % 27) + 1).padStart(2, '0')}`,
+    enddate: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String(((i * 3) % 27) + 1).padStart(2, '0')}`,
     contactsName: ['李服务', '王服务', '陈服务'][i % 3],
     ...extra,
   }
 }
 
-const renewedList = Array.from({ length: 14 }, (_, i) =>
-  base(i, { renewedStatus: i % 3 }),
-)
+const renewedList = Array.from({ length: 14 }, (_, i) => base(i, { renewedStatus: i % 3 }))
 const questionList = Array.from({ length: 11 }, (_, i) =>
   base(i, {
     questionStatus: i % 3,
@@ -43,7 +41,7 @@ const endList = Array.from({ length: 9 }, (_, i) =>
     teamFlag: i % 2,
     dutyName: ['张经理', '李经理', '王经理'][i % 3],
     auditContent: i % 2 ? '建议优先跟进' : '正常推进',
-    endCommitDate: `2026-${String(((i % 12) + 1)).padStart(2, '0')}-${String(((i * 5) % 27) + 1).padStart(2, '0')}`,
+    endCommitDate: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String(((i * 5) % 27) + 1).padStart(2, '0')}`,
     remainDay: 3 + (i % 12),
     endContent: `客户因${['经营调整', '预算缩减', '转投同业'][i % 3]}申请终止`,
   }),
@@ -71,16 +69,41 @@ function pageOf(records: any[], req: any) {
   const page = Number(q.page || q.current || 1)
   const size = Number(q.pageSize || q.size || 10)
   const start = (page - 1) * size
-  return ok({ records: records.slice(start, start + size), total: records.length, current: page, size })
+  return ok({
+    records: records.slice(start, start + size),
+    total: records.length,
+    current: page,
+    size,
+  })
 }
 
 const routes: MockRoute[] = [
-  { url: '/xb/xbExtendInfo/renewedList', method: 'GET', response: (req) => pageOf(renewedList, req) },
-  { url: '/xb/xbExtendInfo/questionList', method: 'GET', response: (req) => pageOf(questionList, req) },
+  {
+    url: '/xb/xbExtendInfo/renewedList',
+    method: 'GET',
+    response: (req) => pageOf(renewedList, req),
+  },
+  {
+    url: '/xb/xbExtendInfo/questionList',
+    method: 'GET',
+    response: (req) => pageOf(questionList, req),
+  },
   { url: '/xb/xbExtendInfo/endList', method: 'GET', response: (req) => pageOf(endList, req) },
-  { url: '/xb/xbExtendInfo/questionInput', method: 'POST', response: () => ok({ message: '问题反馈提交成功' }) },
-  { url: '/xb/xbExtendInfo/endInput', method: 'POST', response: () => ok({ message: '终止反馈提交成功' }) },
-  { url: '/xb/xbFeedbackData/add', method: 'POST', response: () => ok({ message: '续保反馈提交成功' }) },
+  {
+    url: '/xb/xbExtendInfo/questionInput',
+    method: 'POST',
+    response: () => ok({ message: '问题反馈提交成功' }),
+  },
+  {
+    url: '/xb/xbExtendInfo/endInput',
+    method: 'POST',
+    response: () => ok({ message: '终止反馈提交成功' }),
+  },
+  {
+    url: '/xb/xbFeedbackData/add',
+    method: 'POST',
+    response: () => ok({ message: '续保反馈提交成功' }),
+  },
 ]
 
 export default routes

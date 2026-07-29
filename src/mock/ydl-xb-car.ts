@@ -18,7 +18,7 @@ const rows = Array.from({ length: 13 }, (_, i) => ({
   insuredname: ['张三', '李四', '王五', '赵六'][i % 4],
   coinsnetpremium: 3200 + i * 280,
   startdate: `2025-08-01`,
-  enddate: `2026-${String(((i % 12) + 1)).padStart(2, '0')}-${String(((i * 3) % 27) + 1).padStart(2, '0')}`,
+  enddate: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String(((i * 3) % 27) + 1).padStart(2, '0')}`,
   policyno: `PDAM2025${String(100000 + i)}`,
   endBtnStatus: i % 2 === 0 ? 1 : 2,
 }))
@@ -62,7 +62,12 @@ const routes: MockRoute[] = [
       if (q.showStatus !== undefined && q.showStatus !== '')
         list = list.filter((r) => String(r.showStatus) === q.showStatus)
       const start = (page - 1) * size
-      return ok({ records: list.slice(start, start + size), total: list.length, current: page, size })
+      return ok({
+        records: list.slice(start, start + size),
+        total: list.length,
+        current: page,
+        size,
+      })
     },
   },
   {

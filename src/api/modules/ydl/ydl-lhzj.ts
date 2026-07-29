@@ -56,5 +56,7 @@ export function updateYdlLhzj(data: Partial<YdlLhzjVisit>) {
 
 /** 删除：DELETE /lhzj/lhVisitInfo/delete */
 export function deleteYdlLhzj(id: number | string) {
-  return ydlDel<{ success: boolean; message: string }>('/lhzj/lhVisitInfo/delete', { params: { id } })
+  return ydlDel<{ success: boolean; message: string }>('/lhzj/lhVisitInfo/delete', {
+    params: { id },
+  })
 }

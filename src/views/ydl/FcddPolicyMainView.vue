@@ -143,7 +143,13 @@ const base = (row: YdlFcddPolicy) => [
 
 <template>
   <div class="ydl-detail-page">
-    <van-nav-bar title="非车待续保跟踪" class="van-nav-bar--picc-primary" left-text="返回" left-arrow @click-left="router.back()" />
+    <van-nav-bar
+      title="非车待续保跟踪"
+      class="van-nav-bar--picc-primary"
+      left-text="返回"
+      left-arrow
+      @click-left="router.back()"
+    />
 
     <VantList
       :api="api"
@@ -196,7 +202,12 @@ const base = (row: YdlFcddPolicy) => [
             placeholder="全部"
             clearable
           />
-          <van-field v-model="query.policyno" label="保单号" placeholder="输入保单号" input-align="right" />
+          <van-field
+            v-model="query.policyno"
+            label="保单号"
+            placeholder="输入保单号"
+            input-align="right"
+          />
         </van-cell-group>
       </template>
 
@@ -214,13 +225,20 @@ const base = (row: YdlFcddPolicy) => [
         </div>
         <div class="r-meta">保单号：{{ item.policyno }}</div>
         <div class="r-meta">险种：{{ item.riskcname }} ｜ 到期：{{ item.enddate }}</div>
-        <div class="r-meta">上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}</div>
+        <div class="r-meta">
+          上年保费：¥{{ Number(item.coinsnetpremium).toLocaleString('zh-CN') }}
+        </div>
       </template>
 
       <template #detail="{ item }">
         <template v-if="detailFull">
           <van-cell-group inset title="保单信息" class="picc-card">
-            <van-cell v-for="c in base(detailFull.policy)" :key="c.label" :title="c.label" :value="c.value" />
+            <van-cell
+              v-for="c in base(detailFull.policy)"
+              :key="c.label"
+              :title="c.label"
+              :value="c.value"
+            />
           </van-cell-group>
 
           <van-cell-group inset title="历史反馈" class="picc-card">
@@ -257,7 +275,13 @@ const base = (row: YdlFcddPolicy) => [
               input-align="right"
             />
             <div class="fb-submit">
-              <van-button type="primary" block round :loading="fbSubmitting" @click="onSubmitFeedback">
+              <van-button
+                type="primary"
+                block
+                round
+                :loading="fbSubmitting"
+                @click="onSubmitFeedback"
+              >
                 提交反馈
               </van-button>
             </div>

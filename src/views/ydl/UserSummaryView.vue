@@ -23,5 +23,10 @@ const columns = [
 </script>
 
 <template>
-  <YdlStatBoard title="劳效统计" :api-fn="getYdlUserSummary" :columns="columns" :show-label="true" />
+  <YdlStatBoard
+    title="劳效统计"
+    :api-fn="getYdlUserSummary"
+    :columns="columns"
+    :show-label="true"
+  />
 </template>
