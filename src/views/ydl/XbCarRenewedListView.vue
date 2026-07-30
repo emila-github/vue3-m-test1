@@ -582,7 +582,7 @@ function carItemMeta(item: YdlXbCarRow) {
 <style scoped>
 .ydl-detail-page {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .f-group {
   margin: 8px 12px;
@@ -596,15 +596,15 @@ function carItemMeta(item: YdlXbCarRow) {
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-meta {
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 3px;
 }
 .r-label {
-  color: #999;
+  color: var(--app-text-3);
 }
 .r-grid {
   display: flex;
@@ -623,12 +623,12 @@ function carItemMeta(item: YdlXbCarRow) {
   width: 100%;
 }
 .r-cell .r-label {
-  color: #999;
+  color: var(--app-text-3);
   flex-shrink: 0;
   margin-right: 2px;
 }
 .r-cell .r-value {
-  color: #333;
+  color: var(--app-text);
   word-break: break-all;
 }
 .fb-submit {
@@ -645,7 +645,7 @@ function carItemMeta(item: YdlXbCarRow) {
   text-align: center;
   font-size: 17px;
   margin: 0 0 12px;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .op-popup :deep(.van-cell-group) {
   flex: 1;

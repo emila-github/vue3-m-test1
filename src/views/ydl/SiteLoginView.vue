@@ -228,19 +228,19 @@ onMounted(async () => {
 .login-title {
   margin: 4px 0 6px;
   font-size: 22px;
-  color: #1a1a1a;
+  color: var(--app-text);
   font-weight: 600;
   line-height: 1.3;
 }
 .login-subtitle {
   margin: 0;
   font-size: 13px;
-  color: #999;
+  color: var(--app-text-3);
 }
 
 /* ====== 卡片式登录表单 ====== */
 .login-card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(var(--app-primary-rgb), 0.07);
   overflow: hidden;
@@ -306,7 +306,7 @@ onMounted(async () => {
   border: none;
   outline: none;
   font-size: 15px;
-  color: #333;
+  color: var(--app-text);
   background: transparent;
   min-width: 0;
 }
@@ -326,7 +326,7 @@ onMounted(async () => {
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  background: #f7f8fa;
+  background: var(--app-bg);
   user-select: none;
 }
 .captcha-svg-img {
@@ -368,7 +368,7 @@ onMounted(async () => {
 .tip {
   margin-top: 16px;
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
   text-align: center;
 }
 .bind-tip {

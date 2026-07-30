@@ -293,7 +293,7 @@ function onClear() {
 .vant-calendar__field :deep(.van-field__control) {
   flex: 1;
   min-width: 0;
-  color: #1a1a1a;
+  color: var(--app-text);
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -311,11 +311,11 @@ function onClear() {
   display: block;
   font-size: 16px;
   line-height: inherit;
-  color: #8a8a8a;
+  color: var(--app-text-3);
   cursor: pointer;
 }
 .vant-calendar__field .vant-field-clear-icon:active {
-  color: #323233;
+  color: var(--app-text);
 }
 </style>
 

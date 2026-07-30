@@ -29,10 +29,20 @@ export const SKINS: SkinMeta[] = [
   { id: 'vant', name: 'Vant 默认蓝', desc: '清爽蓝调', color: '#1989fa', deep: '#1565c0' },
   { id: 'emerald', name: '翡翠绿', desc: '清新自然', color: '#059669', deep: '#047857' },
   { id: 'amber', name: '琥珀橙', desc: '温暖活力', color: '#f59e0b', deep: '#d97706' },
-  { id: 'violet', name: '紫罗兰', desc: '优雅科技', color: '#7c3aed', deep: '#6d28d9' },
   { id: 'teal', name: '青碧', desc: '宁静治愈', color: '#0d9488', deep: '#0f766e' },
   { id: 'rose', name: '玫瑰粉', desc: '柔和浪漫', color: '#e11d48', deep: '#be123c' },
+  { id: 'indigo', name: '靛蓝', desc: '科技靛蓝', color: '#6366F1', deep: '#4f46e5' },
+  { id: 'sky', name: '天蓝', desc: '清亮天蓝', color: '#0EA5E9', deep: '#0284c7' },
+  { id: 'cyan', name: '湖青', desc: '医疗湖青', color: '#0891B2', deep: '#0e7490' },
+  { id: 'insurance', name: '保险蓝', desc: '守护保险蓝', color: '#0369A1', deep: '#075985' },
+  { id: 'lavender', name: '薰衣草', desc: '柔紫疗愈', color: '#8B5CF6', deep: '#7c3aed' },
+  { id: 'pink', name: '樱粉', desc: '活泼樱粉', color: '#EC4899', deep: '#db2777' },
+  { id: 'forest', name: '森林绿', desc: '稳重森林绿', color: '#15803D', deep: '#166534' },
+  { id: 'coffee', name: '暖咖', desc: '温馨暖咖', color: '#78350F', deep: '#92400e' },
+  { id: 'graphite', name: '石墨灰', desc: '工业极简', color: '#64748B', deep: '#475569' },
   { id: 'dark', name: '暗夜', desc: '护眼深色', color: '#60a5fa', deep: '#0f172a', dark: true },
+  { id: 'luxury', name: '奢华黑金', desc: '高端黑金', color: '#eab308', deep: '#0a0a0a', dark: true },
+  { id: 'navy', name: '商务深蓝', desc: '深海军蓝', color: '#93c5fd', deep: '#0a1628', dark: true },
 ]
 
 const STORAGE_KEY = 'app-skin'

@@ -256,7 +256,7 @@ onUnmounted(() => clearTimeout(timer))
   top: 100%;
   z-index: 20;
   margin-top: 4px;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 8px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   max-height: 264px;
@@ -273,11 +273,11 @@ onUnmounted(() => clearTimeout(timer))
   justify-content: space-between;
   padding: 10px 14px;
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   cursor: pointer;
 }
 .vant-search__item.is-active {
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .vant-search__item-text {
   flex: 1;
@@ -295,7 +295,7 @@ onUnmounted(() => clearTimeout(timer))
   padding: 18px 14px;
   text-align: center;
   font-size: 13px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vant-search__state--error {
   color: #ee0a24;

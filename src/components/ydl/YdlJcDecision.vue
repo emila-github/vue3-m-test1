@@ -165,7 +165,7 @@ onMounted(async () => {
 <style scoped>
 .ydl-jc {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .s-filter {
   margin: 12px;
@@ -178,7 +178,7 @@ onMounted(async () => {
 .s-table-wrap {
   margin: 0 12px;
   overflow-x: auto;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
@@ -190,14 +190,14 @@ onMounted(async () => {
 }
 .s-table th,
 .s-table td {
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--app-border);
   padding: 8px 10px;
   white-space: nowrap;
   text-align: center;
-  color: #323233;
+  color: var(--app-text);
 }
 .s-table thead th {
-  background: #fafafa;
+  background: var(--app-bg);
   font-weight: 700;
   position: sticky;
   top: 0;
@@ -206,17 +206,17 @@ onMounted(async () => {
 .s-sticky {
   position: sticky;
   left: 0;
-  background: #fff;
+  background: var(--app-surface);
   font-weight: 600;
   z-index: 1;
 }
 .s-table thead .s-sticky {
   z-index: 3;
-  background: #fafafa;
+  background: var(--app-bg);
 }
 .s-branch {
   text-align: left;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .s-table td.is-pct {
   color: #1989fa;

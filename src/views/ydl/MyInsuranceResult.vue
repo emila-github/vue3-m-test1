@@ -186,22 +186,22 @@ function isSuccess(item: YdlSalesResult) {
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-meta {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 4px;
 }
 .r-time {
-  color: #969799;
+  color: var(--app-text-3);
 }
 .r-tip {
   padding: 8px 16px;
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 </style>

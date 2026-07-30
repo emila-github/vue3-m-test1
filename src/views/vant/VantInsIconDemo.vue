@@ -69,7 +69,7 @@ const rows = ref<InsRow[]>([
 <style scoped>
 .ins-demo {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 .ins-banner {
@@ -82,7 +82,7 @@ const rows = ref<InsRow[]>([
   box-shadow: 0 2px 8px rgba(215, 25, 32, 0.15);
 }
 .ins-section {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   margin: 16px 12px 0;
   padding: 18px 6px 16px;
@@ -92,7 +92,7 @@ const rows = ref<InsRow[]>([
   margin: 0 0 14px 10px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--app-text);
   position: relative;
   padding-left: 10px;
 }
@@ -121,7 +121,7 @@ const rows = ref<InsRow[]>([
 }
 .ins-label {
   font-size: 12.5px;
-  color: #333;
+  color: var(--app-text);
   text-align: center;
   line-height: 1.3;
   max-width: 64px;
@@ -132,7 +132,7 @@ const rows = ref<InsRow[]>([
 .ins-tip {
   margin: 20px 16px 0;
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
   line-height: 1.6;
 }
 .ins-tip code {

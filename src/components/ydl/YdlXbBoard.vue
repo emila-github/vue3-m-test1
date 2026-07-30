@@ -437,7 +437,7 @@ const baseInfo = (row: YdlXbRow) => [
 <style scoped>
 .ydl-detail-page {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .f-group {
   margin: 8px 12px;
@@ -451,11 +451,11 @@ const baseInfo = (row: YdlXbRow) => [
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-meta {
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 3px;
 }
 .r-tags {
@@ -467,7 +467,7 @@ const baseInfo = (row: YdlXbRow) => [
   margin-left: 0;
 }
 .r-label {
-  color: #999;
+  color: var(--app-text-3);
 }
 .fb-submit {
   padding: 14px 4px 4px;

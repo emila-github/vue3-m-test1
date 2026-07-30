@@ -966,7 +966,7 @@ const idCardMockBack = mockDemoIdCardOcr('back')
   padding-bottom: 24px;
 }
 .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 16px;
   margin: 12px;
@@ -975,7 +975,7 @@ const idCardMockBack = mockDemoIdCardOcr('back')
 .section-title {
   font-size: 15px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin-bottom: 12px;
 }
 /* ⑰ change 回显：标题行 + 清空按钮 两端对齐 */
@@ -992,15 +992,15 @@ const idCardMockBack = mockDemoIdCardOcr('back')
 .log-box {
   max-height: 160px;
   overflow-y: auto;
-  background: #f7f8fa;
-  border: 1px solid #ebedf0;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
   border-radius: 6px;
   padding: 8px 10px;
 }
 .log-line {
   font-size: 12px;
   line-height: 1.7;
-  color: #646566;
+  color: var(--app-text-2);
   margin: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   word-break: break-all;
@@ -1031,7 +1031,7 @@ const idCardMockBack = mockDemoIdCardOcr('back')
 }
 .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   line-height: 1.6;
   margin: 0 0 10px;
 }
@@ -1050,7 +1050,7 @@ const idCardMockBack = mockDemoIdCardOcr('back')
   gap: 12px;
   margin: 12px;
   padding: 12px 16px;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
@@ -1069,11 +1069,11 @@ const idCardMockBack = mockDemoIdCardOcr('back')
 .field-toggle__title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
 }
 .field-toggle__desc {
   font-size: 11px;
-  color: #969799;
+  color: var(--app-text-3);
   line-height: 1.5;
 }
 /* 表单回填示例：提交按钮间距 */
@@ -1082,14 +1082,14 @@ const idCardMockBack = mockDemoIdCardOcr('back')
 }
 /* 统一模拟数据：等宽字体展示 JSON */
 .mock-pre {
-  background: #f7f8fa;
-  border: 1px solid #ebedf0;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
   padding: 10px 12px;
   margin: 0 0 10px;
   font-size: 11px;
   line-height: 1.5;
-  color: #323233;
+  color: var(--app-text);
   white-space: pre-wrap;
   word-break: break-all;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;

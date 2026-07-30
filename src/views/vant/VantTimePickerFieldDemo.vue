@@ -200,24 +200,24 @@ const dateTime = ref('')
 <style scoped>
 .tp-demo {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 .section-title {
   font-size: 13px;
-  color: #969799;
+  color: var(--app-text-3);
   padding: 16px 16px 8px;
   font-weight: 500;
 }
 .card {
-  background: #fff;
+  background: var(--app-surface);
   margin: 0 12px 4px;
   border-radius: 8px;
   padding: 4px 12px;
 }
 .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 4px 0 12px;
   line-height: 1.6;
 }
@@ -229,7 +229,7 @@ const dateTime = ref('')
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 </style>

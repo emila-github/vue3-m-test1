@@ -383,17 +383,17 @@ onMounted(async () => {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .f-row-label {
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   min-width: 76px;
 }
 .f-tip {
   padding: 12px 16px;
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 
 /* 列表行 */
@@ -406,18 +406,18 @@ onMounted(async () => {
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-meta {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 4px;
 }
 .r-time {
-  color: #969799;
+  color: var(--app-text-3);
 }
 .r-tel {
   color: #1989fa;

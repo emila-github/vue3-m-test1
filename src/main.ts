@@ -5,7 +5,7 @@ import { initSkin } from './composables/useSkin'
 // 须先于 vant-picc.css 引入，使 PICC 皮肤的 html.picc-skin 作用域规则能覆盖中性版。
 import './styles/base-mobile.css'
 import './styles/vant-picc.css'
-// 全套主题（Vant 蓝 / 翡翠绿 / 琥珀橙 / 紫罗兰 / 青碧 / 玫瑰粉 / 暗夜）：
+// 全套主题（Vant 蓝 / 翡翠绿 / 琥珀橙 / 青碧 / 玫瑰粉 / 暗夜 等，动态来自 useSkin 的 SKINS）：
 // 以 html.theme-<id> 提供主色与表面配套，须置于 vant-picc.css 之后。
 import './styles/skins.css'
 // 函数式组件（showToast/showLoadingToast/showConfirmDialog/showDialog 等）基于 Popup 渲染，

@@ -230,7 +230,7 @@ async function onLogout() {
   gap: 8px;
   padding: 12px 6px;
   border-radius: 12px;
-  border: 1.5px solid var(--van-border-color, #ebedf0);
+  border: 1.5px solid var(--van-border-color, var(--app-border));
   background: var(--van-background-3, #f7f8fa);
   cursor: pointer;
   transition:

@@ -662,7 +662,7 @@ defineExpose({
 
 <style scoped>
 .vc-checkin {
-  background: #f7f8fa;
+  background: var(--app-bg);
   min-height: 100vh;
   padding-bottom: 24px;
 }
@@ -694,11 +694,11 @@ defineExpose({
 }
 .vc-map-mask--light {
   background: rgba(247, 248, 250, 0.92);
-  color: #323233;
+  color: var(--app-text);
 }
 .vc-map-hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 4px 0 0;
   line-height: 1.5;
 }
@@ -706,14 +706,14 @@ defineExpose({
   font-family: 'Courier New', monospace;
   font-size: 14px;
   color: #1989fa;
-  background: #fff;
+  background: var(--app-surface);
   padding: 6px 12px;
   border-radius: 6px;
 }
 
 /* 信息区 */
 .vc-info {
-  background: #fff;
+  background: var(--app-surface);
   margin: 10px;
   border-radius: 12px;
   padding: 10px 14px;
@@ -725,7 +725,7 @@ defineExpose({
   justify-content: space-between;
   gap: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #f2f3f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .vc-coord {
   display: flex;
@@ -741,7 +741,7 @@ defineExpose({
 .vc-coord-text {
   font-family: 'Courier New', monospace;
   font-size: 13px;
-  color: #323233;
+  color: var(--app-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -776,7 +776,7 @@ defineExpose({
   gap: 4px;
   padding-top: 8px;
   font-size: 13px;
-  color: #646566;
+  color: var(--app-text-2);
 }
 .vc-addr-icon {
   color: #1989fa;
@@ -785,7 +785,7 @@ defineExpose({
 }
 .vc-addr-label {
   flex-shrink: 0;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vc-addr-text {
   overflow: hidden;
@@ -802,7 +802,7 @@ defineExpose({
 }
 .vc-loc-hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 0 0;
   line-height: 1.5;
 }
@@ -818,7 +818,7 @@ defineExpose({
   height: 200px;
   border-radius: 50%;
   border: 6px solid var(--ring, #1989fa);
-  background: #fff;
+  background: var(--app-surface);
   color: var(--ring, #1989fa);
   display: flex;
   flex-direction: column;
@@ -856,7 +856,7 @@ defineExpose({
 .vc-history-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 8px 4px;
 }
 </style>

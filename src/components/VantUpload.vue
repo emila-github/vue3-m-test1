@@ -891,7 +891,7 @@ function docIcon(it: UploadItem): string {
 }
 .vuf-label {
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   margin-bottom: 10px;
 }
 .vuf-req {
@@ -922,7 +922,7 @@ function docIcon(it: UploadItem): string {
   flex: 1;
   min-width: 0;
   font-size: 13px;
-  color: #323233;
+  color: var(--app-text);
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
@@ -960,7 +960,7 @@ function docIcon(it: UploadItem): string {
   border: 1px solid color-mix(in srgb, var(--van-primary-color) 18%, #fff);
   border-radius: 8px;
   font-size: 12px;
-  color: #323233;
+  color: var(--app-text);
 }
 .vuf-ocr__icon {
   color: var(--van-primary-color);
@@ -968,7 +968,7 @@ function docIcon(it: UploadItem): string {
   flex-shrink: 0;
 }
 .vuf-ocr__label {
-  color: #646566;
+  color: var(--app-text-2);
   flex-shrink: 0;
 }
 .vuf-ocr__value {
@@ -1023,8 +1023,8 @@ function docIcon(it: UploadItem): string {
   gap: 4px;
   width: 80px;
   height: 80px;
-  color: #969799;
-  background: #f7f8fa;
+  color: var(--app-text-3);
+  background: var(--app-bg);
   border: 1px dashed #dcdee0;
   border-radius: 50%;
 }
@@ -1044,8 +1044,8 @@ function docIcon(it: UploadItem): string {
   gap: 4px;
   width: 80px;
   height: 80px;
-  color: #969799;
-  background: #f7f8fa;
+  color: var(--app-text-3);
+  background: var(--app-bg);
   border: 1px dashed #dcdee0;
   border-radius: 8px;
 }
@@ -1302,7 +1302,7 @@ function docIcon(it: UploadItem): string {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  background: #f7f8fa;
+  background: var(--app-bg);
   box-sizing: border-box;
 }
 .vuf-invoice-cell-img {
@@ -1379,12 +1379,12 @@ function docIcon(it: UploadItem): string {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #969799;
+  color: var(--app-text-3);
   font-size: 26px;
 }
 .vuf-invoice-add-hint {
   font-size: 13px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 /* 网格小方格（多张已有图）：与缩略图同宽，仅小相机图标 */
 .vuf-invoice-add:not(.is-large) {
@@ -1393,7 +1393,7 @@ function docIcon(it: UploadItem): string {
 }
 .vuf-invoice-add:not(.is-large) .vuf-invoice-add-icon {
   font-size: 26px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 /* label 右侧 tag 标签 */
 .vuf-invoice-tag {
@@ -1403,7 +1403,7 @@ function docIcon(it: UploadItem): string {
   padding: 0 6px;
   border-radius: 4px;
   background: #f2f3f5;
-  color: #969799;
+  color: var(--app-text-3);
   margin-left: 6px;
 }
 
@@ -1418,7 +1418,7 @@ function docIcon(it: UploadItem): string {
   border: 1px dashed #dcdee0;
   border-radius: 10px;
   background: #fafbfc;
-  color: #646566;
+  color: var(--app-text-2);
   font-size: 14px;
   cursor: pointer;
   overflow: hidden;
@@ -1450,8 +1450,8 @@ function docIcon(it: UploadItem): string {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: #fff;
-  border: 1px solid #f0f0f0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
 }
 .vuf-doc-icon {
@@ -1468,14 +1468,14 @@ function docIcon(it: UploadItem): string {
 }
 .vuf-doc-name {
   font-size: 13px;
-  color: #323233;
+  color: var(--app-text);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .vuf-doc-meta {
   font-size: 11px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vuf-doc-meta em {
   font-style: normal;

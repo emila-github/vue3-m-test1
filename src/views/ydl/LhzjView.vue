@@ -307,7 +307,7 @@ const detailFields = (item: YdlLhzjVisit) => [
 <style scoped>
 .ydl-lhzj-page {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .f-group {
   margin: 8px 12px;
@@ -315,12 +315,12 @@ const detailFields = (item: YdlLhzjVisit) => [
 .r-title {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
   margin-bottom: 6px;
 }
 .r-meta {
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 3px;
 }
 </style>

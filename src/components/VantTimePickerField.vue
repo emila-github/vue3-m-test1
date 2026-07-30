@@ -248,7 +248,7 @@ function onClear() {
 
 <style scoped>
 .vant-time-picker :deep(.van-field__control) {
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 
 /* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */
@@ -261,10 +261,10 @@ function onClear() {
   display: block;
   font-size: 16px;
   line-height: inherit;
-  color: #8a8a8a;
+  color: var(--app-text-3);
   cursor: pointer;
 }
 .vant-time-picker .vant-field-clear-icon:active {
-  color: #323233;
+  color: var(--app-text);
 }
 </style>

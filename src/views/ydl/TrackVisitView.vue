@@ -214,7 +214,7 @@ async function onPush(q: Record<string, any>) {
 <style scoped>
 .ydl-detail-page {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .f-group {
   margin: 8px 12px;
@@ -226,7 +226,7 @@ async function onPush(q: Record<string, any>) {
 .r-title {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
   margin-bottom: 8px;
 }
 .r-grid {
@@ -240,11 +240,11 @@ async function onPush(q: Record<string, any>) {
 }
 .r-cell-label {
   font-size: 11px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .r-cell-value {
   font-size: 13px;
-  color: #323233;
+  color: var(--app-text);
   margin-top: 2px;
 }
 </style>

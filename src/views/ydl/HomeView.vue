@@ -287,7 +287,7 @@ function go(it: MenuConf) {
 }
 .ydl-label {
   font-size: 12.5px;
-  color: #4a4a4a; /* 炭灰 */
+  color: var(--app-text-2);
   text-align: center;
   line-height: 1.3;
 }
@@ -295,7 +295,7 @@ function go(it: MenuConf) {
 /* 无权限空态 */
 .ydl-empty {
   text-align: center;
-  color: #8a8a8a; /* 钢灰 */
+  color: var(--app-text-3);
   padding: 32px 16px;
   font-size: 14px;
 }

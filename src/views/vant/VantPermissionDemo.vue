@@ -217,7 +217,7 @@ function visibleNone(codes: string | string[]): boolean {
 .perm-block-title {
   font-size: 15px;
   font-weight: 700;
-  color: #323233;
+  color: var(--app-text);
   margin: 0 0 10px;
 }
 .perm-block-title b {
@@ -232,14 +232,14 @@ function visibleNone(codes: string | string[]): boolean {
 }
 .perm-codes-label {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .perm-code-tag {
   margin-right: 2px;
 }
 .perm-codes-empty {
   font-size: 12px;
-  color: #c8c9cc;
+  color: var(--app-text-3);
 }
 .perm-row {
   display: flex;
@@ -247,7 +247,7 @@ function visibleNone(codes: string | string[]): boolean {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .perm-row:last-child {
   border-bottom: none;
@@ -277,7 +277,7 @@ function visibleNone(codes: string | string[]): boolean {
 }
 .perm-foot {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   line-height: 1.7;
   padding: 4px 16px;
 }
@@ -289,24 +289,24 @@ function visibleNone(codes: string | string[]): boolean {
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding: 0 0 24px;
 }
 .usage-page .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 18px 12px 8px;
 }
 .usage-page .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 4px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .usage-page .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 4px 12px;
   line-height: 1.6;
 }

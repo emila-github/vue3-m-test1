@@ -297,7 +297,7 @@ onUnmounted(() => clearTimeout(timer))
 
 <style scoped>
 .vant-search-field :deep(.van-field__control) {
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 
 .vant-search-field__popup {
@@ -314,11 +314,11 @@ onUnmounted(() => clearTimeout(timer))
 .vant-search-field__title {
   font-size: 16px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
 }
 .vant-search-field__close {
   font-size: 20px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vant-search-field__body {
   flex: 1;
@@ -336,11 +336,11 @@ onUnmounted(() => clearTimeout(timer))
   justify-content: space-between;
   padding: 12px 16px;
   font-size: 15px;
-  color: #323233;
+  color: var(--app-text);
   cursor: pointer;
 }
 .vant-search-field__item.is-active {
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .vant-search-field__item-text {
   flex: 1;
@@ -358,7 +358,7 @@ onUnmounted(() => clearTimeout(timer))
   padding: 28px 16px;
   text-align: center;
   font-size: 13px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vant-search-field__state--error {
   color: #ee0a24;
@@ -374,10 +374,10 @@ onUnmounted(() => clearTimeout(timer))
   display: block;
   font-size: 16px;
   line-height: inherit;
-  color: #8a8a8a;
+  color: var(--app-text-3);
   cursor: pointer;
 }
 .vant-search-field .vant-field-clear-icon:active {
-  color: #323233;
+  color: var(--app-text);
 }
 </style>

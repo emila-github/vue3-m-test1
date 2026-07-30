@@ -296,7 +296,7 @@ const base = (row: YdlFcddPolicy) => [
 <style scoped>
 .ydl-detail-page {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .f-group {
   margin: 8px 12px;
@@ -310,7 +310,7 @@ const base = (row: YdlFcddPolicy) => [
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-tags {
   display: flex;
@@ -318,7 +318,7 @@ const base = (row: YdlFcddPolicy) => [
 }
 .r-meta {
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 3px;
 }
 .fb-submit {

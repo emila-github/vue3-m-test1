@@ -159,7 +159,7 @@ const isHighlight = computed(() => props.style === 'highlight')
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: #fff;
+  background: var(--app-surface);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: relative;
   flex-shrink: 0;

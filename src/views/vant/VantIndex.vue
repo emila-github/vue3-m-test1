@@ -245,11 +245,11 @@ function navigateTo(path: string) {
 }
 .page-header h1 {
   font-size: 28px;
-  color: #1a1a1a;
+  color: var(--app-text);
   margin: 0 0 8px;
 }
 .subtitle {
-  color: #666;
+  color: var(--app-text-2);
   font-size: 14px;
 }
 .subtitle code {
@@ -260,7 +260,7 @@ function navigateTo(path: string) {
 }
 
 .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
@@ -269,7 +269,7 @@ function navigateTo(path: string) {
 .card h2 {
   margin: 0 0 16px;
   font-size: 18px;
-  color: #333;
+  color: var(--app-text);
 }
 
 .api-grid {
@@ -284,9 +284,9 @@ function navigateTo(path: string) {
   gap: 4px;
   padding: 12px;
   min-width: 0;
-  background: #fafafa;
+  background: var(--app-bg);
   border-radius: 8px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--app-border);
 }
 .api-item code {
   font-size: 13px;
@@ -297,13 +297,13 @@ function navigateTo(path: string) {
 }
 .api-item span {
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
 }
 
 .stages h2 {
   margin: 0 0 16px;
   font-size: 18px;
-  color: #333;
+  color: var(--app-text);
 }
 .stage-grid {
   display: grid;
@@ -314,8 +314,8 @@ function navigateTo(path: string) {
 
 .stage-card {
   position: relative;
-  background: #fff;
-  border: 1px solid #f0f0f0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-top: 3px solid;
   border-radius: 10px;
   padding: 20px 16px;
@@ -334,11 +334,11 @@ function navigateTo(path: string) {
 .stage-card h3 {
   margin: 10px 0 6px;
   font-size: 15px;
-  color: #333;
+  color: var(--app-text);
 }
 .stage-desc {
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
   line-height: 1.5;
   margin: 0;
 }
@@ -358,7 +358,7 @@ function navigateTo(path: string) {
 .why-list li {
   padding: 6px 0;
   font-size: 14px;
-  color: #555;
+  color: var(--app-text-2);
   line-height: 1.6;
 }
 

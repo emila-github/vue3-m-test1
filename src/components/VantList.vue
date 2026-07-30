@@ -616,7 +616,7 @@ defineExpose({
               style="margin-left: 6px"
             />
           </span>
-          <van-icon :name="showMoreFilter ? 'arrow-up' : 'arrow-down'" size="14" color="#999" />
+          <van-icon :name="showMoreFilter ? 'arrow-up' : 'arrow-down'" size="14" color="var(--app-text-3)" />
         </div>
 
         <div v-show="showMoreFilter" class="vl-more-body">
@@ -647,7 +647,7 @@ defineExpose({
               <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
                 filterDisplay(f)
               }}</span>
-              <van-icon name="arrow" color="#c8c9cc" />
+              <van-icon name="arrow" color="var(--app-text-3)" />
             </div>
 
             <!-- date 日期（点击单元格弹出 DatePicker） -->
@@ -655,7 +655,7 @@ defineExpose({
               <span :class="{ 'is-placeholder': !(query as Record<string, any>)[f.key] }">{{
                 filterDisplay(f)
               }}</span>
-              <van-icon name="arrow" color="#c8c9cc" />
+              <van-icon name="arrow" color="var(--app-text-3)" />
             </div>
 
             <!-- text / number 输入 -->
@@ -863,7 +863,7 @@ defineExpose({
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .vl-search-wrap {
   padding: 0 4px;
@@ -873,7 +873,7 @@ defineExpose({
   padding: 0 4px;
 }
 .vl-more {
-  background: #fff;
+  background: var(--app-surface);
 }
 .vl-more-bar {
   display: flex;
@@ -881,17 +881,17 @@ defineExpose({
   align-items: center;
   padding: 8px 16px;
   font-size: 13px;
-  color: #646566;
+  color: var(--app-text-2);
   cursor: pointer;
-  border-top: 1px solid #f5f5f5;
+  border-top: 1px solid var(--app-border);
 }
 .vl-more-body {
   padding: 0 16px 12px;
-  border-top: 1px solid #f5f5f5;
+  border-top: 1px solid var(--app-border);
 }
 .vl-filter-row {
   padding: 10px 0;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .vl-filter-row:last-of-type {
   border-bottom: none;
@@ -900,7 +900,7 @@ defineExpose({
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin-bottom: 8px;
 }
 .vl-filter-actions {
@@ -917,16 +917,16 @@ defineExpose({
   justify-content: space-between;
   padding: 6px 0;
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   cursor: pointer;
 }
 .vl-cell .is-placeholder {
-  color: #c8c9cc;
+  color: var(--app-text-3);
 }
 .vl-card {
   margin: 8px 12px;
   padding: 12px 16px;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
@@ -937,7 +937,7 @@ defineExpose({
   gap: 8px;
   padding-top: 8px;
   margin-top: 8px;
-  border-top: 1px solid #f5f5f5;
+  border-top: 1px solid var(--app-border);
 }
 .vl-card-actions-left,
 .vl-card-actions-right {
@@ -952,7 +952,7 @@ defineExpose({
 }
 .vl-empty {
   text-align: center;
-  color: #969799;
+  color: var(--app-text-3);
   font-size: 13px;
   padding: 40px 0;
 }
@@ -990,12 +990,12 @@ defineExpose({
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .vl-submit-bar {
   padding: 16px;
-  background: #fff;
-  border-top: 1px solid #f0f0f0;
+  background: var(--app-surface);
+  border-top: 1px solid var(--app-border);
   position: sticky;
   bottom: 0;
 }
@@ -1006,18 +1006,18 @@ defineExpose({
   text-align: center;
   font-size: 17px;
   margin: 0 0 12px;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .vl-log {
   margin: 16px 12px;
   padding: 12px;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 8px;
 }
 .vl-log-title {
   margin: 0 0 8px;
   font-size: 14px;
-  color: #333;
+  color: var(--app-text);
 }
 .vl-log-list {
   max-height: 200px;
@@ -1025,7 +1025,7 @@ defineExpose({
 }
 .vl-log-item {
   font-size: 11px;
-  color: #999;
+  color: var(--app-text-3);
   padding: 2px 0;
   font-family: monospace;
 }

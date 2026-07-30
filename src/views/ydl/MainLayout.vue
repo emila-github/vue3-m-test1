@@ -22,7 +22,7 @@ import { RouterView } from 'vue-router'
 <style scoped>
 .main-layout {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .layout-body {
   padding-bottom: 60px;

@@ -580,7 +580,7 @@ function onFailed() {
 <style scoped>
 .ins-form {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 .mode-bar {
@@ -588,12 +588,12 @@ function onFailed() {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
 }
 .mode-bar__tip {
   font-size: 13px;
-  color: #646566;
+  color: var(--app-text-2);
 }
 .form-actions {
   display: flex;
@@ -603,32 +603,32 @@ function onFailed() {
 
 /* 报案人原生 van-field clearable 清空图标，与自定义清空图标保持一致 */
 .ins-form :deep(.van-field__clear-icon) {
-  color: #8a8a8a;
+  color: var(--app-text-3);
   font-size: 16px;
 }
 .ins-form :deep(.van-field__clear-icon):active {
-  color: #323233;
+  color: var(--app-text);
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding: 0 0 24px;
 }
 .usage-page .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 18px 12px 8px;
 }
 .usage-page .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 4px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .usage-page .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 4px 12px;
   line-height: 1.6;
 }

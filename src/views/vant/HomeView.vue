@@ -160,7 +160,7 @@ function go(it: MenuItem) {
 /* ========== 页面根 ========== */
 .home {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 
 /* ========== 红色渐变头部 ========== */
@@ -228,14 +228,14 @@ function go(it: MenuItem) {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 20px;
   padding: 9px 16px;
   margin-bottom: 16px;
   cursor: pointer;
 }
 .search-placeholder {
-  color: #999;
+  color: var(--app-text-3);
   font-size: 14px;
 }
 
@@ -289,7 +289,7 @@ function go(it: MenuItem) {
 .promo-subtitle {
   margin: 4px 0 0;
   font-size: 12px;
-  color: #666;
+  color: var(--app-text-2);
 }
 .promo-tag {
   flex-shrink: 0;
@@ -314,12 +314,12 @@ function go(it: MenuItem) {
   padding-left: 4px;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 
 /* 福建源动力平台网格 */
 .menu-grid {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 14px;
   padding: 20px 6px 14px;
   display: grid;
@@ -342,7 +342,7 @@ function go(it: MenuItem) {
 }
 .menu-label {
   font-size: 12.5px;
-  color: #333;
+  color: var(--app-text);
   text-align: center;
   line-height: 1.3;
   max-width: 68px;

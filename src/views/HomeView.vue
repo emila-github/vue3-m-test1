@@ -78,7 +78,7 @@ function open(m: ModuleItem) {
 <style scoped>
 .mod-home {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .mod-header {
   background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
@@ -125,7 +125,7 @@ function open(m: ModuleItem) {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #fff;
+  background: var(--app-surface);
   border: none;
   border-radius: 14px;
   padding: 16px 16px;
@@ -157,16 +157,16 @@ function open(m: ModuleItem) {
 .mod-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .mod-desc {
   margin-top: 4px;
   font-size: 12.5px;
-  color: #888;
+  color: var(--app-text-3);
   line-height: 1.4;
 }
 .mod-arrow {
-  color: #c8c9cc;
+  color: var(--app-text-3);
   font-size: 18px;
   flex-shrink: 0;
 }

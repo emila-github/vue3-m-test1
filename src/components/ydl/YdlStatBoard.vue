@@ -234,7 +234,7 @@ onMounted(async () => {
 .s-org {
   font-size: 15px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
   margin-bottom: 10px;
 }
 .s-total .s-org {
@@ -251,12 +251,12 @@ onMounted(async () => {
 }
 .s-cell-label {
   font-size: 11px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .s-cell-value {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin-top: 2px;
 }
 .s-cell-value.is-money {
