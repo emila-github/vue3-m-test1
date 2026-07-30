@@ -221,7 +221,7 @@ function visibleNone(codes: string | string[]): boolean {
   margin: 0 0 10px;
 }
 .perm-block-title b {
-  color: #d71920;
+  color: var(--van-primary-color);
 }
 .perm-codes {
   margin-top: 10px;

@@ -165,7 +165,7 @@ function go(it: MenuItem) {
 
 /* ========== 红色渐变头部 ========== */
 .home-header {
-  background: linear-gradient(180deg, #d71920 0%, #e84a52 55%, #f08a8f 100%);
+  background: linear-gradient(180deg, var(--van-primary-color) 0%, var(--app-primary-deep) 55%, var(--app-primary-light) 100%);
   padding: 12px 16px 0;
   color: #fff;
   border-radius: 0 0 24px 24px;
@@ -284,7 +284,7 @@ function go(it: MenuItem) {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #d71920;
+  color: var(--van-primary-color);
 }
 .promo-subtitle {
   margin: 4px 0 0;
@@ -293,7 +293,7 @@ function go(it: MenuItem) {
 }
 .promo-tag {
   flex-shrink: 0;
-  background: linear-gradient(135deg, #d71920, #ee5a24);
+  background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-light));
   color: #fff;
   padding: 6px 14px;
   border-radius: 18px;

@@ -38,7 +38,7 @@ const modules: ModuleItem[] = [
     desc: '源动力业务平台（子目录模块首页）',
     to: '/ydl',
     icon: '源',
-    color: '#D71920',
+    color: 'var(--van-primary-color)',
   },
 ]
 
@@ -81,7 +81,7 @@ function open(m: ModuleItem) {
   background: #f5f6f8;
 }
 .mod-header {
-  background: linear-gradient(135deg, #d71920, #b31319);
+  background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   padding: 28px 20px 36px;
   color: #fff;
   border-radius: 0 0 24px 24px;

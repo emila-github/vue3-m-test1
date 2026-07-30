@@ -1,6 +1,9 @@
 import './assets/main.css'
 import { initSkin } from './composables/usePiccSkin'
 
+// 移动端基础布局层：与皮肤开关无关，始终生效（修复 Vant 皮肤下页面排版错乱）。
+// 须先于 vant-picc.css 引入，使 PICC 皮肤的 html.picc-skin 作用域规则能覆盖中性版。
+import './styles/base-mobile.css'
 import './styles/vant-picc.css'
 // 函数式组件（showToast/showLoadingToast/showConfirmDialog/showDialog 等）基于 Popup 渲染，
 // 其定位/居中/边框样式不会由模板 <van-*> 的按需机制自动带入；这里显式引入，

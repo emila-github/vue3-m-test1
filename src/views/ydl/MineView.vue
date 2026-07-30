@@ -5,9 +5,37 @@ import { showConfirmDialog, showToast } from 'vant'
 import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
 import { usePermission } from '@/composables/usePermission'
 import { siteLogout } from '@/api/modules/ydl/site-auth'
+import { usePiccSkin } from '@/composables/usePiccSkin'
 
 const router = useRouter()
 const LOGIN_PATH = '/ydl/login'
+
+// 皮肤设置：picc = PICC 品牌皮肤（默认），vant = 去除 PICC 后的 Vant 默认皮肤
+const { active, enable, disable } = usePiccSkin()
+const skinShow = ref(false)
+const skinColumns = [
+  { text: 'PICC 品牌皮肤', value: 'picc' },
+  { text: 'Vant 默认皮肤', value: 'vant' },
+]
+const currentSkin = computed(() => (active.value ? 'picc' : 'vant'))
+const currentSkinText = computed(() => (active.value ? 'PICC 品牌皮肤' : 'Vant 默认皮肤'))
+
+function openSkinPicker() {
+  skinShow.value = true
+}
+interface SkinConfirmParams {
+  selectedOptions?: { value?: string }[]
+}
+function onSkinConfirm({ selectedOptions }: SkinConfirmParams) {
+  const v = selectedOptions?.[0]?.value
+  // vant = 关闭 PICC 皮肤（移除 picc-skin class，回退到默认 Vant 主题）
+  if (v === 'vant') disable()
+  else enable()
+  skinShow.value = false
+}
+function onSkinCancel() {
+  skinShow.value = false
+}
 
 // 登录态 + 当前登录用户信息（登录成功后由 setUserInfo 持久化）
 const logged = ref(isLoggedIn())
@@ -74,8 +102,27 @@ async function onLogout() {
     </header>
 
     <van-cell-group inset class="mine-cells">
+      <van-cell
+        icon="brush-o"
+        title="皮肤设置"
+        :value="currentSkinText"
+        is-link
+        @click="openSkinPicker"
+      />
       <van-cell v-for="c in cells" :key="c.title" :icon="c.icon" :title="c.title" is-link />
     </van-cell-group>
+
+    <!-- 皮肤选择弹层 -->
+    <van-popup v-model:show="skinShow" position="bottom" round>
+      <van-picker
+        :model-value="[currentSkin]"
+        :columns="skinColumns"
+        :show-toolbar="true"
+        title="选择皮肤"
+        @confirm="onSkinConfirm"
+        @cancel="onSkinCancel"
+      />
+    </van-popup>
 
     <div class="mine-logout">
       <van-button v-if="logged" block round type="primary" plain @click="onLogout">
@@ -92,7 +139,7 @@ async function onLogout() {
   background: #f5f6f8;
 }
 .mine-header {
-  background: linear-gradient(135deg, #d71920, #b31319);
+  background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   padding: 36px 20px 28px;
 }
 .mine-user {

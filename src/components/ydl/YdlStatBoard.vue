@@ -227,9 +227,10 @@ onMounted(async () => {
   padding: 12px 14px;
 }
 .s-total {
-  border-left: 4px solid #d71920;
-  background: linear-gradient(0deg, #fff, #fff7f7);
+  border-left: 4px solid var(--van-primary-color);
 }
+/* 合计行（首行=合计）的淡红渐变底为 PICC 品牌样式，见 vant-picc.css 的
+   html.picc-skin .s-total；Vant 皮肤下不显示渐变底（避免蓝色调不搭）。 */
 .s-org {
   font-size: 15px;
   font-weight: 700;
@@ -237,7 +238,7 @@ onMounted(async () => {
   margin-bottom: 10px;
 }
 .s-total .s-org {
-  color: #d71920;
+  color: var(--van-primary-color);
 }
 .s-grid {
   display: grid;
@@ -259,7 +260,7 @@ onMounted(async () => {
   margin-top: 2px;
 }
 .s-cell-value.is-money {
-  color: #d71920;
+  color: var(--van-primary-color);
 }
 .bottom-spacer {
   height: 40px;

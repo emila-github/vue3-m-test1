@@ -603,7 +603,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 }
 .r-premium {
   margin-left: auto;
-  color: #d71920;
+  color: var(--van-primary-color);
   font-weight: 600;
 }
 .r-types {

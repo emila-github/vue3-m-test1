@@ -222,7 +222,7 @@ onMounted(async () => {
   color: #1989fa;
 }
 .s-table td.is-money {
-  color: #d71920;
+  color: var(--van-primary-color);
 }
 .bottom-spacer {
   height: 40px;

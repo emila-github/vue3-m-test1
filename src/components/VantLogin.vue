@@ -203,7 +203,7 @@ onMounted(() => {
           <van-checkbox
             v-model="agreeChecked"
             shape="circle"
-            checked-color="#d71920"
+            checked-color="var(--van-primary-color)"
             icon-size="14px"
           />
           <span
@@ -254,7 +254,7 @@ onMounted(() => {
           <van-checkbox
             v-model="agreeChecked"
             shape="circle"
-            checked-color="#d71920"
+            checked-color="var(--van-primary-color)"
             icon-size="14px"
           />
           <span
@@ -374,7 +374,7 @@ onMounted(() => {
   display: inline-block;
   font-size: 26px;
   font-weight: 800;
-  color: #d71920;
+  color: var(--van-primary-color);
   letter-spacing: 3px;
   line-height: 1;
   margin-bottom: 12px;
@@ -423,11 +423,11 @@ onMounted(() => {
   transition: all 0.25s;
   text-align: center;
   background: transparent;
-  color: #d71920;
+  color: var(--van-primary-color);
   position: relative;
 }
 .card-tab--active {
-  background: linear-gradient(135deg, #e88a91, #d71920);
+  background: linear-gradient(135deg, var(--app-primary-deep), var(--van-primary-color));
   color: #fff;
 }
 .card-tab:not(.card-tab--active):hover {
@@ -521,7 +521,7 @@ onMounted(() => {
   border-radius: 25px;
   font-size: 17px;
   font-weight: 600;
-  color: #d71920;
+  color: var(--van-primary-color);
   background: rgba(215, 25, 32, 0.08);
   cursor: pointer;
   transition: background 0.2s;

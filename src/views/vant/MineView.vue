@@ -90,7 +90,7 @@ async function onLogout() {
   background: #f5f6f8;
 }
 .mine-header {
-  background: linear-gradient(135deg, #d71920, #b31319);
+  background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   padding: 36px 20px 28px;
 }
 .mine-user {

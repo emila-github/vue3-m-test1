@@ -11,7 +11,7 @@ const stages = ref([
     desc: '仿 PICC 截图险种解读/查保单两行的白底圆角+红色线形业务图标，含 10 个保险场景图标',
     path: '/vant/vant-ins-icon-demo',
     icon: '🛡️',
-    color: '#d71920',
+    color: 'var(--van-primary-color)',
   },
   {
     id: 'permission',
@@ -147,7 +147,7 @@ const stages = ref([
     desc: '验证码/密码/微信/企业微信四种登录方式，可配置启用项与默认方式，默认企业微信登录',
     path: '/vant/vant-login-demo',
     icon: '🔑',
-    color: '#d71920',
+    color: 'var(--van-primary-color)',
   },
   {
     id: 'slider-verify',

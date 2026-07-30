@@ -54,7 +54,7 @@ const filters: ListFilter[] = [
 ]
 
 function typeColor(type: string) {
-  return type === 'VIP' ? '#d71920' : type === '会员' ? '#07c160' : '#969799'
+  return type === 'VIP' ? 'var(--van-primary-color)' : type === '会员' ? '#07c160' : '#969799'
 }
 
 function onAction(payload: { key: string; item: DemoCustomer }) {
@@ -227,7 +227,7 @@ const actions = [{ key: 'call', name: '拨打电话', icon: 'phone-o' }]
 }
 .r-amount {
   margin-left: auto;
-  color: #d71920;
+  color: var(--van-primary-color);
   font-weight: 600;
 }
 

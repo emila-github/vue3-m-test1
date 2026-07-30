@@ -869,7 +869,7 @@ defineExpose({
   padding: 0 4px;
 }
 .vl-search-action {
-  color: #d71920;
+  color: var(--van-primary-color);
   padding: 0 4px;
 }
 .vl-more {

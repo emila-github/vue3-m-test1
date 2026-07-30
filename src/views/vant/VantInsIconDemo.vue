@@ -75,7 +75,7 @@ const rows = ref<InsRow[]>([
 .ins-banner {
   margin: 12px 16px 4px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #d71920, #e84a52);
+  background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   color: #fff;
   font-size: 13px;
   border-radius: 10px;
@@ -104,7 +104,7 @@ const rows = ref<InsRow[]>([
   bottom: 2px;
   width: 3px;
   border-radius: 2px;
-  background: #d71920;
+  background: var(--van-primary-color);
 }
 .ins-row {
   display: flex;

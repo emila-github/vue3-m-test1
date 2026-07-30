@@ -211,7 +211,7 @@ onMounted(async () => {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: #d71920;
+  background: var(--van-primary-color);
   color: #fff;
   font-size: 20px;
   font-weight: 800;
@@ -222,7 +222,7 @@ onMounted(async () => {
 .brand-text {
   font-size: 22px;
   font-weight: 800;
-  color: #d71920;
+  color: var(--van-primary-color);
   letter-spacing: 2px;
 }
 .login-title {
@@ -263,11 +263,11 @@ onMounted(async () => {
   transition: all 0.25s;
   text-align: center;
   background: transparent;
-  color: #d71920;
+  color: var(--van-primary-color);
   position: relative;
 }
 .card-tab--active {
-  background: linear-gradient(135deg, #e88a91, #d71920);
+  background: linear-gradient(135deg, var(--app-primary-deep), var(--van-primary-color));
   color: #fff;
 }
 .card-tab:not(.card-tab--active):hover {
@@ -350,7 +350,7 @@ onMounted(async () => {
   border-radius: 25px;
   font-size: 17px;
   font-weight: 600;
-  color: #d71920;
+  color: var(--van-primary-color);
   background: rgba(215, 25, 32, 0.08);
   cursor: pointer;
   transition: background 0.2s;
@@ -374,7 +374,7 @@ onMounted(async () => {
 .bind-tip {
   margin: 14px 0 0;
   font-size: 12px;
-  color: #d71920;
+  color: var(--van-primary-color);
   text-align: center;
 }
 </style>
