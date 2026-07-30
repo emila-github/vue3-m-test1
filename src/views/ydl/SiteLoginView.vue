@@ -15,7 +15,12 @@ import { useSitePasswordLogin } from '@/composables/ydl/useSitePasswordLogin'
 const route = useRoute()
 const router = useRouter()
 const wecom = useSiteWecomLogin()
-const { captchaUrl, loading: pwdLoading, refreshCaptcha, submit: submitPwd } = useSitePasswordLogin()
+const {
+  captchaUrl,
+  loading: pwdLoading,
+  refreshCaptcha,
+  submit: submitPwd,
+} = useSitePasswordLogin()
 
 const activeTab = ref<'wecom' | 'password'>('wecom')
 const username = ref('')
@@ -130,11 +135,7 @@ onMounted(async () => {
                     alt="验证码"
                     @click="refreshCaptcha"
                   />
-                  <van-button
-                    v-else
-                    size="mini"
-                    @click="refreshCaptcha"
-                  >获取</van-button>
+                  <van-button v-else size="mini" @click="refreshCaptcha">获取</van-button>
                 </template>
               </van-field>
             </van-cell-group>

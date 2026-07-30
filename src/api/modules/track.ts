@@ -14,7 +14,5 @@ export function listTrackSessions(params?: { userId?: string }) {
 
 /** 获取单个会话的完整操作序列，用于回放 */
 export function getTrackSessionEvents(sessionId: string) {
-  return get<{ session: TrackSession; events: TrackEvent[] }>(
-    `/track/sessions/${sessionId}/events`,
-  )
+  return get<{ session: TrackSession; events: TrackEvent[] }>(`/track/sessions/${sessionId}/events`)
 }

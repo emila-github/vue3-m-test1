@@ -102,7 +102,10 @@ const ICONS: Record<string, { c: string; p: string }> = {
   },
 
   // 兜底
-  _default: { c: 'var(--van-primary-color)', p: `<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 17v.02"/>` },
+  _default: {
+    c: 'var(--van-primary-color)',
+    p: `<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 17v.02"/>`,
+  },
 }
 
 const meta = computed(() => ICONS[props.name] ?? ICONS._default)

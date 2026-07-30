@@ -21,7 +21,8 @@ const WX_APP_ID = (import.meta.env.VITE_SITE_WX_APP_ID as string) || ''
 // 优先 ydl 专用配置，回退通用 OAUTH_REDIRECT_BASE；两者皆空则回退当前地址（仅演示/dev 用）。
 const OAUTH_REDIRECT_BASE =
   (import.meta.env.VITE_SITE_OAUTH_REDIRECT_BASE as string) ||
-  (import.meta.env.VITE_OAUTH_REDIRECT_BASE as string) || ''
+  (import.meta.env.VITE_OAUTH_REDIRECT_BASE as string) ||
+  ''
 
 export interface WecomLoginResult {
   ok: boolean

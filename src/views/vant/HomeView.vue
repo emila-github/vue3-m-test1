@@ -165,7 +165,12 @@ function go(it: MenuItem) {
 
 /* ========== 红色渐变头部 ========== */
 .home-header {
-  background: linear-gradient(180deg, var(--van-primary-color) 0%, var(--app-primary-deep) 55%, var(--app-primary-light) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--van-primary-color) 0%,
+    var(--app-primary-deep) 55%,
+    var(--app-primary-light) 100%
+  );
   padding: 12px 16px 0;
   color: #fff;
   border-radius: 0 0 24px 24px;

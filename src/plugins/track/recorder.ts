@@ -301,7 +301,10 @@ export class TrackRecorder {
     this.push(ev)
   }
 
-  private recordPageView(path: string, extra: { title?: string; name?: string; initial?: boolean }): void {
+  private recordPageView(
+    path: string,
+    extra: { title?: string; name?: string; initial?: boolean },
+  ): void {
     if (!this.enabled || !this.session) return
     // 避免连续重复记录同一路径
     const last = this.buffer[this.buffer.length - 1]

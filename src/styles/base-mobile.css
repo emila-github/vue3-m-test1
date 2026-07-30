@@ -33,13 +33,13 @@
   /* ===================== 应用级语义变量（供业务组件跟随皮肤翻转） ===================== */
   /* 默认（浅色）取值；暗色主题在 skins.css 的 html.theme-* 块内覆写。
      业务组件应引用这些变量而非写死颜色，否则切换暗色会残留白底/黑字。 */
-  --app-bg: #f5f6f8;        /* 画布 / 页面底色 */
-  --app-surface: #ffffff;   /* 卡片 / 凸起表面 */
+  --app-bg: #f5f6f8; /* 画布 / 页面底色 */
+  --app-surface: #ffffff; /* 卡片 / 凸起表面 */
   --app-surface-2: #f7f8fa; /* 次级表面（输入区 / 凹陷） */
-  --app-text: #1a1a1a;      /* 主文字 */
-  --app-text-2: #646566;    /* 次文字 */
-  --app-text-3: #969799;    /* 辅助 / 占位文字 */
-  --app-border: #ebedf0;    /* 分隔线 / 边框 */
+  --app-text: #1a1a1a; /* 主文字 */
+  --app-text-2: #646566; /* 次文字 */
+  --app-text-3: #969799; /* 辅助 / 占位文字 */
+  --app-border: #ebedf0; /* 分隔线 / 边框 */
 }
 
 /* ===================== 1. 移动端 App 外壳 ===================== */
@@ -52,7 +52,11 @@
   background: #f7f8fa; /* Vant 默认画布灰，作为两套皮肤的公共底色 */
   position: relative;
   font-family:
-    'PingFang SC', 'HarmonyOS Sans', 'Microsoft YaHei', system-ui, -apple-system,
+    'PingFang SC',
+    'HarmonyOS Sans',
+    'Microsoft YaHei',
+    system-ui,
+    -apple-system,
     sans-serif;
 }
 

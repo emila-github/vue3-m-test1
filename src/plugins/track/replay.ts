@@ -46,9 +46,7 @@ function resolveClickable(el: Element): Element {
   ) {
     return el
   }
-  return (
-    el.closest('button, a, input, select, textarea, [role="button"], .van-button') ?? el
-  )
+  return el.closest('button, a, input, select, textarea, [role="button"], .van-button') ?? el
 }
 
 // ===== 回放视觉高亮（让用户看清当前在操作的元件） =====
@@ -76,7 +74,10 @@ function clearHighlight(): void {
   lastHighlight = null
 }
 
-function dispatchInput(el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, value: string): void {
+function dispatchInput(
+  el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+  value: string,
+): void {
   el.value = value
   el.dispatchEvent(new Event('input', { bubbles: true }))
   el.dispatchEvent(new Event('change', { bubbles: true }))
@@ -90,7 +91,12 @@ function cancelScrollAnim(): void {
     scrollRAF = 0
   }
 }
-function animateScrollTo(scroller: HTMLElement | null, x: number, y: number, duration: number): void {
+function animateScrollTo(
+  scroller: HTMLElement | null,
+  x: number,
+  y: number,
+  duration: number,
+): void {
   cancelScrollAnim()
   const startX = scroller ? scroller.scrollLeft : window.scrollX
   const startY = scroller ? scroller.scrollTop : window.scrollY
@@ -177,8 +183,13 @@ export function replayTrackEvents(events: TrackEvent[], options: ReplayOptions =
         }
         case 'input':
         case 'change':
-          if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
-            const inputType = el instanceof HTMLInputElement ? (el.getAttribute('type') || el.type) : ''
+          if (
+            el instanceof HTMLInputElement ||
+            el instanceof HTMLSelectElement ||
+            el instanceof HTMLTextAreaElement
+          ) {
+            const inputType =
+              el instanceof HTMLInputElement ? el.getAttribute('type') || el.type : ''
             if (inputType === 'checkbox' || inputType === 'radio') {
               // 勾选框：回填勾选态并派发 change，驱动组件 v-model
               if (typeof ev.checked === 'boolean') (el as HTMLInputElement).checked = ev.checked
@@ -191,7 +202,10 @@ export function replayTrackEvents(events: TrackEvent[], options: ReplayOptions =
           break
         case 'submit':
           if (el instanceof HTMLFormElement) el.requestSubmit?.()
-          else (el as HTMLElement).dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+          else
+            (el as HTMLElement).dispatchEvent(
+              new Event('submit', { bubbles: true, cancelable: true }),
+            )
           break
         // page_view 等元数据动作在回放中不重演 DOM 行为
       }

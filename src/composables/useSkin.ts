@@ -41,7 +41,14 @@ export const SKINS: SkinMeta[] = [
   { id: 'coffee', name: '暖咖', desc: '温馨暖咖', color: '#78350F', deep: '#92400e' },
   { id: 'graphite', name: '石墨灰', desc: '工业极简', color: '#64748B', deep: '#475569' },
   { id: 'dark', name: '暗夜', desc: '护眼深色', color: '#60a5fa', deep: '#0f172a', dark: true },
-  { id: 'luxury', name: '奢华黑金', desc: '高端黑金', color: '#eab308', deep: '#0a0a0a', dark: true },
+  {
+    id: 'luxury',
+    name: '奢华黑金',
+    desc: '高端黑金',
+    color: '#eab308',
+    deep: '#0a0a0a',
+    dark: true,
+  },
   { id: 'navy', name: '商务深蓝', desc: '深海军蓝', color: '#93c5fd', deep: '#0a1628', dark: true },
 ]
 
