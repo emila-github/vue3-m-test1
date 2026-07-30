@@ -5,9 +5,13 @@ import { showConfirmDialog, showToast } from 'vant'
 import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
 import { logout } from '@/api/modules/login'
 import { useSkin, SKINS, type SkinMeta } from '@/composables/useSkin'
+import pkg from '../../../package.json'
 
 const router = useRouter()
 const LOGIN_PATH = '/vant/vant-login-demo'
+
+// 版本号：取自 package.json 的 version 字段，构建时静态内联
+const version = pkg.version as string
 
 // 登录态 + 当前登录用户信息（登录成功后由 setUserInfo 持久化）
 const logged = ref(isLoggedIn())
@@ -74,6 +78,7 @@ async function onLogout() {
 <template>
   <div class="mine">
     <header class="mine-header">
+      <span class="mine-version">v{{ version }}</span>
       <div class="mine-user" @click="!logged && goLogin()">
         <div class="avatar">
           {{ avatarText }}
@@ -140,8 +145,17 @@ async function onLogout() {
   background: var(--app-bg);
 }
 .mine-header {
+  position: relative;
   background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   padding: 36px 20px 28px;
+}
+.mine-version {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.3px;
 }
 .mine-user {
   display: flex;

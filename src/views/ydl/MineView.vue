@@ -6,6 +6,7 @@ import { getUserInfo, clearAuth, isLoggedIn } from '@/api/core/token'
 import { usePermission } from '@/composables/usePermission'
 import { siteLogout } from '@/api/modules/ydl/site-auth'
 import { useSkin, SKINS, type SkinMeta } from '@/composables/useSkin'
+import pkg from '../../../package.json'
 
 const router = useRouter()
 const LOGIN_PATH = '/ydl/login'
@@ -13,6 +14,9 @@ const LOGIN_PATH = '/ydl/login'
 // 皮肤设置：接入多皮肤注册表（全套皮肤在源文件 SKINS 中维护）
 const { active, setSkin, current } = useSkin()
 const skinShow = ref(false)
+
+// 版本号：取自 package.json 的 version 字段，构建时静态内联
+const version = pkg.version as string
 
 function openSkinPicker() {
   skinShow.value = true
@@ -76,6 +80,7 @@ async function onLogout() {
 <template>
   <div class="mine">
     <header class="mine-header">
+      <span class="mine-version">v{{ version }}</span>
       <div class="mine-user" @click="!logged && goLogin()">
         <div class="avatar">
           {{ avatarText }}
@@ -143,8 +148,17 @@ async function onLogout() {
   background: var(--van-background, #f5f6f8);
 }
 .mine-header {
+  position: relative;
   background: linear-gradient(135deg, var(--van-primary-color), var(--app-primary-deep));
   padding: 36px 20px 28px;
+}
+.mine-version {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.3px;
 }
 .mine-user {
   display: flex;
