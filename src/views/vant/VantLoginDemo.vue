@@ -189,10 +189,10 @@ function onSuccess(r: LoginResult) {
 .result-card h3 {
   margin: 8px 4px;
   font-size: 15px;
-  color: #333;
+  color: var(--app-text);
 }
 .result-card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 16px;
 }
@@ -214,7 +214,7 @@ function onSuccess(r: LoginResult) {
   border-radius: 50%;
   object-fit: cover;
   flex: 0 0 auto;
-  background: #fff;
+  background: var(--app-surface);
 }
 .avatar-placeholder {
   display: flex;
@@ -248,14 +248,14 @@ function onSuccess(r: LoginResult) {
   gap: 8px;
   margin: 12px 0 0;
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
 }
 .token-line code {
   flex: 1;
-  background: #f5f6f8;
+  background: var(--app-bg);
   border-radius: 6px;
   padding: 4px 8px;
-  color: #666;
+  color: var(--app-text-2);
   word-break: break-all;
 }
 .raw-toggle {
@@ -264,10 +264,10 @@ function onSuccess(r: LoginResult) {
 .raw-json {
   margin: 12px 0 0;
   font-size: 12px;
-  color: #555;
+  color: var(--app-text-2);
   white-space: pre-wrap;
   word-break: break-all;
-  background: #f5f6f8;
+  background: var(--app-bg);
   border-radius: 8px;
   padding: 10px;
 }

@@ -162,7 +162,7 @@ defineExpose({ reset })
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e23b3b, #d71920);
+  background: linear-gradient(135deg, #e23b3b, var(--van-primary-color));
   color: #fff;
   display: flex;
   align-items: center;

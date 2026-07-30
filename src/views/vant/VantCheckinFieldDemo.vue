@@ -179,22 +179,22 @@ const sampleEmpty = ref<CheckinResult | null>(null)
 <style scoped>
 .demo-page {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 .section-title {
   font-size: 14px;
-  color: #969799;
+  color: var(--app-text-3);
   padding: 16px 16px 8px;
 }
 .sub-title {
   font-size: 13px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   padding: 8px 16px 4px;
 }
 .card {
-  background: #fff;
+  background: var(--app-surface);
   margin: 0 12px 12px;
   border-radius: 12px;
   padding: 8px 0;
@@ -204,7 +204,7 @@ const sampleEmpty = ref<CheckinResult | null>(null)
 }
 .hint {
   font-size: 13px;
-  color: #646566;
+  color: var(--app-text-2);
   line-height: 1.7;
   padding: 4px 14px 8px;
 }

@@ -94,15 +94,8 @@ const core = useLoginCore(emit)
 const { loading } = core
 
 // ====== 配置解析（可用方式 / 默认 / 标题 / 激活方式）======
-const {
-  title,
-  subtitle,
-  formMethods,
-  oauthMethods,
-  activeMethod,
-  switchTo,
-  fetchConfig,
-} = useLoginConfig(props)
+const { title, subtitle, formMethods, oauthMethods, activeMethod, switchTo, fetchConfig } =
+  useLoginConfig(props)
 
 // ====== 短信验证码登录 ======
 const {
@@ -194,30 +187,40 @@ onMounted(() => {
             class="field-input"
             placeholder="输入短信验证码"
           />
-          <button type="button" class="code-btn" :class="{ 'code-btn--disabled': codeBtnDisabled }" @click="onSendCode">
+          <button
+            type="button"
+            class="code-btn"
+            :class="{ 'code-btn--disabled': codeBtnDisabled }"
+            @click="onSendCode"
+          >
             {{ countdown > 0 ? `${countdown}s 后重发` : '获取验证码' }}
           </button>
         </div>
 
-        <button type="submit" class="submit-btn" :class="{ loading }">
-          登录
-        </button>
+        <button type="submit" class="submit-btn" :class="{ loading }">登录</button>
 
         <label class="agreement">
-          <van-checkbox v-model="agreeChecked" shape="circle" checked-color="#d71920" icon-size="14px" />
-          <span>已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span>
+          <van-checkbox
+            v-model="agreeChecked"
+            shape="circle"
+            checked-color="var(--van-primary-color)"
+            icon-size="14px"
+          />
+          <span
+            >已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span
+          >
         </label>
       </van-form>
 
       <!-- ========== 密码登录 ========== -->
-      <van-form v-else-if="activeMethod === 'password'" @submit="onPasswordSubmit" class="card-form">
+      <van-form
+        v-else-if="activeMethod === 'password'"
+        @submit="onPasswordSubmit"
+        class="card-form"
+      >
         <div class="card-field">
           <van-icon name="contact" class="field-icon" />
-          <input
-            v-model="pwdForm.account"
-            class="field-input"
-            placeholder="手机号 / 工号"
-          />
+          <input v-model="pwdForm.account" class="field-input" placeholder="手机号 / 工号" />
         </div>
         <div class="card-field">
           <van-icon name="lock" class="field-icon" />
@@ -242,16 +245,21 @@ onMounted(() => {
           </span>
         </div>
 
-        <button type="submit" class="submit-btn" :class="{ loading }">
-          登录
-        </button>
+        <button type="submit" class="submit-btn" :class="{ loading }">登录</button>
         <button v-if="forgotPassword" type="button" class="forgot-link" @click="showForgot = true">
           忘记密码？
         </button>
 
         <label class="agreement">
-          <van-checkbox v-model="agreeChecked" shape="circle" checked-color="#d71920" icon-size="14px" />
-          <span>已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span>
+          <van-checkbox
+            v-model="agreeChecked"
+            shape="circle"
+            checked-color="var(--van-primary-color)"
+            icon-size="14px"
+          />
+          <span
+            >已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span
+          >
         </label>
       </van-form>
     </div>
@@ -270,7 +278,9 @@ onMounted(() => {
           @click="onOAuth(m)"
         >
           <svg v-if="m === 'wechat'" viewBox="0 0 24 24" fill="#fff" class="oauth-svg">
-            <path d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66L4 17l2.5-1.5c.86.26 1.77.4 2.72.41A5.7 5.7 0 019 14c0-3.31 3.13-6 7-6 .34 0 .67.02 1 .06C16.47 5.61 13.28 4 9.5 4zm-2.88 4.38a1 1 0 110-2 1 1 0 010 2zm5.76 0a1 1 0 110-2 1 1 0 010 2zM16 9c-3.31 0-6 2.24-6 5s2.69 5 6 5c.67 0 1.31-.1 1.91-.27L20 20l-.54-2.14C21.15 16.93 22 15.55 22 14c0-2.76-2.69-5-6-5zm-2.5 3.25a.88.88 0 110-1.75.88.88 0 010 1.75zm5 0a.88.88 0 110-1.75.88.88 0 010 1.75z"/>
+            <path
+              d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66L4 17l2.5-1.5c.86.26 1.77.4 2.72.41A5.7 5.7 0 019 14c0-3.31 3.13-6 7-6 .34 0 .67.02 1 .06C16.47 5.61 13.28 4 9.5 4zm-2.88 4.38a1 1 0 110-2 1 1 0 010 2zm5.76 0a1 1 0 110-2 1 1 0 010 2zM16 9c-3.31 0-6 2.24-6 5s2.69 5 6 5c.67 0 1.31-.1 1.91-.27L20 20l-.54-2.14C21.15 16.93 22 15.55 22 14c0-2.76-2.69-5-6-5zm-2.5 3.25a.88.88 0 110-1.75.88.88 0 010 1.75zm5 0a.88.88 0 110-1.75.88.88 0 010 1.75z"
+            />
           </svg>
           <span v-else-if="m === 'wecom'" class="oauth-glyph">{{ METHOD_META[m].glyph }}</span>
           <van-icon v-else :name="METHOD_META[m].icon" color="#fff" size="22" />
@@ -329,7 +339,14 @@ onMounted(() => {
           <van-button round block type="primary" native-type="submit" :loading="loading">
             重置密码
           </van-button>
-          <van-button round block plain type="primary" class="forgot-cancel" @click="showForgot = false">
+          <van-button
+            round
+            block
+            plain
+            type="primary"
+            class="forgot-cancel"
+            @click="showForgot = false"
+          >
             取消
           </van-button>
         </div>
@@ -345,7 +362,7 @@ onMounted(() => {
   min-height: 100vh;
   margin: 0 auto;
   padding: 0 20px 24px;
-  background: linear-gradient(180deg, #fff1f2 0%, #fce7ec 40%, #f5e8ec 100%);
+  background: var(--app-login-gradient);
   box-sizing: border-box;
 }
 
@@ -357,7 +374,7 @@ onMounted(() => {
   display: inline-block;
   font-size: 26px;
   font-weight: 800;
-  color: #d71920;
+  color: var(--van-primary-color);
   letter-spacing: 3px;
   line-height: 1;
   margin-bottom: 12px;
@@ -371,21 +388,21 @@ onMounted(() => {
 .login-title {
   margin: 4px 0 6px;
   font-size: 22px;
-  color: #1a1a1a;
+  color: var(--app-text);
   font-weight: 600;
   line-height: 1.3;
 }
 .login-subtitle {
   margin: 0;
   font-size: 13px;
-  color: #999;
+  color: var(--app-text-3);
 }
 
 /* ====== 卡片式登录表单 ====== */
 .login-card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(215, 25, 32, 0.07);
+  box-shadow: 0 4px 20px rgba(var(--app-primary-rgb), 0.07);
   overflow: hidden;
 }
 
@@ -406,15 +423,15 @@ onMounted(() => {
   transition: all 0.25s;
   text-align: center;
   background: transparent;
-  color: #d71920;
+  color: var(--van-primary-color);
   position: relative;
 }
 .card-tab--active {
-  background: linear-gradient(135deg, #e88a91, #d71920);
+  background: linear-gradient(135deg, var(--app-primary-deep), var(--van-primary-color));
   color: #fff;
 }
 .card-tab:not(.card-tab--active):hover {
-  color: #b01418;
+  color: var(--app-primary-deep);
 }
 
 /* --- 表单内容 --- */
@@ -446,7 +463,7 @@ onMounted(() => {
   border: none;
   outline: none;
   font-size: 15px;
-  color: #333;
+  color: var(--app-text);
   background: transparent;
   min-width: 0;
 }
@@ -460,7 +477,7 @@ onMounted(() => {
   flex-shrink: 0;
   border: none;
   background: transparent;
-  color: #1989fa;
+  color: var(--van-primary-color);
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
@@ -482,7 +499,7 @@ onMounted(() => {
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  background: #f7f8fa;
+  background: var(--app-bg);
 }
 .captcha-img :deep(svg) {
   display: block;
@@ -504,14 +521,14 @@ onMounted(() => {
   border-radius: 25px;
   font-size: 17px;
   font-weight: 600;
-  color: #d71920;
-  background: rgba(215, 25, 32, 0.08);
+  color: var(--van-primary-color);
+  background: rgba(var(--app-primary-rgb), 0.08);
   cursor: pointer;
   transition: background 0.2s;
 }
 .submit-btn:hover,
 .submit-btn:active {
-  background: rgba(215, 25, 32, 0.14);
+  background: rgba(var(--app-primary-rgb), 0.14);
 }
 .submit-btn.loading {
   opacity: 0.6;
@@ -526,7 +543,7 @@ onMounted(() => {
   padding: 0;
   border: none;
   background: transparent;
-  color: #1989fa;
+  color: var(--van-primary-color);
   font-size: 13px;
   text-align: right;
   cursor: pointer;
@@ -539,7 +556,7 @@ onMounted(() => {
   gap: 6px;
   margin-top: 16px;
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
   cursor: pointer;
   line-height: 1.5;
 }
@@ -547,7 +564,7 @@ onMounted(() => {
   padding-top: 1px;
 }
 .agreement a {
-  color: #1989fa;
+  color: var(--van-primary-color);
   text-decoration: none;
 }
 
@@ -584,7 +601,9 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s;
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .oauth-icon-btn:hover {

@@ -544,7 +544,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 .f-upload-title {
   font-size: 13px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   padding: 8px 12px 6px;
 }
 .f-group {
@@ -556,7 +556,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .f-row:last-child {
   border-bottom: none;
@@ -568,7 +568,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 }
 .f-row-label {
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   min-width: 76px;
 }
 .applicant-verified {
@@ -585,14 +585,14 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 .r-name {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .r-meta {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #666;
+  color: var(--app-text-2);
   margin-top: 4px;
 }
 .r-sep {
@@ -603,7 +603,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 }
 .r-premium {
   margin-left: auto;
-  color: #d71920;
+  color: var(--van-primary-color);
   font-weight: 600;
 }
 .r-types {
@@ -614,24 +614,24 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding: 0 0 24px;
 }
 .usage-page .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 18px 12px 8px;
 }
 .usage-page .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 4px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .usage-page .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 4px 12px;
   line-height: 1.6;
 }

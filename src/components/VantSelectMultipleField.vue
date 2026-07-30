@@ -183,7 +183,7 @@ function onToggle(value: string | number) {
 
 <style scoped>
 .vant-select-multiple :deep(.van-field__control) {
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .vsm-popup {
   max-height: 70vh;
@@ -195,16 +195,16 @@ function onToggle(value: string | number) {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid #f2f3f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .vsm-title {
   font-size: 15px;
   font-weight: 500;
-  color: #323233;
+  color: var(--app-text);
 }
 .vsm-cancel {
   font-size: 14px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .vsm-confirm {
   font-size: 14px;
@@ -213,7 +213,7 @@ function onToggle(value: string | number) {
 }
 .vsm-counter {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   padding: 8px 16px 0;
 }
 .vsm-list {
@@ -231,10 +231,10 @@ function onToggle(value: string | number) {
   display: block;
   font-size: 16px;
   line-height: inherit;
-  color: #8a8a8a;
+  color: var(--app-text-3);
   cursor: pointer;
 }
 .vant-select-multiple .vant-field-clear-icon:active {
-  color: #323233;
+  color: var(--app-text);
 }
 </style>

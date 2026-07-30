@@ -1,0 +1,121 @@
+/* ============================================================================
+ * 移动端基础布局层 (base-mobile.css)
+ * ----------------------------------------------------------------------------
+ * 作用：与皮肤开关无关、始终生效的移动端外壳与「中性布局类」。
+ *
+ * 为什么需要这份文件？
+ *   PICC 皮肤的 .picc-page / .picc-card / .picc-header-gradient 等布局类原本
+ *   全部 scope 在 `html.picc-skin` 下；一旦切换到 Vant 皮肤（移除 picc-skin），
+ *   这些类失效，页面会回落到 create-vue 桌面脚手架（#app 1280px 居中 + 白底），
+ *   表现为：头部白底白字（文字不可见）、失去灰底画布与白卡、整体排版错乱。
+ *
+ * 本文件把这些「结构性 / 中性」样式抽出来常驻，使两套皮肤都有正常的页面骨架：
+ *   - 中性布局类（灰底画布、白卡、分组标题、暖提示）两套皮肤一致；
+ *   - .picc-header-gradient 在 Vant 皮肤用「Vant 蓝渐变」保证白字可读，
+ *     PICC 皮肤下由 vant-picc.css 的 `html.picc-skin` 规则覆盖为品牌红渐变；
+ *   - .picc-price 在 Vant 皮肤回落深灰文字，PICC 皮肤下覆盖为品牌红。
+ *
+ * 注意：品牌色仍只存在于 vant-picc.css 的 html.picc-skin 作用域，
+ *       「移除 picc-skin = 回退默认主题」的机制不受影响。
+ * ==========================================================================*/
+
+/* ===================== 0. 随皮肤翻转的主色配套变量 ===================== */
+/* Vant 皮肤（默认）下的主色体系：以 Vant 蓝为基调，供渐变深/浅端使用。
+   PICC 皮肤会在 vant-picc.css 的 html.picc-skin 作用域内覆盖为品牌红体系。
+   组件里写死的 #d71920 等应改为引用这些变量，使两套皮肤色调自动切换。 */
+:root {
+  --app-primary-deep: #1565c0; /* Vant 深蓝（渐变深端 / 按下态） */
+  --app-primary-light: #e8f3ff; /* Vant 浅蓝（浅底标签 / 浅红底替代） */
+  --app-primary-rgb: 25, 137, 250; /* Vant 蓝 RGB：用于半透明主色（阴影 / 浅底按钮） */
+  /* 登录页背景渐变：Vant 皮肤下浅蓝，PICC 皮肤下由 vant-picc.css 覆盖为品牌红粉 */
+  --app-login-gradient: linear-gradient(180deg, #eef6ff 0%, #e3f0ff 40%, #f0f5fb 100%);
+
+  /* ===================== 应用级语义变量（供业务组件跟随皮肤翻转） ===================== */
+  /* 默认（浅色）取值；暗色主题在 skins.css 的 html.theme-* 块内覆写。
+     业务组件应引用这些变量而非写死颜色，否则切换暗色会残留白底/黑字。 */
+  --app-bg: #f5f6f8;        /* 画布 / 页面底色 */
+  --app-surface: #ffffff;   /* 卡片 / 凸起表面 */
+  --app-surface-2: #f7f8fa; /* 次级表面（输入区 / 凹陷） */
+  --app-text: #1a1a1a;      /* 主文字 */
+  --app-text-2: #646566;    /* 次文字 */
+  --app-text-3: #969799;    /* 辅助 / 占位文字 */
+  --app-border: #ebedf0;    /* 分隔线 / 边框 */
+}
+
+/* ===================== 1. 移动端 App 外壳 ===================== */
+/* 覆盖 create-vue 脚手架的桌面 #app{max-width:1280px}：移动优先，
+   桌面下以手机宽度居中预览，并统一提供浅灰画布底。 */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #f7f8fa; /* Vant 默认画布灰，作为两套皮肤的公共底色 */
+  position: relative;
+  font-family:
+    'PingFang SC', 'HarmonyOS Sans', 'Microsoft YaHei', system-ui, -apple-system,
+    sans-serif;
+}
+
+/* 桌面下两侧留白，凸显手机预览列 */
+body {
+  background: #ebedf0;
+}
+
+/* ===================== 2. 中性布局类（两套皮肤通用） ===================== */
+
+/* 页面通用容器：灰底画布 + 至少满屏高 */
+.picc-page {
+  min-height: 100vh;
+  background: #f5f6f8;
+}
+
+/* 白卡容器：白底 / 12px 圆角 / 轻投影 / 内边距 */
+.picc-card {
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 10px 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* 分组标题 */
+.picc-section-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 14px 16px 8px;
+}
+
+/* 暖色提示条（橙配色本身中性，两套皮肤通用） */
+.picc-notice-warm {
+  background: #fff7ed;
+  color: #c2410c;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 头部区域：两套皮肤都必须「可见」。
+   Vant 皮肤 → Vant 蓝渐变（白字可读，呼应 Vant 默认主题色）；
+   PICC 皮肤 → 由 vant-picc.css 的 html.picc-skin 规则覆盖为品牌红渐变。 */
+.picc-header-gradient {
+  background: linear-gradient(135deg, #1989fa 0%, #4dabf7 100%);
+  color: #ffffff;
+  padding: 20px 16px;
+  border-radius: 0 0 20px 20px;
+  min-height: 120px;
+}
+
+/* 数字展示体：仅字体与字重（无品牌色），两套皮肤通用 */
+.picc-number-display,
+.picc-price {
+  font-family: 'DIN Alternate', 'Bebas Neue', 'PingFang SC', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* 价格文字：Vant 皮肤回落深灰；PICC 皮肤下由 vant-picc.css 覆盖为品牌红 */
+.picc-price {
+  color: #1a1a1a;
+}

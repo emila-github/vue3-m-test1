@@ -23,7 +23,7 @@ import { RouterView } from 'vue-router'
 <style scoped>
 .main-layout {
   min-height: 100vh;
-  background: #f5f6f8;
+  background: var(--app-bg);
 }
 .layout-body {
   /* 预留底部 tabbar 高度，避免内容被遮挡 */

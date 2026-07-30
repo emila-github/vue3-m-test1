@@ -109,12 +109,12 @@ const disabledOn = ref(true)
 .block h3 {
   margin: 8px 16px 4px;
   font-size: 15px;
-  color: #333;
+  color: var(--app-text);
 }
 .hint {
   margin: 0 16px 8px;
   font-size: 12px;
-  color: #999;
+  color: var(--app-text-3);
   line-height: 1.5;
 }
 .status {

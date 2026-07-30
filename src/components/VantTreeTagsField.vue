@@ -337,7 +337,7 @@ function clearTemp() {
 
 <style scoped>
 .vant-tree-tags__field :deep(.van-field__control) {
-  color: #1a1a1a;
+  color: var(--app-text);
 }
 .vant-tree-tags__tags {
   display: flex;
@@ -353,7 +353,7 @@ function clearTemp() {
   font-weight: 600;
   text-align: center;
   padding: 14px;
-  border-bottom: 1px solid #f2f3f5;
+  border-bottom: 1px solid var(--app-border);
 }
 .tree-body {
   max-height: 50vh;
@@ -372,7 +372,7 @@ function clearTemp() {
 }
 .tree-row__arrow {
   font-size: 16px;
-  color: #969799;
+  color: var(--app-text-3);
   width: 20px;
   flex: none;
   cursor: pointer;
@@ -389,14 +389,14 @@ function clearTemp() {
   color: #1989fa;
 }
 .tree-row__check.is-unchecked {
-  color: #c8c9cc;
+  color: var(--app-text-3);
 }
 .tree-row__check.is-disabled {
   opacity: 0.4;
 }
 .tree-row__label {
   font-size: 14px;
-  color: #323233;
+  color: var(--app-text);
   flex: 1;
 }
 .tree-footer {
@@ -404,11 +404,11 @@ function clearTemp() {
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-  border-top: 1px solid #f2f3f5;
+  border-top: 1px solid var(--app-border);
 }
 .tree-footer__count {
   font-size: 13px;
-  color: #969799;
+  color: var(--app-text-3);
 }
 .tree-footer__btns {
   display: flex;
@@ -425,10 +425,10 @@ function clearTemp() {
   display: block;
   font-size: 16px;
   line-height: inherit;
-  color: #8a8a8a;
+  color: var(--app-text-3);
   cursor: pointer;
 }
 .vant-tree-tags__field .vant-field-clear-icon:active {
-  color: #323233;
+  color: var(--app-text);
 }
 </style>

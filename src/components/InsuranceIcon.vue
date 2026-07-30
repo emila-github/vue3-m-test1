@@ -28,7 +28,7 @@ const ICONS: Record<string, { c: string; p: string }> = {
 
   // 险种解读 — 文档+搜索放大镜
   'ins-policy-read': {
-    c: '#d71920',
+    c: 'var(--van-primary-color)',
     p: `<rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 7h6M9 10h6M9 13h3"/><circle cx="15.5" cy="16.5" r="4" fill="#fff" stroke-width="1.8"/><path d="m17.5 18.5 2 2"/>`,
   },
   // 线上营业厅 — 商店门面
@@ -38,7 +38,7 @@ const ICONS: Record<string, { c: string; p: string }> = {
   },
   // 健康评测 — 心脏 + 心电图
   'ins-health-check': {
-    c: '#d71920',
+    c: 'var(--van-primary-color)',
     p: `<path d="M12 4C9 4 7 6.5 7 9c0 5 5 9 5 9s5-4 5-9c0-2.5-2-5-5-5z"/><path d="M3 16h3l2-4 3 6 2-6 2 4h3" stroke-linecap="round"/>`,
   },
   // 新市民 — 人像轮廓
@@ -56,18 +56,18 @@ const ICONS: Record<string, { c: string; p: string }> = {
 
   // 查保单 — 文件夹+搜索
   'ins-query-policy': {
-    c: '#d71920',
+    c: 'var(--van-primary-color)',
     p: `<path d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="15" cy="16" r="3.5" fill="#fff" stroke-width="1.8"/><path d="m17 18 2 2"/>`,
   },
   // 人身险续缴 — 人+¥
   'ins-life-renewal': {
-    c: '#d71920',
-    p: `<circle cx="11" cy="7" r="4"/><path d="M3 21c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5"/><text x="17" y="10" font-size="8" font-weight="700" fill="#d71920" stroke="none">¥</text>`,
+    c: 'var(--van-primary-color)',
+    p: `<circle cx="11" cy="7" r="4"/><path d="M3 21c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5"/><text x="17" y="10" font-size="8" font-weight="700" fill="currentColor" stroke="none">¥</text>`,
   },
   // 保险价格 — 盾牌+¥
   'ins-price-compare': {
-    c: '#d71920',
-    p: `<path d="M12 2.5l8 3.5v5.5c0 5-8 10-8 10S4 16.5 4 11.5V6l8-3.5z"/><text x="10" y="15" font-size="9" font-weight="700" fill="#d71920" stroke="none">¥</text>`,
+    c: 'var(--van-primary-color)',
+    p: `<path d="M12 2.5l8 3.5v5.5c0 5-8 10-8 10S4 16.5 4 11.5V6l8-3.5z"/><text x="10" y="15" font-size="9" font-weight="700" fill="currentColor" stroke="none">¥</text>`,
   },
   // 农险服务 — 盾牌+麦穗叶子
   'ins-agri-service': {
@@ -82,7 +82,7 @@ const ICONS: Record<string, { c: string; p: string }> = {
 
   /* ========== 兜底 ============ */
   _default: {
-    c: '#d71920',
+    c: 'var(--van-primary-color)',
     p: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>`,
   },
 }
@@ -97,7 +97,8 @@ const meta = computed(() => ICONS[props.name] ?? ICONS._default)
       :width="size * 0.5"
       :height="size * 0.5"
       fill="none"
-      :stroke="meta.c"
+      stroke="currentColor"
+      :style="{ color: meta.c }"
       stroke-width="1.75"
       stroke-linecap="round"
       stroke-linejoin="round"
@@ -113,7 +114,7 @@ const meta = computed(() => ICONS[props.name] ?? ICONS._default)
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: #fff;
+  background: var(--app-surface);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   position: relative;
   flex-shrink: 0;
@@ -129,7 +130,7 @@ const meta = computed(() => ICONS[props.name] ?? ICONS._default)
   line-height: 1.2;
   padding: 1px 5px;
   border-radius: 8px 8px 8px 2px;
-  background: #ee5a24;
+  background: var(--app-primary-light);
   color: #fff;
   white-space: nowrap;
   font-weight: 600;

@@ -1,7 +1,13 @@
 import './assets/main.css'
-import { initSkin } from './composables/usePiccSkin'
+import { initSkin } from './composables/useSkin'
 
+// 移动端基础布局层：与皮肤开关无关，始终生效（修复 Vant 皮肤下页面排版错乱）。
+// 须先于 vant-picc.css 引入，使 PICC 皮肤的 html.picc-skin 作用域规则能覆盖中性版。
+import './styles/base-mobile.css'
 import './styles/vant-picc.css'
+// 全套主题（Vant 蓝 / 翡翠绿 / 琥珀橙 / 青碧 / 玫瑰粉 / 暗夜 等，动态来自 useSkin 的 SKINS）：
+// 以 html.theme-<id> 提供主色与表面配套，须置于 vant-picc.css 之后。
+import './styles/skins.css'
 // 函数式组件（showToast/showLoadingToast/showConfirmDialog/showDialog 等）基于 Popup 渲染，
 // 其定位/居中/边框样式不会由模板 <van-*> 的按需机制自动带入；这里显式引入，
 // 确保任意页面的 toast 与二次确认弹窗都能正常显示。
@@ -37,5 +43,5 @@ app.directive('permission-none', permissionNoneDirective) // 拥有任意一个�
 app.directive('menu', menuDirective) // 菜单权限：拥有任意一个即可见 (hasMenuAny)
 app.directive('menu-all', menuAllDirective) // 菜单权限：必须拥有全部才可见 (hasMenuAll)
 
-initSkin(true)
+initSkin('picc')
 app.mount('#app')

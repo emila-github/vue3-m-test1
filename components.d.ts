@@ -52,7 +52,6 @@ declare module 'vue' {
     VanSlider: typeof import('vant/es')['Slider']
     VanStepper: typeof import('vant/es')['Stepper']
     VanSwitch: typeof import('vant/es')['Switch']
-    VanSwitchCell: typeof import('vant/es')['SwitchCell']
     VanTab: typeof import('vant/es')['Tab']
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
@@ -74,6 +73,9 @@ declare module 'vue' {
     VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
     VantUpload: typeof import('./src/components/VantUpload.vue')['default']
     VanUploader: typeof import('vant/es')['Uploader']
+    YdlJcDecision: typeof import('./src/components/ydl/YdlJcDecision.vue')['default']
+    YdlStatBoard: typeof import('./src/components/ydl/YdlStatBoard.vue')['default']
+    YdlXbBoard: typeof import('./src/components/ydl/YdlXbBoard.vue')['default']
   }
 }
 
@@ -119,7 +121,6 @@ declare global {
   const VanSlider: typeof import('vant/es')['Slider']
   const VanStepper: typeof import('vant/es')['Stepper']
   const VanSwitch: typeof import('vant/es')['Switch']
-  const VanSwitchCell: typeof import('vant/es')['SwitchCell']
   const VanTab: typeof import('vant/es')['Tab']
   const VanTabbar: typeof import('vant/es')['Tabbar']
   const VanTabbarItem: typeof import('vant/es')['TabbarItem']
@@ -141,4 +142,7 @@ declare global {
   const VantTreeTagsField: typeof import('./src/components/VantTreeTagsField.vue')['default']
   const VantUpload: typeof import('./src/components/VantUpload.vue')['default']
   const VanUploader: typeof import('vant/es')['Uploader']
+  const YdlJcDecision: typeof import('./src/components/ydl/YdlJcDecision.vue')['default']
+  const YdlStatBoard: typeof import('./src/components/ydl/YdlStatBoard.vue')['default']
+  const YdlXbBoard: typeof import('./src/components/ydl/YdlXbBoard.vue')['default']
 }

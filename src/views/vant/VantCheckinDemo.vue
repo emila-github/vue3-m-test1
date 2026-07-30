@@ -217,7 +217,7 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
 <style scoped>
 .demo-page {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--app-bg);
 }
 .container {
   padding: 12px 12px 40px;
@@ -225,18 +225,18 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 18px 4px 8px;
 }
 .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 4px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 4px 12px;
   line-height: 1.6;
 }
@@ -251,7 +251,7 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  background: #f7f8fa;
+  background: var(--app-bg);
   border-radius: 8px;
   padding: 10px;
   margin: 8px 4px 12px;
@@ -261,7 +261,7 @@ const formMode = computed<'once' | 'multiple'>(() => (formMulti.value ? 'multipl
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 </style>

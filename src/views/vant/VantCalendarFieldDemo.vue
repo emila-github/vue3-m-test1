@@ -231,7 +231,7 @@ const requiredVal = ref<string>('')
 <style scoped>
 .demo-page {
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--app-bg);
 }
 .container {
   padding: 12px 12px 40px;
@@ -239,18 +239,18 @@ const requiredVal = ref<string>('')
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #323233;
+  color: var(--app-text);
   margin: 18px 4px 8px;
 }
 .card {
-  background: #fff;
+  background: var(--app-surface);
   border-radius: 12px;
   padding: 4px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .hint {
   font-size: 12px;
-  color: #969799;
+  color: var(--app-text-3);
   margin: 8px 4px 12px;
 }
 .hint code {
@@ -263,7 +263,7 @@ const requiredVal = ref<string>('')
 .echo-box {
   max-height: 140px;
   overflow-y: auto;
-  background: #f7f8fa;
+  background: var(--app-bg);
   border-radius: 8px;
   padding: 8px 10px;
   margin: 0 4px 12px;
@@ -271,8 +271,8 @@ const requiredVal = ref<string>('')
 .echo-item {
   display: inline-block;
   color: #07c160;
-  background: #fff;
-  border: 1px solid #ebedf0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   padding: 2px 8px;
   border-radius: 4px;
   margin: 0 6px 6px 0;
@@ -280,12 +280,12 @@ const requiredVal = ref<string>('')
   word-break: break-all;
 }
 .echo-empty {
-  color: #969799;
+  color: var(--app-text-3);
   font-size: 12px;
 }
 
 .usage-page {
-  background: #f7f8fa;
+  background: var(--app-bg);
   padding-bottom: 24px;
 }
 </style>

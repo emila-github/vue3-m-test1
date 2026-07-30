@@ -263,6 +263,29 @@ cpolar http 5173 --hostname picc-test.vip.cpolar.cn
 - 运行后 **重启 dev server** 让 `.env` 重新加载，再用脚本打印的域名打开登录页扫码。
 - 该脚本只同步 `.env`；**企业微信后台回调域名仍需手动改成脚本打印的域名**（免费版每次都变）。保留固定域名后后台只需改一次。
 
+## 九、鉴权与免登录联调（VITE_DEV_TOKEN / token 头配置）
+
+`VantLogin` 与站点登录共用 `src/api/core/token.ts` 的鉴权内核（详见 `md/两种登录方案与鉴权详解.md` 第 4 节）。本组件相关的配置要点：
+
+### 9.1 可配置项（环境变量）
+
+| 变量 | 默认 | 作用 |
+| --- | --- | --- |
+| `VITE_TOKEN_HEADER` | `X-Access-Token` | 请求头携带 token 的字段名（请求拦截器经 `TOKEN_HEADER` 注入） |
+| `VITE_TOKEN_STORAGE_KEY` | `app_token` | 本地存储 token 的 key |
+| `VITE_DEV_TOKEN` | 空 | 开发期预置 token：强制 token，跳过登录联调真实后端 |
+
+### 9.2 VITE_DEV_TOKEN 免登录
+
+在 `.env.*` 里配一枚有效 token，`src/main.ts` 启动即 `initDevToken()` 写入 `localStorage`。它是**强制 token**：`getToken()` 优先返回它，所有登录方式（`useLoginCore.doLogin` / OAuth 的 `persistOAuth`）的 `setToken` 都不会覆盖它。适用于"后端可用但想直接拿真实 token 联调、跳过扫码/输密码"的场景。生产环境勿配。
+
+> 后端（JeecgBoot）token 多为"JWT 签名 + Redis 服务端会话"双重校验：`exp` 未过期不代表后端仍认，Redis 会话失效即 `401`。需重新拿有效 token 更新 `VITE_DEV_TOKEN`。
+
+### 9.3 与 demoMode 的关系
+
+- `demoMode=true`：OAuth 走演示降级（本地预览登录信息，无需 https / 可信域名）；若同时配 `VITE_DEV_TOKEN`，强制 token 仍优先生效。
+- `demoMode=false`（真实）：OAuth 走真实扫码，仍由 `getToken()` 注入的 `VITE_DEV_TOKEN` 决定请求是否带真实 token。两者正交，可并存。
+
 ### 真实打通自检清单
 
 - [ ] `.env` 配齐 WECHAT*\*/WECOM*\* 凭证
