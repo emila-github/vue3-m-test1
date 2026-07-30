@@ -26,6 +26,9 @@
 :root {
   --app-primary-deep: #1565c0; /* Vant 深蓝（渐变深端 / 按下态） */
   --app-primary-light: #e8f3ff; /* Vant 浅蓝（浅底标签 / 浅红底替代） */
+  --app-primary-rgb: 25, 137, 250; /* Vant 蓝 RGB：用于半透明主色（阴影 / 浅底按钮） */
+  /* 登录页背景渐变：Vant 皮肤下浅蓝，PICC 皮肤下由 vant-picc.css 覆盖为品牌红粉 */
+  --app-login-gradient: linear-gradient(180deg, #eef6ff 0%, #e3f0ff 40%, #f0f5fb 100%);
 }
 
 /* ===================== 1. 移动端 App 外壳 ===================== */

@@ -194,7 +194,7 @@ onMounted(async () => {
   margin: 0 auto;
   padding: 0 20px 24px;
   box-sizing: border-box;
-  background: linear-gradient(180deg, #fff1f2 0%, #fce7ec 40%, #f5e8ec 100%);
+  background: var(--app-login-gradient);
 }
 
 /* ====== 顶部标题区 ====== */
@@ -242,7 +242,7 @@ onMounted(async () => {
 .login-card {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(215, 25, 32, 0.07);
+  box-shadow: 0 4px 20px rgba(var(--app-primary-rgb), 0.07);
   overflow: hidden;
 }
 
@@ -271,7 +271,7 @@ onMounted(async () => {
   color: #fff;
 }
 .card-tab:not(.card-tab--active):hover {
-  color: #b01418;
+  color: var(--app-primary-deep);
 }
 
 /* --- 表单内容 --- */
@@ -351,13 +351,13 @@ onMounted(async () => {
   font-size: 17px;
   font-weight: 600;
   color: var(--van-primary-color);
-  background: rgba(215, 25, 32, 0.08);
+  background: rgba(var(--app-primary-rgb), 0.08);
   cursor: pointer;
   transition: background 0.2s;
 }
 .submit-btn:hover,
 .submit-btn:active {
-  background: rgba(215, 25, 32, 0.14);
+  background: rgba(var(--app-primary-rgb), 0.14);
 }
 .submit-btn.loading {
   opacity: 0.6;
