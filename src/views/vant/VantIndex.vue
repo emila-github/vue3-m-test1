@@ -157,6 +157,14 @@ const stages = ref([
     icon: '🎚️',
     color: '#ff976a',
   },
+  {
+    id: 'track',
+    title: '页面操作记录插件 Track',
+    desc: '默认不开启，开启后对全站进行无感知记录并上报后端，再由后端数据回放用户操作',
+    path: '/vant/vant-track-demo',
+    icon: '📡',
+    color: '#07c160',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -197,7 +205,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 19 个）</h2>
+      <h2>组件演示（共 20 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

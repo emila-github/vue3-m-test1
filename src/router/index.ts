@@ -154,6 +154,12 @@ const manualRoutes = [
     component: () => import('../views/vant/VantSliderVerifyDemo.vue'),
     meta: { title: 'VantSliderVerify 滑块验证' },
   },
+  {
+    path: '/vant/vant-track-demo',
+    name: 'vant-track-demo',
+    component: () => import('../views/vant/VantTrackDemo.vue'),
+    meta: { title: '操作记录' },
+  },
 
 ]
 

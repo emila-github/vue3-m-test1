@@ -20,6 +20,7 @@ import demoClaimRoutes from './demo-claim'
 import demoCustomerRoutes from './demo-customer'
 import demoMapRoutes from './demo-map'
 import loginRoutes from './login'
+import { trackMockRoutes } from './track'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -43,6 +44,7 @@ const allRoutes: MockRoute[] = [
   ...demoCustomerRoutes,
   ...demoMapRoutes,
   ...loginRoutes,
+  ...trackMockRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
