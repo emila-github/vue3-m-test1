@@ -1,0 +1,186 @@
+/* ============================================================================
+ * 站点全套皮肤 (skins.css)
+ * ----------------------------------------------------------------------------
+ * 与 vant-picc.css（仅 html.picc-skin 专属重组件主题）配合：
+ *   - PICC 品牌皮肤由 vant-picc.css 的 html.picc-skin 提供；
+ *   - 其余皮肤由本文件以 html.theme-<id> 提供「主色 + 表面 + 渐变」配套 token，
+ *     组件形态回落 Vant 默认，仅主色 / 画布 / 强调随主题翻转。
+ * 任一时刻只有一个皮肤 class 生效（由 useSkin 负责清理），互不冲突。
+ *
+ * 配色来自 ui-ux-pro-max 设计系统：金融级对比度（≥4.5:1）、主色 + 深端双色、
+ * 深色 OLED 主题护眼。所有交互过渡 150–300ms。
+ * ==========================================================================*/
+
+/* ===================== Vant 默认蓝（轻量显式声明，便于切换与预览） ===================== */
+html.theme-vant {
+  --van-primary-color: #1989fa;
+  --van-primary-color-light: #ecf4ff;
+  --van-primary-color-light-2: #d4e8ff;
+  --app-primary-deep: #1565c0;
+  --app-primary-light: #e8f3ff;
+  --app-primary-rgb: 25, 137, 250;
+  --app-login-gradient: linear-gradient(180deg, #eef6ff 0%, #e3f0ff 40%, #f0f5fb 100%);
+}
+
+/* ===================== 翡翠绿（清新自然 / fintech fresh） ===================== */
+html.theme-emerald {
+  --van-primary-color: #059669;
+  --van-primary-color-light: #d1fae5;
+  --van-primary-color-light-2: #a7f3d0;
+  --app-primary-deep: #047857;
+  --app-primary-light: #d1fae5;
+  --app-primary-rgb: 5, 150, 105;
+  --app-login-gradient: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 40%, #f0fdf9 100%);
+}
+
+/* ===================== 琥珀橙（温暖活力 / gold trust） ===================== */
+html.theme-amber {
+  --van-primary-color: #f59e0b;
+  --van-primary-color-light: #fef3c7;
+  --van-primary-color-light-2: #fde68a;
+  --app-primary-deep: #d97706;
+  --app-primary-light: #fef3c7;
+  --app-primary-rgb: 245, 158, 11;
+  --app-login-gradient: linear-gradient(180deg, #fffbeb 0%, #fef3c7 40%, #fffdf5 100%);
+}
+
+/* ===================== 紫罗兰（优雅科技 / purple tech） ===================== */
+html.theme-violet {
+  --van-primary-color: #7c3aed;
+  --van-primary-color-light: #ede9fe;
+  --van-primary-color-light-2: #ddd6fe;
+  --app-primary-deep: #6d28d9;
+  --app-primary-light: #ede9fe;
+  --app-primary-rgb: 124, 58, 237;
+  --app-login-gradient: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 40%, #faf8ff 100%);
+}
+
+/* ===================== 青碧（宁静治愈 / calm teal） ===================== */
+html.theme-teal {
+  --van-primary-color: #0d9488;
+  --van-primary-color-light: #ccfbf1;
+  --van-primary-color-light-2: #99f6e4;
+  --app-primary-deep: #0f766e;
+  --app-primary-light: #ccfbf1;
+  --app-primary-rgb: 13, 148, 136;
+  --app-login-gradient: linear-gradient(180deg, #f0fdfa 0%, #ccfbf1 40%, #f6fffd 100%);
+}
+
+/* ===================== 玫瑰粉（柔和浪漫 / rose） ===================== */
+html.theme-rose {
+  --van-primary-color: #e11d48;
+  --van-primary-color-light: #ffe4e6;
+  --van-primary-color-light-2: #fecdd3;
+  --app-primary-deep: #be123c;
+  --app-primary-light: #ffe4e6;
+  --app-primary-rgb: 225, 29, 72;
+  --app-login-gradient: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 40%, #fff7f8 100%);
+}
+
+/* ===================== 各主题头部渐变（让核心头部随皮肤切换颜色） ===================== */
+/* 顺序须早于 theme-dark 块；base-mobile 的默认蓝仅作兜底，被此处 html.theme-* 覆盖。*/
+html.theme-vant .picc-header-gradient {
+  background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+  color: #ffffff;
+}
+html.theme-emerald .picc-header-gradient {
+  background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+  color: #ffffff;
+}
+html.theme-amber .picc-header-gradient {
+  background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+  color: #ffffff;
+}
+html.theme-violet .picc-header-gradient {
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  color: #ffffff;
+}
+html.theme-teal .picc-header-gradient {
+  background: linear-gradient(135deg, #115e59 0%, #0d9488 100%);
+  color: #ffffff;
+}
+html.theme-rose .picc-header-gradient {
+  background: linear-gradient(135deg, #9f1239 0%, #e11d48 100%);
+  color: #ffffff;
+}
+
+/* ===================== 暗夜（OLED 护眼深色主题） ===================== */
+html.theme-dark {
+  /* 主色：在深色画布上保持可读的亮蓝 */
+  --van-primary-color: #60a5fa;
+  --van-primary-color-light: rgba(96, 165, 250, 0.16);
+  --van-primary-color-light-2: rgba(96, 165, 250, 0.28);
+  --app-primary-deep: #3b82f6;
+  --app-primary-light: rgba(96, 165, 250, 0.16);
+  --app-primary-rgb: 96, 165, 250;
+  --app-login-gradient: linear-gradient(180deg, #0f172a 0%, #1e293b 60%, #0b1220 100%);
+
+  /* 表面 / 文本 / 边框 深色化（覆盖 base-mobile 的浅色默认） */
+  --van-background: #0f172a;
+  --van-background-2: #1e293b;
+  --van-background-3: #334155;
+  --van-text-color: #f8fafc;
+  --van-text-color-2: #cbd5e1;
+  --van-text-color-3: #94a3b8;
+  --van-border-color: #334155;
+  --van-active-color: #334155;
+  --van-nav-bar-background: #111827;
+  --van-nav-bar-title-text-color: #f8fafc;
+  --van-nav-bar-icon-color: #f8fafc;
+  --van-nav-bar-text-color: #60a5fa;
+  --van-tabbar-background: #111827;
+  --van-tabbar-item-text-color: #94a3b8;
+  --van-tabs-nav-background: #111827;
+  --van-tabs-default-color: #f8fafc;
+  --van-tab-text-color: #cbd5e1;
+  --van-tab-active-text-color: #60a5fa;
+  --van-cell-background: #1e293b;
+  --van-cell-group-background: #1e293b;
+  --van-cell-text-color: #f8fafc;
+  --van-cell-value-color: #cbd5e1;
+  --van-cell-label-color: #94a3b8;
+  --van-cell-border-color: #334155;
+  --van-field-input-text-color: #f8fafc;
+  --van-field-placeholder-text-color: #64748b;
+  --van-popup-background: #1e293b;
+  --van-dialog-background: #1e293b;
+  --van-card-background: #1e293b;
+  --van-search-background: #0f172a;
+  --van-search-content-background: #1e293b;
+  --van-action-sheet-item-background: #1e293b;
+  --van-action-sheet-cancel-text-color: #f8fafc;
+  --van-action-sheet-description-color: #94a3b8;
+  --van-picker-title-text-color: #f8fafc;
+  --van-picker-option-text-color: #f8fafc;
+  --van-picker-cancel-action-color: #94a3b8;
+}
+
+/* 暗夜：画布 / 外壳 / 中性布局类一并深色化 */
+html.theme-dark #app {
+  background: #0f172a;
+}
+html.theme-dark body {
+  background: #020617;
+}
+html.theme-dark .picc-page {
+  background: #0f172a;
+}
+html.theme-dark .picc-card {
+  background: #1e293b;
+  box-shadow: none;
+  border: 1px solid #334155;
+}
+html.theme-dark .picc-header-gradient {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #f8fafc;
+}
+html.theme-dark .picc-section-title {
+  color: #f8fafc;
+}
+html.theme-dark .picc-price {
+  color: #f8fafc;
+}
+html.theme-dark .picc-notice-warm {
+  background: #3a2a12;
+  color: #fbbf24;
+}

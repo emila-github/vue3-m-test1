@@ -274,7 +274,7 @@ function navigateTo(path: string) {
 
 .api-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -283,6 +283,7 @@ function navigateTo(path: string) {
   flex-direction: column;
   gap: 4px;
   padding: 12px;
+  min-width: 0;
   background: #fafafa;
   border-radius: 8px;
   border: 1px solid #f0f0f0;
@@ -291,6 +292,8 @@ function navigateTo(path: string) {
   font-size: 13px;
   color: #1989fa;
   font-weight: 500;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .api-item span {
   font-size: 12px;
@@ -361,7 +364,7 @@ function navigateTo(path: string) {
 
 @media (max-width: 768px) {
   .api-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .stage-grid {
     grid-template-columns: 1fr;
