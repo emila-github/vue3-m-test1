@@ -15,6 +15,8 @@ export interface ReplayOptions {
   onDone?: () => void
   /** 单步最小间隔（ms），避免事件过密看不清，默认 250 */
   minStep?: number
+  /** 页面切换（page_view）回调，传入记录时的路由 fullPath，用于回放时真实跳转 */
+  navigate?: (fullPath: string) => void | Promise<void>
 }
 
 export interface ReplayHandle {
@@ -162,7 +164,10 @@ export function replayTrackEvents(events: TrackEvent[], options: ReplayOptions =
     const nextEv = events[index + 1]
     const gap = nextEv ? Math.max((nextEv.t - ev.t) / speed, minStep) : minStep
 
-    if (ev.type === 'scroll') {
+    // 页面切换：回放时真实跳转路由，还原用户的导航轨迹
+    if (ev.type === 'page_view') {
+      if (ev.path) options.navigate?.(ev.path)
+    } else if (ev.type === 'scroll') {
       // 滚屏还原：用 rAF 在 gap 时间内从当前位置平滑插值到记录位置，
       // 模拟真实「连续滚动」手势，而非瞬移或分段跳变。
       // 注意：scroll 事件没有 selector（window 滚动），不能放在下面的 if(el) 内。
@@ -230,8 +235,10 @@ export function replayTrackEvents(events: TrackEvent[], options: ReplayOptions =
     get total() {
       return total
     },
-    play() {
-      if (playing || index >= total) return
+    play(fromIndex = 0) {
+      if (playing) return
+      // 支持断点续播：从指定索引开始（刷新 / 跨页跳转恢复后继续）
+      index = Math.max(0, Math.min(fromIndex, total - 1))
       playing = true
       step()
     },

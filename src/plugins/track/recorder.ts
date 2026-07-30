@@ -119,6 +119,13 @@ export class TrackRecorder {
 
   setRouter(router: any): void {
     this.router = router
+    // 若已开启记录但此前未挂上路由守卫（安装时 router 尚未就绪），补挂 afterEach，
+    // 确保「页面切换（page_view）」在后续导航中被记录。
+    if (this.enabled && !this.routeGuard && router?.afterEach) {
+      this.routeGuard = router.afterEach((to: any) => {
+        this.recordPageView(to.fullPath, { title: to.meta?.title, name: to.name })
+      })
+    }
   }
 
   isEnabled(): boolean {

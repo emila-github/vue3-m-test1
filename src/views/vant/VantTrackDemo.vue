@@ -8,14 +8,14 @@
  *  - 回放区：从 mock 后端拉取会话，按事件序列在沙箱上重演用户操作
  */
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
-import { useTrack, replayTrackEvents } from '@/plugins/track'
+import { useTrack } from '@/plugins/track'
 import type { TrackEvent, TrackEventType } from '@/plugins/track'
-import { listTrackSessions, getTrackSessionEvents } from '@/api/modules/track'
-import { getUserInfo } from '@/api/core/token'
+import { useTrackReplay } from '@/composables/useTrackReplay'
 
 const track = useTrack()
-const user = getUserInfo()
+const router = useRouter()
 
 // ===== 开关状态 =====
 const enabled = ref(track.isEnabled())
@@ -92,6 +92,8 @@ function onEventsChange() {
 const liveEvents = ref<TrackEvent[]>([])
 let unsub: (() => void) | null = null
 onMounted(() => {
+  // 确保录制器持有 router，保证「页面切换（page_view）」在任意时机都能被记录
+  track.setRouter(router)
   unsub = track.subscribe((events) => {
     // 仅展示最近 50 条，避免 DOM 无限增长导致频繁重排
     liveEvents.value = events.slice(-50).reverse()
@@ -130,78 +132,31 @@ function clearNow() {
 }
 
 // ===== 会话查询与回放 =====
-const sessions = ref<{ sessionId: string; startedAt: number; eventCount: number }[]>([])
-const loadingSessions = ref(false)
-async function loadSessions() {
-  loadingSessions.value = true
-  try {
-    const res = await listTrackSessions({ userId: user?.userId })
-    sessions.value = res.list ?? []
-    // 拉取完成后直接展开弹出层，默认显示会话列表（可切换）
-    popupView.value = 'sessions'
-    listVisible.value = true
-    // 回放需关闭记录，避免重复记录；开启状态提示用户先关闭操作记录
-    if (enabled.value) showToast('回放前请先关闭操作记录')
-    else if (!sessions.value.length) showToast('暂无会话，请先开启记录并操作')
-  } finally {
-    loadingSessions.value = false
-  }
-}
+// 回放状态由 useTrackReplay 模块级单例持有：跨页面切换（组件卸载）不丢失，
+// 同时断点写入 localStorage，刷新也不丢。
+const {
+  sessions,
+  replayEvents,
+  replayIndex,
+  replayTotal,
+  replaying,
+  listVisible,
+  popupView,
+  loadSessions,
+  loadReplay,
+  playReplay,
+  stopReplay,
+  openList,
+} = useTrackReplay()
 
-const replayEvents = ref<TrackEvent[]>([])
-const replayIndex = ref(0)
-const replayTotal = ref(0)
-const replaying = ref(false)
-const listVisible = ref(false)
-// 弹出层视图：sessions=会话列表（可切换）/ events=回放事件列表（看进度）
-const popupView = ref<'sessions' | 'events'>('sessions')
-const sandboxRef = ref<HTMLElement | null>(null)
-let handle: ReturnType<typeof replayTrackEvents> | null = null
-
-async function loadReplay(id: string) {
-  const res = await getTrackSessionEvents(id)
-  replayEvents.value = res.events ?? []
-  replayIndex.value = 0
-  replayTotal.value = replayEvents.value.length
-  // 选择记录后默认隐藏回放列表，仅保留浮动控制条；点开「列表」可展开
-  listVisible.value = false
-  showToast(`载入 ${replayEvents.value.length} 条操作`)
+// 播放 / 退出播放后同步「启用记录」开关显示（回放会自动关闭记录）
+function onPlay() {
+  playReplay()
+  enabled.value = track.isEnabled()
 }
-
-function playReplay() {
-  if (!replayEvents.value.length) return
-  // 回放前自动关闭操作记录，避免重复记录（无需手动关闭）
-  if (enabled.value) {
-    track.disable()
-    enabled.value = track.isEnabled()
-    showToast('已自动关闭操作记录，开始回放')
-  }
-  handle = replayTrackEvents(replayEvents.value, {
-    root: sandboxRef.value ?? undefined,
-    speed: 1,
-    minStep: 400,
-    onStep: (_ev, i) => {
-      replayIndex.value = i + 1
-    },
-    onDone: () => {
-      replaying.value = false
-      showToast('回放完成')
-    },
-  })
-  replaying.value = true
-  handle.play()
-}
-function stopReplay() {
-  handle?.stop()
-  replaying.value = false
-  replayIndex.value = 0
-  // 退出回放后保留已载入会话，浮动条回到「会话 + 播放」状态（不清空）
-  listVisible.value = false
-}
-// 打开列表：依据是否正在回放，决定默认展示会话列表或回放事件列表
-function openList() {
-  popupView.value = replaying.value ? 'events' : 'sessions'
-  listVisible.value = true
+function onStop() {
+  stopReplay()
+  enabled.value = track.isEnabled()
 }
 </script>
 
@@ -236,10 +191,10 @@ function openList() {
           <span class="replay-fab-title">回放 {{ replayIndex }} / {{ replayTotal }}</span>
           <div class="replay-fab-actions">
             <van-button size="mini" plain icon="video-o" @click="openList">会话</van-button>
-            <van-button v-if="!replaying" size="mini" type="primary" icon="play" @click="playReplay"
+            <van-button v-if="!replaying" size="mini" type="primary" icon="play" @click="onPlay"
               >播放</van-button
             >
-            <van-button v-else size="mini" type="danger" icon="stop" @click="stopReplay"
+            <van-button v-else size="mini" type="danger" icon="stop" @click="onStop"
               >退出播放</van-button
             >
           </div>
@@ -353,7 +308,7 @@ function openList() {
 
     <!-- 沙箱：产生操作 -->
     <van-cell-group inset title="操作沙箱（在此操作会被记录）" class="block">
-      <form id="track-form" ref="sandboxRef" class="sandbox" @submit.prevent="onSubmit">
+      <form id="track-form" class="sandbox" @submit.prevent="onSubmit">
         <van-field id="track-name" v-model="form.name" label="姓名" placeholder="输入触发 input" />
         <van-field id="track-city" v-model="form.city" label="城市" placeholder="输入触发 input" />
         <van-field
