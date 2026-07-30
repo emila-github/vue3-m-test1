@@ -207,7 +207,7 @@ function openList() {
 
 <template>
   <div class="track-demo">
-    <van-nav-bar title="页面操作记录" />
+    <van-nav-bar title="页面操作记录" left-text="返回" left-arrow @click-left="$router.back()" />
 
     <!-- 统一浮动控制条：拉取列表 / 会话 / 回放 / 退出回放 在一起浮动（不透明、紧凑小巧） -->
     <div class="replay-fab" data-track-ignore>

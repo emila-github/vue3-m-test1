@@ -137,6 +137,12 @@ const manualRoutes = [
     meta: { title: '表单内打卡' },
   },
   {
+    path: '/vant/vant-ins-icon-demo',
+    name: 'vant-ins-icon-demo',
+    component: () => import('../views/vant/VantInsIconDemo.vue'),
+    meta: { title: 'VantInsIcon 图标' },
+  },
+  {
     path: '/vant/vant-insurance-form-demo',
     name: 'vant-insurance-form-demo',
     component: () => import('../views/vant/VantInsuranceFormDemo.vue'),
@@ -160,7 +166,6 @@ const manualRoutes = [
     component: () => import('../views/vant/VantTrackDemo.vue'),
     meta: { title: '操作记录' },
   },
-
 ]
 
 const router = createRouter({
