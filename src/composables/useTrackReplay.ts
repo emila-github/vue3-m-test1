@@ -108,6 +108,10 @@ export function useTrackReplay() {
       track.disable()
       showToast('已自动关闭操作记录，开始回放')
     }
+    // 回放完成后再点播放：进度已到末尾，从头重新回放
+    if (replayIndex.value >= replayTotal.value) {
+      replayIndex.value = 0
+    }
     // 跨页面回放：以 document 为根（page_view 会跳转其它路由，元素不在沙箱内）；
     // navigate 在 page_view 时真实跳转路由，还原用户导航轨迹
     handle = replayTrackEvents(replayEvents.value, {
