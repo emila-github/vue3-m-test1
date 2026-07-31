@@ -53,7 +53,7 @@ function onSubmit() {
 
 <template>
   <div class="sig-demo">
-    <van-nav-bar title="电子签名组件" />
+    <van-nav-bar title="电子签名组件" left-text="返回" left-arrow @click-left="$router.back()" />
 
     <van-form @submit="onSubmit">
       <van-cell-group inset>
