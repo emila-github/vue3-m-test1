@@ -43,7 +43,12 @@ const disabledOn = ref(true)
 
 <template>
   <div class="slider-verify-demo">
-    <van-nav-bar title="VantSliderVerify 滑块验证" />
+    <van-nav-bar
+      title="VantSliderVerify 滑块验证"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <!-- 1. 基础用法 -->
     <section class="block">

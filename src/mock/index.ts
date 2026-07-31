@@ -32,6 +32,8 @@ import ydlJcRoutes from './ydl-jc'
 import ydlXbRoutes from './ydl-xb'
 import ydlXbCarRoutes from './ydl-xb-car'
 import ydlLhzjRoutes from './ydl-lhzj'
+import { trackMockRoutes } from './track'
+import { screenRecordMockRoutes } from './demo-record'
 
 // ===== 上传文件目录（相对于项目根目录，demo 前缀避免与正式项目冲突） =====
 const UPLOAD_DIR = path.resolve('src/assets/demo-upload')
@@ -67,6 +69,8 @@ const allRoutes: MockRoute[] = [
   ...ydlXbRoutes,
   ...ydlXbCarRoutes,
   ...ydlLhzjRoutes,
+  ...trackMockRoutes,
+  ...screenRecordMockRoutes,
 ]
 
 // ===== 匹配并返回响应 =====
@@ -154,7 +158,6 @@ export function mockPlugin(): Plugin {
           next()
         }
       })
-
       // ===== ydl 模块（JeecgBoot 风格）：对应 ydlClient 的 baseURL /ydl-api =====
       server.middlewares.use('/ydl-api', async (req, res, next) => {
         try {

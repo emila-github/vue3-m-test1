@@ -137,6 +137,12 @@ const manualRoutes = [
     meta: { title: '表单内打卡' },
   },
   {
+    path: '/vant/vant-ins-icon-demo',
+    name: 'vant-ins-icon-demo',
+    component: () => import('../views/vant/VantInsIconDemo.vue'),
+    meta: { title: 'VantInsIcon 图标' },
+  },
+  {
     path: '/vant/vant-insurance-form-demo',
     name: 'vant-insurance-form-demo',
     component: () => import('../views/vant/VantInsuranceFormDemo.vue'),
@@ -183,7 +189,6 @@ const manualRoutes = [
     path: '/ydl/ydl-list-demo',
     name: 'ydl-list-demo',
     component: () => import('../views/ydl/YdlListDemo.vue'),
-    meta: { title: 'VantList 示例（ydl）' },
   },
   // ydl：我的保源（保险来源）及详情子功能
   {
@@ -295,6 +300,19 @@ const manualRoutes = [
     component: () => import('../views/ydl/LhzjView.vue'),
     meta: { title: '我的领航' },
   },
+  {
+    path: '/vant/vant-track-demo',
+    name: 'vant-track-demo',
+    component: () => import('../views/vant/VantTrackDemo.vue'),
+    meta: { title: '操作记录' },
+  },
+  {
+    path: '/vant/vant-record-demo',
+    name: 'vant-record-demo',
+    component: () => import('../views/vant/VantRecordDemo.vue'),
+    meta: { title: '屏幕录屏' },
+  },
+  },
 ]
 
 const router = createRouter({
@@ -303,7 +321,10 @@ const router = createRouter({
 })
 
 // 支持开发环境下的热更新（无需刷新页面即可更新路由）
-if (import.meta.hot) {
+// 注意需同时判断 `import.meta.hot.data`：单元测试（vitest）环境下 hot 对象存在但 data 为
+// undefined，直接调用 handleHotUpdate 会抛 "Cannot set properties of undefined (setting 'router')"，
+// 导致所有间接 import 本文件的测试套件整体收集失败。
+if (import.meta.hot?.data) {
   handleHotUpdate(router)
 }
 

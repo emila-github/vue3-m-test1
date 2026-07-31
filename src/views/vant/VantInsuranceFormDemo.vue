@@ -298,7 +298,13 @@ function onFailed() {
 
 <template>
   <div class="ins-form">
-    <van-nav-bar title="保险报案表单" left-text="返回" left-arrow @click-left="$router.back()">
+    <van-nav-bar
+      title="保险报案表单"
+      left-text="返回"
+      left-arrow
+      data-track-anchor="navBack"
+      @click-left="$router.back()"
+    >
       <template #right>
         <van-tag :type="mode === 'edit' ? 'warning' : 'primary'" round>
           {{ mode === 'edit' ? '编辑' : '新增' }}
@@ -326,6 +332,7 @@ function onFailed() {
       <!-- 报案人信息 -->
       <van-cell-group title="报案人信息" inset>
         <van-field
+          data-track-anchor="reporterName"
           v-model="form.reporterName"
           label="报案人"
           placeholder="请输入报案人姓名"
@@ -333,6 +340,7 @@ function onFailed() {
           :rules="[{ required: true, message: '请输入报案人姓名' }]"
         />
         <van-field
+          data-track-anchor="phone"
           v-model="form.phone"
           label="手机号"
           type="tel"
@@ -342,7 +350,7 @@ function onFailed() {
             { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确' },
           ]"
         />
-        <van-field label="性别">
+        <van-field label="性别" data-track-anchor="gender">
           <template #input>
             <van-radio-group v-model="form.gender" direction="horizontal">
               <van-radio name="male">男</van-radio>
@@ -350,8 +358,14 @@ function onFailed() {
             </van-radio-group>
           </template>
         </van-field>
-        <van-field v-model="form.idCard" label="证件号码" placeholder="请输入身份证号" />
+        <van-field
+          data-track-anchor="idCard"
+          v-model="form.idCard"
+          label="证件号码"
+          placeholder="请输入身份证号"
+        />
         <VantSelectField
+          data-track-anchor="relationship"
           v-model="form.relationship"
           :options="relationships"
           label="与投保人关系"
@@ -363,8 +377,14 @@ function onFailed() {
 
       <!-- 保单信息 -->
       <van-cell-group title="保单信息" inset>
-        <van-field v-model="form.policyNo" label="保单号" placeholder="请输入保单号" />
+        <van-field
+          data-track-anchor="policyNo"
+          v-model="form.policyNo"
+          label="保单号"
+          placeholder="请输入保单号"
+        />
         <VantSearchField
+          data-track-anchor="insurer"
           v-model="form.insurer"
           :options="insurerOptions"
           label="承保公司"
@@ -373,6 +393,7 @@ function onFailed() {
           clearable
         />
         <VantSelectField
+          data-track-anchor="insuranceType"
           v-model="form.insuranceType"
           :options="insuranceTypes"
           label="险种类型"
@@ -381,6 +402,7 @@ function onFailed() {
           clearable
         />
         <VantSelectMultipleField
+          data-track-anchor="extraCoverage"
           v-model="form.extraCoverage"
           :options="extraOptions"
           label="附加险种"
@@ -388,6 +410,7 @@ function onFailed() {
           clearable
         />
         <VantCalendarField
+          data-track-anchor="effectiveDate"
           v-model="form.effectiveDate"
           label="投保日期"
           title="选择投保日期"
@@ -398,6 +421,7 @@ function onFailed() {
       <!-- 出险信息 -->
       <van-cell-group title="出险信息" inset>
         <VantSelectField
+          data-track-anchor="accidentCause"
           v-model="form.accidentCause"
           :options="accidentCauses"
           label="出险原因"
@@ -406,6 +430,7 @@ function onFailed() {
           clearable
         />
         <VantTimePickerField
+          data-track-anchor="accidentDate"
           v-model="form.accidentDate"
           type="date"
           label="出险日期"
@@ -414,6 +439,7 @@ function onFailed() {
           clearable
         />
         <VantTimePickerField
+          data-track-anchor="accidentTime"
           v-model="form.accidentTime"
           type="time"
           label="出险时间"
@@ -421,6 +447,7 @@ function onFailed() {
           clearable
         />
         <VantTreeSelectField
+          data-track-anchor="region"
           v-model="form.region"
           :options="regionTree"
           label="出险地区"
@@ -429,6 +456,7 @@ function onFailed() {
           clearable
         />
         <VantSearchField
+          data-track-anchor="hospital"
           v-model="form.hospital"
           :options="hospitalOptions"
           label="就诊医院"
@@ -437,28 +465,30 @@ function onFailed() {
           clearable
         />
         <VantTreeTagsField
+          data-track-anchor="accidentType"
           v-model="form.accidentType"
           :options="accidentTree"
           label="事故类型"
           title="选择事故类型"
           clearable
         />
-        <van-field label="是否住院">
+        <van-field label="是否住院" data-track-anchor="isHospitalized">
           <template #input>
             <van-switch v-model="form.isHospitalized" />
           </template>
         </van-field>
-        <van-field label="受伤人数">
+        <van-field label="受伤人数" data-track-anchor="injuredCount">
           <template #input>
             <van-stepper v-model="form.injuredCount" min="0" max="20" integer />
           </template>
         </van-field>
-        <van-field label="事故严重程度">
+        <van-field label="事故严重程度" data-track-anchor="severity">
           <template #input>
             <van-rate v-model="form.severity" :count="5" />
           </template>
         </van-field>
         <VantSelectMultipleField
+          data-track-anchor="lossItems"
           v-model="form.lossItems"
           :options="lossOptions"
           label="损失项目"
@@ -466,6 +496,7 @@ function onFailed() {
           clearable
         />
         <van-field
+          data-track-anchor="description"
           v-model="form.description"
           label="事故经过"
           type="textarea"
@@ -479,6 +510,7 @@ function onFailed() {
       <!-- 出险地点 -->
       <van-cell-group title="出险地点（定位打卡）" inset>
         <VantCheckinField
+          data-track-anchor="checkin"
           v-model="form.checkin"
           :map-key="tmapKey"
           mode="once"
@@ -492,6 +524,7 @@ function onFailed() {
       <!-- 资料上传 -->
       <van-cell-group title="资料上传" inset>
         <VantUpload
+          data-track-anchor="idCardFront"
           v-model="form.idCardFront"
           type="idcard"
           variant="front"
@@ -503,6 +536,7 @@ function onFailed() {
           :rules="[{ required: true, message: '请上传身份证人像面' }]"
         />
         <VantUpload
+          data-track-anchor="idCardBack"
           v-model="form.idCardBack"
           type="idcard"
           variant="back"
@@ -514,6 +548,7 @@ function onFailed() {
           :rules="[{ required: true, message: '请上传身份证国徽面' }]"
         />
         <VantUpload
+          data-track-anchor="driverLicense"
           v-model="form.driverLicense"
           type="image"
           :upload="makeUploader('image')"
@@ -524,6 +559,7 @@ function onFailed() {
           :rules="[{ required: true, message: '请上传驾驶证' }]"
         />
         <VantUpload
+          data-track-anchor="medicalRecord"
           v-model="form.medicalRecord"
           type="image"
           :upload="makeUploader('image')"
@@ -532,6 +568,7 @@ function onFailed() {
           label="病历资料"
         />
         <VantUpload
+          data-track-anchor="invoice"
           v-model="form.invoice"
           type="invoice"
           :upload="makeUploader('image')"
@@ -548,7 +585,7 @@ function onFailed() {
 
       <!-- 条款确认 -->
       <van-cell-group inset>
-        <van-cell>
+        <van-cell data-track-anchor="agree">
           <van-checkbox v-model="form.agree" shape="square">
             我已阅读并同意《保险报案须知》与《个人信息处理授权》
           </van-checkbox>

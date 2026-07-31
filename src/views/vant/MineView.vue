@@ -44,9 +44,9 @@ const subText = computed(() => {
 
 const cells = ref([
   { icon: 'contact', title: '个人资料', to: '' },
-  { icon: 'balance-o', title: '权限与角色', to: '' },
-  { icon: 'setting-o', title: '设置', to: '' },
-  { icon: 'info-o', title: '关于中国人保', to: '' },
+  { icon: 'manager', title: '权限与角色', to: '' },
+  { icon: 'setting', title: '设置', to: '' },
+  { icon: 'info', title: '关于中国人保', to: '' },
 ])
 
 /** 未登录时点头像区 → 去登录 */
@@ -94,7 +94,7 @@ async function onLogout() {
     </header>
 
     <van-cell-group inset class="mine-cells">
-      <van-cell title="皮肤设置" is-link @click="openSkinPicker">
+      <van-cell icon="gem" title="皮肤设置" is-link @click="openSkinPicker">
         <template #value>
           <span class="skin-current">
             <span class="skin-dot" :style="{ background: current.color }"></span>

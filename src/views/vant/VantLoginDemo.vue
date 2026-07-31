@@ -84,7 +84,12 @@ function onSuccess(r: LoginResult) {
       :forgot-password="forgotPassword"
       @success="onSuccess"
     />
-    <van-nav-bar title="VantLogin 登录组件" />
+    <van-nav-bar
+      title="VantLogin 登录组件"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <div v-if="result" class="result-card">
       <h3>（{{ methodLabels[result.method] }}）</h3>

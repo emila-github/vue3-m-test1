@@ -15,6 +15,7 @@ import { RouterView } from 'vue-router'
 
     <van-tabbar route fixed safe-area-inset-bottom>
       <van-tabbar-item :to="{ name: 'vant-home' }" icon="wap-home-o">首页</van-tabbar-item>
+      <van-tabbar-item :to="{ name: 'vant-index' }" icon="apps-o">组件</van-tabbar-item>
       <van-tabbar-item :to="{ name: 'vant-mine' }" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>

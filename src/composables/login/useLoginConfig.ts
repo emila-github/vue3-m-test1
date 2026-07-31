@@ -67,7 +67,16 @@ export function useLoginConfig(props: LoginConfigProps) {
   /** 当前激活的登录方式 */
   const activeMethod = ref<LoginMethod>('sms')
 
+  /**
+   * 用户是否手动点过 Tab。
+   * 后端配置是异步返回的，若用户在配置返回前就切到了「密码登录」，
+   * 配置到达时触发的下方 watch 会把 activeMethod 强行改回 defaultMethod，
+   * 表现为「刚点的 Tab 自己弹回去了」。故手动切换后不再被配置回填覆盖。
+   */
+  const userSwitched = ref(false)
+
   function switchTo(m: LoginMethod) {
+    userSwitched.value = true
     activeMethod.value = m
   }
 
@@ -75,6 +84,8 @@ export function useLoginConfig(props: LoginConfigProps) {
   watch(
     [availableMethods, resolvedDefault],
     () => {
+      // 用户已手动选择且该方式依然可用 → 尊重用户选择，不做修正
+      if (userSwitched.value && formMethods.value.includes(activeMethod.value)) return
       const target = resolvedDefault.value
       if ((target === 'wechat' || target === 'wecom') && formMethods.value.length > 0) {
         activeMethod.value = formMethods.value[0]

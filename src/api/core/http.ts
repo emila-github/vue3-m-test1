@@ -8,6 +8,27 @@ import type { ClientOptions, ApiClient } from './types'
 import type { PageParams, PageResult } from '../types'
 import { defaultPagination } from './adapters'
 import { getToken, TOKEN_HEADER } from './token'
+import { replayGate } from './replayGate'
+
+/**
+ * 回放请求网关接入：
+ * - 回放中且「非真实回放」：拦截请求，用本地缓存 / 兜底响应直接返回，不触达后端；
+ * - 回放中且「真实回放」：放行到后端，并为再请求接口附加 te 标记（query ?te + header）。
+ */
+function applyReplayGate(config: InternalAxiosRequestConfig): void {
+  if (!replayGate.isReplaying()) return
+  if (replayGate.isRealReplay()) {
+    const tag = replayGate.teMarker()
+    if (tag) {
+      config.params = { ...(config.params || {}), te: tag }
+      config.headers = config.headers ?? {}
+      ;(config.headers as Record<string, unknown>)['X-Track-Replay'] = tag
+    }
+  } else {
+    // 本地模拟：覆盖 adapter，直接返回缓存 / 兜底响应，绝不发真实请求
+    config.adapter = (() => Promise.resolve(replayGate.buildLocalResponse(config))) as any
+  }
+}
 
 /** 业务异常（统一抛出，便于上层 catch 区分） */
 export class BizError extends Error {
@@ -55,6 +76,7 @@ export function createClient(options: ClientOptions): ApiClient {
       config.headers[TOKEN_HEADER] = token
     }
     options.onRequest?.(config)
+    applyReplayGate(config)
     return config
   })
 
@@ -62,8 +84,11 @@ export function createClient(options: ClientOptions): ApiClient {
   instance.interceptors.response.use(
     (res: AxiosResponse): any => {
       const raw = res.data
+      const cfg = res.config
 
       if (adapter.isSuccess(raw)) {
+        // 录制阶段缓存 GET 成功响应，供回放时本地模拟（回放中不记录，避免覆盖）
+        replayGate.record(cfg.method || 'GET', cfg.url || '', cfg.params, cfg.data, raw)
         return adapter.extractData(raw)
       }
 

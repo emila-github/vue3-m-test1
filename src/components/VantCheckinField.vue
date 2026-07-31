@@ -4,6 +4,11 @@ import type { FieldRule } from 'vant'
 import VantCheckin from './VantCheckin.vue'
 import type { CheckinResult } from './VantCheckin.vue'
 
+// 组件含 van-field + van-popup 两个根节点，属多根片段组件；
+// 关闭自动属性继承，把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 既消除「Extraneous non-props attributes」告警，又让录制锚点落到正确的业务元素上。
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(
   defineProps<{
     /** v-model：打卡结果（含经纬度/地址/时间）。传入上次打卡数据可在弹窗内预览地图 */
@@ -88,6 +93,7 @@ function onCheckin(r: CheckinResult) {
   <!-- 不自带 van-cell-group：由外部 van-cell-group 负责外框，避免双重 inset 缩进
        与 VantSelectField / VantUpload(field) 等裸 van-field 保持一致对齐 -->
   <van-field
+    v-bind="$attrs"
     class="vcf-field"
     :model-value="modelValue?.address || ''"
     :label="label"

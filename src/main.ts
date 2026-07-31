@@ -20,6 +20,8 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { initDevToken } from './api/core/token'
+import { createTrackPlugin } from './plugins/track'
+import { createScreenRecordPlugin } from './plugins/record'
 import {
   permissionDirective,
   permissionAllDirective,
@@ -44,4 +46,12 @@ app.directive('menu', menuDirective) // 菜单权限：拥有任意一个即可�
 app.directive('menu-all', menuAllDirective) // 菜单权限：必须拥有全部才可见 (hasMenuAll)
 
 initSkin('picc')
+// 页面操作记录插件：默认开启全站无感知记录（enabled: true），
+// 业务可随时调用 track.disable() / track.enable() 动态开关。
+// 默认记录表单输入值（captureValues: true）；密码框明文默认不记录，
+// 仅记行为，需手动 track.enable({ recordPassword: true }) 才记录密码值。
+app.use(createTrackPlugin({ enabled: true }))
+// 屏幕录屏插件：默认开启「停止后自动上传」，但录屏本身需用户手势触发（浏览器安全限制），
+// 故插件安装后不会自动录制，业务在「页面操作发起」时手动 record.start()/recordOperation()。
+app.use(createScreenRecordPlugin({ autoUpload: true }))
 app.mount('#app')
