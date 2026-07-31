@@ -275,15 +275,15 @@ describe('buildSelector 稳定性（不耦合 van- 动态类）', () => {
 })
 
 describe('滚动采集（节流 + 尾部补帧）', () => {
-  it('滚动事件按 throttle 节流，停止后补记最终位置', () => {
-    vi.useFakeTimers()
-    const r = makeRecorder({ scrollThrottle: 300 })
+  it('滚动事件按 throttle 节流，停止后补记最终位置', async () => {
+    vi.useRealTimers() // 防御：避免 fake-timers 下节流/补帧时序不确定导致偶发 0 条
+    const r = makeRecorder({ scrollThrottle: 20 })
     r.enable()
     window.dispatchEvent(new Event('scroll'))
-    window.dispatchEvent(new Event('scroll')) // 100ms 内 -> 进入节流
-    vi.advanceTimersByTime(300)
+    window.dispatchEvent(new Event('scroll')) // 同一窗口内 -> 进入节流
+    await new Promise((res) => setTimeout(res, 60)) // 超过节流窗口，触发尾部补帧
     const scrolls = r.snapshot().filter((e) => e.type === 'scroll')
-    // 初始 1 次 + 节流尾部补帧 1 次
+    // 至多 2 条：leading 或尾部其一 + 节流尾部补帧其一
     expect(scrolls.length).toBeGreaterThanOrEqual(1)
     expect(scrolls.length).toBeLessThanOrEqual(2)
   })
@@ -304,8 +304,22 @@ describe('滚动采集（节流 + 尾部补帧）', () => {
 
 describe('拖拽识别与 click 抑制', () => {
   function drag(el: Element, fromX: number, fromY: number, toX: number, toY: number) {
-    el.dispatchEvent(new PointerEvent('pointerdown', { clientX: fromX, clientY: fromY, pointerType: 'mouse', bubbles: true }))
-    window.dispatchEvent(new PointerEvent('pointerup', { clientX: toX, clientY: toY, pointerType: 'mouse', bubbles: true }))
+    el.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        clientX: fromX,
+        clientY: fromY,
+        pointerType: 'mouse',
+        bubbles: true,
+      }),
+    )
+    window.dispatchEvent(
+      new PointerEvent('pointerup', {
+        clientX: toX,
+        clientY: toY,
+        pointerType: 'mouse',
+        bubbles: true,
+      }),
+    )
   }
 
   it('位移超过阈值记为 drag，且抑制随后同元素的 click', () => {

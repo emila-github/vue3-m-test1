@@ -83,7 +83,9 @@ const attrs = useAttrs()
 // 用于为弹层内每个选项生成「与选中态无关」的稳定唯一锚点，例如
 // [data-track-anchor="extraCoverage-opt-<value>"]，保证回放时可稳定定位，
 // 不再依赖脆弱的 vsm-check--on/off 状态类或 nth-child（否则状态不符即回放失败）。
-const anchorBase = computed(() => String(attrs['data-track-anchor'] ?? props.label ?? 'multi-select'))
+const anchorBase = computed(() =>
+  String(attrs['data-track-anchor'] ?? props.label ?? 'multi-select'),
+)
 
 const show = ref(false)
 // 弹层内临时勾选结果，确认后再写回 modelValue
@@ -170,9 +172,13 @@ function onToggle(value: string | number) {
 
   <van-popup v-model:show="show" position="bottom" round class="vsm-popup">
     <div class="vsm-header">
-      <span class="vsm-cancel" :data-track-anchor="`${anchorBase}-cancel`" @click="show = false">取消</span>
+      <span class="vsm-cancel" :data-track-anchor="`${anchorBase}-cancel`" @click="show = false"
+        >取消</span
+      >
       <span class="vsm-title">{{ title }}</span>
-      <span class="vsm-confirm" :data-track-anchor="`${anchorBase}-confirm`" @click="onConfirm">确定</span>
+      <span class="vsm-confirm" :data-track-anchor="`${anchorBase}-confirm`" @click="onConfirm"
+        >确定</span
+      >
     </div>
 
     <div v-if="max > 0" class="vsm-counter">已选 {{ temp.length }} / {{ max }}</div>

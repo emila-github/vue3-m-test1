@@ -88,10 +88,7 @@ class ReplayGate {
     const cached = this.lookup(config.method, config.url || '', config.params, config.data)
     // 命中录制缓存 → 原样返回（与后端包络结构一致，响应拦截器照常解析）；
     // 未命中 → 安全兜底，避免回放因缺数据而报错；GET 列表类接口返回空列表更友好
-    const body =
-      cached !== undefined
-        ? cached
-        : { code: 0, data: [], message: 'replay-local' }
+    const body = cached !== undefined ? cached : { code: 0, data: [], message: 'replay-local' }
     return {
       data: body,
       status: 200,

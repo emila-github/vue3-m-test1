@@ -339,11 +339,7 @@ function clearTemp() {
           {{ max > 0 ? `已选 ${tempSelected.length} / ${max}` : `已选 ${tempSelected.length} 项` }}
         </span>
         <div class="tree-footer__btns">
-          <van-button
-            size="small"
-            :disabled="tempSelected.length === 0"
-            @click="clearTemp"
-          >
+          <van-button size="small" :disabled="tempSelected.length === 0" @click="clearTemp">
             <span :data-track-anchor="`${anchorBase}-clear`">清空</span>
           </van-button>
           <van-button size="small" @click="cancel">

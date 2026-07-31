@@ -81,11 +81,34 @@ describe('VantList', () => {
     expect(wrapper.find('.van-nav-bar--picc-primary').exists()).toBe(true)
   })
 
-  it('create 事件：点击新增触发 emit 并打开表单', async () => {
-    const wrapper = mountList()
+  it('create 事件：提供 #form 槽时，点击新增既 emit 又打开内部表单', async () => {
+    // 组件约定：仅当父级提供 #form 插槽时才打开内部新增弹层，
+    // 否则只 emit('create')，由父级自行打开自定义弹层（避免弹出空表单）
+    const wrapper = shallowMount(VantList, {
+      props: { api } as any,
+      global: {
+        stubs,
+        directives: {
+          permission: permissionDirective,
+          'permission-all': permissionAllDirective,
+          'permission-none': permissionNoneDirective,
+        },
+      },
+      slots: {
+        item: '<template #item="{ item }">{{ item.name }}</template>',
+        form: '<template #form><div class="my-form" /></template>',
+      },
+    })
     ;(wrapper.vm as any).onCreate()
     expect(wrapper.emitted('create')).toBeTruthy()
     expect((wrapper.vm as any).formVisible).toBe(true)
+  })
+
+  it('create 事件：未提供 #form 槽时只 emit，不打开空的内部表单', async () => {
+    const wrapper = mountList()
+    ;(wrapper.vm as any).onCreate()
+    expect(wrapper.emitted('create')).toBeTruthy()
+    expect((wrapper.vm as any).formVisible).toBe(false)
   })
 
   it('action 事件：ActionSheet 选择自定义操作派发对应 key', async () => {

@@ -67,10 +67,10 @@ describe('submit 回放', () => {
     const form = document.createElement('form')
     form.id = 'f'
     document.body.appendChild(form)
-    replayTrackEvents(
-      [{ type: 'submit', t: 0, path: '/x', selector: '#f' } as any],
-      { root: document, minStep: 1 },
-    ).play()
+    replayTrackEvents([{ type: 'submit', t: 0, path: '/x', selector: '#f' } as any], {
+      root: document,
+      minStep: 1,
+    }).play()
     expect(spy).toHaveBeenCalled()
   })
 
@@ -80,10 +80,10 @@ describe('submit 回放', () => {
     document.body.appendChild(div)
     let fired = false
     div.addEventListener('submit', () => (fired = true))
-    replayTrackEvents(
-      [{ type: 'submit', t: 0, path: '/x', selector: '#d' } as any],
-      { root: document, minStep: 1 },
-    ).play()
+    replayTrackEvents([{ type: 'submit', t: 0, path: '/x', selector: '#d' } as any], {
+      root: document,
+      minStep: 1,
+    }).play()
     expect(fired).toBe(true)
   })
 })
@@ -99,10 +99,10 @@ describe('scroll 回放', () => {
     window.scrollTo = vi.fn() as any
     ;(window.scrollTo as any).mockImplementation(spy)
 
-    replayTrackEvents(
-      [{ type: 'scroll', t: 0, path: '/x', scrollX: 0, scrollY: 500 } as any],
-      { root: document, minStep: 1 },
-    ).play()
+    replayTrackEvents([{ type: 'scroll', t: 0, path: '/x', scrollX: 0, scrollY: 500 } as any], {
+      root: document,
+      minStep: 1,
+    }).play()
     expect(spy).toHaveBeenCalledWith(0, 500)
   })
 })
@@ -110,10 +110,11 @@ describe('scroll 回放', () => {
 describe('page_view 回放', () => {
   it('page_view 触发 navigate 回调并传入 fullPath', () => {
     const nav = vi.fn()
-    replayTrackEvents(
-      [{ type: 'page_view', t: 0, path: '/vant/target' } as any],
-      { root: document, minStep: 1, navigate: nav },
-    ).play()
+    replayTrackEvents([{ type: 'page_view', t: 0, path: '/vant/target' } as any], {
+      root: document,
+      minStep: 1,
+      navigate: nav,
+    }).play()
     expect(nav).toHaveBeenCalledWith('/vant/target')
   })
 })
@@ -153,12 +154,17 @@ describe('滑块拖拽（pointer 正向路径）', () => {
 })
 
 describe('定位失败提示（onHint）', () => {
-  it('click 选择器失效且无文本兜底时调用 onHint 而非静默跳过', () => {
+  it('click 选择器失效且无文本兜底时调用 onHint 而非静默跳过', async () => {
+    vi.useRealTimers() // 防御：本用例依赖真实 setTimeout 完成 waitForTarget 兜底
     const hints: string[] = []
-    replayTrackEvents(
-      [{ type: 'click', t: 0, path: '/x', selector: '#not-exist' } as any],
-      { root: document, minStep: 1, onHint: (_, m) => hints.push(m) },
-    ).play()
+    replayTrackEvents([{ type: 'click', t: 0, path: '/x', selector: '#not-exist' } as any], {
+      root: document,
+      minStep: 1,
+      targetWaitMs: 50,
+      onHint: (_, m) => hints.push(m),
+    }).play()
+    // play() 触发的是异步 step()：waitForTarget(50ms) 等不到目标后才兜底调用 onHint，需真实等待
+    await new Promise((res) => setTimeout(res, 120))
     expect(hints.length).toBe(1)
     expect(hints[0]).toContain('已执行操作')
   })
@@ -198,10 +204,14 @@ describe('播放控制流（play / pause / stop）', () => {
     btn.id = 'a'
     document.body.appendChild(btn)
     await new Promise<void>((resolve) => {
-      replayTrackEvents(
-        [{ type: 'click', t: 0, path: '/x', selector: '#a' } as any],
-        { root: document, minStep: 1, onDone: () => { done(); resolve() } },
-      ).play()
+      replayTrackEvents([{ type: 'click', t: 0, path: '/x', selector: '#a' } as any], {
+        root: document,
+        minStep: 1,
+        onDone: () => {
+          done()
+          resolve()
+        },
+      }).play()
     })
     expect(done).toHaveBeenCalled()
   })
@@ -309,10 +319,12 @@ describe('下拉项就绪确认（不立即兜底提示）', () => {
 
   it('目标确实永远找不到时才兜底提示（而非静默跳过）', async () => {
     const hints: string[] = []
-    replayTrackEvents(
-      [{ type: 'click', t: 0, path: '/x', selector: '#never' } as any],
-      { root: document, minStep: 1, targetWaitMs: 200, onHint: (_, m) => hints.push(m) },
-    ).play()
+    replayTrackEvents([{ type: 'click', t: 0, path: '/x', selector: '#never' } as any], {
+      root: document,
+      minStep: 1,
+      targetWaitMs: 200,
+      onHint: (_, m) => hints.push(m),
+    }).play()
     // 200ms 等待后仍找不到 -> 兜底提示命中
     await new Promise((r) => setTimeout(r, 350))
     expect(hints.length).toBe(1)

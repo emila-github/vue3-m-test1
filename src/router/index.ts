@@ -174,7 +174,10 @@ const router = createRouter({
 })
 
 // 支持开发环境下的热更新（无需刷新页面即可更新路由）
-if (import.meta.hot) {
+// 注意需同时判断 `import.meta.hot.data`：单元测试（vitest）环境下 hot 对象存在但 data 为
+// undefined，直接调用 handleHotUpdate 会抛 "Cannot set properties of undefined (setting 'router')"，
+// 导致所有间接 import 本文件的测试套件整体收集失败。
+if (import.meta.hot?.data) {
   handleHotUpdate(router)
 }
 

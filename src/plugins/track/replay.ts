@@ -82,7 +82,9 @@ function resolveEventTarget(root: ParentNode, ev: TrackEvent): Element | null {
     // 文本搜索优先限定在最上层浮层（van-popup）内，避开主页面同文本字段的干扰；找不到再回退全文档。
     const needle = ev.text.trim()
     const popups = Array.from(root.querySelectorAll('.van-popup'))
-    const scope: ParentNode = popups.length ? (popups[popups.length - 1] as unknown as ParentNode) : root
+    const scope: ParentNode = popups.length
+      ? (popups[popups.length - 1] as unknown as ParentNode)
+      : root
     let byText = locateByText(scope, ev.text)
     if (!byText) byText = locateByText(root, ev.text)
     if (byText) {
@@ -259,13 +261,7 @@ function evLabel(ev: TrackEvent): string {
  * 再沿路径在 window 上派发若干 pointermove，最后在终点派发 pointerup。
  * 与 VantSliderVerify 的 onDown/onMove/onUp（挂在 .slider-bar + window）完全对应。
  */
-function dispatchDrag(
-  el: Element,
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number,
-): void {
+function dispatchDrag(el: Element, fromX: number, fromY: number, toX: number, toY: number): void {
   const mk = (type: string, x: number, y: number) =>
     new PointerEvent(type, {
       bubbles: true,

@@ -298,7 +298,13 @@ function onFailed() {
 
 <template>
   <div class="ins-form">
-    <van-nav-bar title="保险报案表单" left-text="返回" left-arrow data-track-anchor="navBack" @click-left="$router.back()">
+    <van-nav-bar
+      title="保险报案表单"
+      left-text="返回"
+      left-arrow
+      data-track-anchor="navBack"
+      @click-left="$router.back()"
+    >
       <template #right>
         <van-tag :type="mode === 'edit' ? 'warning' : 'primary'" round>
           {{ mode === 'edit' ? '编辑' : '新增' }}
@@ -352,7 +358,12 @@ function onFailed() {
             </van-radio-group>
           </template>
         </van-field>
-        <van-field data-track-anchor="idCard" v-model="form.idCard" label="证件号码" placeholder="请输入身份证号" />
+        <van-field
+          data-track-anchor="idCard"
+          v-model="form.idCard"
+          label="证件号码"
+          placeholder="请输入身份证号"
+        />
         <VantSelectField
           data-track-anchor="relationship"
           v-model="form.relationship"
@@ -366,7 +377,12 @@ function onFailed() {
 
       <!-- 保单信息 -->
       <van-cell-group title="保单信息" inset>
-        <van-field data-track-anchor="policyNo" v-model="form.policyNo" label="保单号" placeholder="请输入保单号" />
+        <van-field
+          data-track-anchor="policyNo"
+          v-model="form.policyNo"
+          label="保单号"
+          placeholder="请输入保单号"
+        />
         <VantSearchField
           data-track-anchor="insurer"
           v-model="form.insurer"

@@ -84,7 +84,15 @@ describe('replay picker drag (城市下拉)', () => {
     slider.addEventListener('touchstart', sliderSpy)
 
     const events = [
-      { type: 'click', ts: 0, t: 0, path: '/x', selector: 'input#track-city', tag: 'input', text: '' },
+      {
+        type: 'click',
+        ts: 0,
+        t: 0,
+        path: '/x',
+        selector: 'input#track-city',
+        tag: 'input',
+        text: '',
+      },
       {
         type: 'drag',
         ts: 0,

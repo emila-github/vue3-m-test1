@@ -342,7 +342,12 @@ export class TrackRecorder {
     if (type === 'click' && Date.now() < this.suppressClickUntil) {
       const tgt = e.target as Element | null
       if (this.suppressClickTarget && tgt === this.suppressClickTarget) return
-      if (this.suppressClickColumn && tgt instanceof Element && tgt.closest?.(this.opts.optionColumn) === this.suppressClickColumn) return
+      if (
+        this.suppressClickColumn &&
+        tgt instanceof Element &&
+        tgt.closest?.(this.opts.optionColumn) === this.suppressClickColumn
+      )
+        return
     }
 
     const el = (e.target as Element) ?? null
@@ -434,16 +439,20 @@ export class TrackRecorder {
     const target = e.target as EventTarget | null
     let scroller: HTMLElement | null = null
     let isWindow = false
+    // 「页面级滚动」判定：target 为 document / body / documentElement / window。
+    // 注意不能只写 `target === window`：跨 realm（iframe、jsdom 测试环境）下该恒等比较
+    // 会不成立，导致窗口滚动被整体丢弃。故以「不是 DOM 节点」作为 window 的兜底判定。
+    const isNode = !!target && typeof (target as Node).nodeType === 'number'
     if (
+      !isNode ||
       target === document ||
-      target === window ||
       target === document.body ||
       target === document.documentElement
     ) {
       scroller = (document.scrollingElement ?? document.documentElement) as HTMLElement
       isWindow = true
-    } else if (target instanceof HTMLElement) {
-      scroller = target
+    } else if ((target as Node).nodeType === 1) {
+      scroller = target as HTMLElement
     }
     if (!scroller) return
     this.push({
@@ -539,7 +548,12 @@ export class TrackRecorder {
    *   - tappedText：手势按下落点的选项文本（用户手指实际点中的项）；
    *   - preSelectedText：手势开始前列已选中项（按下瞬间尚未因惯性改变）。
    */
-  private captureColumnSelection(column: Element, t: number, tappedText: string, preSelectedText: string): void {
+  private captureColumnSelection(
+    column: Element,
+    t: number,
+    tappedText: string,
+    preSelectedText: string,
+  ): void {
     const deadline = Date.now() + this.opts.optionSettleMs
     let lastText: string | null = null
     const tick = () => {
@@ -569,9 +583,7 @@ export class TrackRecorder {
     //    当前选中 li。这与组件的选中算法完全一致，不依赖 --selected 时机，
     //    也不依赖 elementFromPoint 命中（后者易命中遮罩/刻度层导致选错项）。
     const wrapper = column.querySelector('.van-picker-column__wrapper') as HTMLElement | null
-    const items = Array.from(
-      column.querySelectorAll('.van-picker-column__item'),
-    ) as HTMLElement[]
+    const items = Array.from(column.querySelectorAll('.van-picker-column__item')) as HTMLElement[]
     if (wrapper && items.length) {
       const first = items[0]!
       const itemH = first.offsetHeight || first.getBoundingClientRect().height
@@ -645,7 +657,12 @@ export class TrackRecorder {
   ): void {
     const moved = settledText !== preSelectedText
     let finalText = settledText
-    if (!moved && tappedText && tappedText !== settledText && this.findColumnItemByText(column, tappedText)) {
+    if (
+      !moved &&
+      tappedText &&
+      tappedText !== settledText &&
+      this.findColumnItemByText(column, tappedText)
+    ) {
       finalText = tappedText
     }
     if (this.lastColumnPick.get(column) === finalText) return

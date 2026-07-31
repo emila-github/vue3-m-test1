@@ -62,9 +62,7 @@ describe('replay picker option click', () => {
     })
 
     // selector 故意退化成裸标签链（模拟 van- 类被剥离后命中主页面字段容器）
-    const events = [
-      { type: 'click', text: '上海', selector: 'div > div > div', t: 0 },
-    ]
+    const events = [{ type: 'click', text: '上海', selector: 'div > div > div', t: 0 }]
     const handle = replayTrackEvents(events as any, { root: document, minStep: 10 })
     handle.play()
 

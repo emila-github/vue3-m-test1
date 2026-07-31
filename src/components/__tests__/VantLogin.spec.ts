@@ -18,19 +18,27 @@ vi.mock('@/api/modules/login', () => ({
   resetPassword: vi.fn(async () => ({})),
 }))
 
-// 测试中移除 vant 运行库（toast 等副作用），全部降级为 no-op
-vi.mock('vant', () => new Proxy({}, { get: () => vi.fn() }))
+// vant 运行库已在 src/test/setup.ts 全局 mock 为 no-op。
+// 此处不要再用 `vi.mock('vant', () => new Proxy({}, ...))`：vitest 4 需要工厂返回
+// 「可枚举自有属性的普通对象」，返回 Proxy 会抛
+// "Cannot create proxy with a non-object as target or handler" 导致整个套件收集失败。
 
 import VantLogin from '../VantLogin.vue'
 import * as loginApi from '@/api/modules/login'
 
 const loginApiMock = loginApi as Record<string, ReturnType<typeof vi.fn>>
 
-function mountLogin(props: Record<string, any> = {}) {
-  return shallowMount(VantLogin, { props: props as any })
+function mountLogin(props: Record<string, any> = {}, stubs: Record<string, any> = {}) {
+  return shallowMount(VantLogin, { props: props as any, global: { stubs } })
 }
 
+/** van-form 默认被 shallowMount 桩掉且不渲染插槽，需要断言表单内部元素时用它替换 */
+const renderFormStub = { 'van-form': { template: '<form><slot /></form>' } }
+
 beforeEach(() => {
+  // 清理上一用例的调用记录（仅清 calls，保留 mock 实现），
+  // 否则 `not.toHaveBeenCalled()` 会误命中前一个用例的调用
+  vi.clearAllMocks()
   // jsdom 下 window.open 默认不存在，OAuth 弹窗分支需要先 stub
   ;(window as any).open = vi.fn(() => ({ closed: false, close: vi.fn() }))
   sessionStorage.clear()
@@ -68,6 +76,15 @@ describe('VantLogin', () => {
     expect((wrapper.vm as any).activeMethod).toBe('password')
   })
 
+  it('后端配置晚于用户点击返回时，不把手动切换的 Tab 重置回默认方式', async () => {
+    const wrapper = mountLogin()
+    await wrapper.findAll('.card-tab')[1].trigger('click')
+    // 配置请求（defaultMethod: 'sms'）此时才返回
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+    expect((wrapper.vm as any).activeMethod).toBe('password')
+  })
+
   it('底部渲染微信/企业微信 OAuth 入口，点击触发 onOAuth', async () => {
     const wrapper = mountLogin()
     const oauthBtns = wrapper.findAll('.oauth-icon-btn')
@@ -78,7 +95,10 @@ describe('VantLogin', () => {
   })
 
   it('点击「忘记密码」打开找回弹窗（showForgot 置真）', async () => {
-    const wrapper = mountLogin()
+    // .forgot-link 位于「密码登录」表单内部，需先切 Tab，且让 van-form 渲染插槽
+    const wrapper = mountLogin({}, renderFormStub)
+    await wrapper.findAll('.card-tab')[1].trigger('click')
+    await wrapper.vm.$nextTick()
     await wrapper.find('.forgot-link').trigger('click')
     await wrapper.vm.$nextTick()
     expect((wrapper.vm as any).showForgot).toBe(true)

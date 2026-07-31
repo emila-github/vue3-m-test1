@@ -24,7 +24,14 @@ export default mergeConfig(
       // VantUpload 在脚本中 import { showToast } from 'vant'，全局 mock 即可
       setupFiles: [fileURLToPath(new URL('./src/test/setup.ts', import.meta.url))],
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**'],
+      exclude: [
+        ...configDefaults.exclude,
+        'e2e/**',
+        // 技能包 / 文档目录下的 spec 只是 src 用例的「模板副本」，不是本项目的真实测试；
+        // 参与运行会重复跑、并因路径别名差异产生噪音失败。
+        '**/.codebuddy/**',
+        'md/**',
+      ],
       root: fileURLToPath(new URL('./', import.meta.url)),
     },
   }),
