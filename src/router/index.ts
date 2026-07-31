@@ -312,7 +312,6 @@ const manualRoutes = [
     component: () => import('../views/vant/VantRecordDemo.vue'),
     meta: { title: '屏幕录屏' },
   },
-  },
 ]
 
 const router = createRouter({
