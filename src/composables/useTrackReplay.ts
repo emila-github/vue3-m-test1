@@ -13,6 +13,7 @@ import { useTrack, replayTrackEvents } from '@/plugins/track'
 import type { TrackEvent } from '@/plugins/track'
 import { getTrackSessionEvents, listTrackSessions } from '@/api/modules/track'
 import { getUserInfo } from '@/api/core/token'
+import { replayGate } from '@/api/core/replayGate'
 
 const STORAGE_KEY = 'vant-track-replay'
 
@@ -35,7 +36,10 @@ const replayTotal = ref(0)
 const replaying = ref(false)
 const listVisible = ref(false)
 const popupView = ref<'sessions' | 'events'>('sessions')
+/** 真实回放开关：默认关闭 → 回放触发的请求本地模拟；手动开启 → 放行到后端并加 te 标记 */
+const realReplay = ref(false)
 let handle: ReturnType<typeof replayTrackEvents> | null = null
+let currentSessionId = ''
 let restored = false
 
 function persist() {
@@ -77,20 +81,24 @@ export function useTrackReplay() {
 
   restore()
 
-  async function loadSessions() {
+  async function loadSessions(silent = false) {
     const res = await listTrackSessions({ userId: user?.userId })
     sessions.value = res.list ?? []
     popupView.value = 'sessions'
-    listVisible.value = true
-    // 回放需关闭记录，避免重复记录；开启状态提示用户先关闭操作记录
-    if (track.isEnabled()) showToast('回放前请先关闭操作记录')
-    else if (!sessions.value.length) showToast('暂无会话，请先开启记录并操作')
+    if (!silent) {
+      listVisible.value = true
+      // 回放需关闭记录，避免重复记录；开启状态提示用户先关闭操作记录
+      if (track.isEnabled()) showToast('回放前请先关闭操作记录')
+      else if (!sessions.value.length) showToast('暂无会话，请先开启记录并操作')
+    }
   }
 
   async function loadReplay(id: string) {
     // 载入新会话前先停止旧回放，避免定时器叠加
     handle?.stop()
     replaying.value = false
+    replayGate.setReplaying(false)
+    currentSessionId = id
     const res = await getTrackSessionEvents(id)
     replayEvents.value = res.events ?? []
     replayIndex.value = 0
@@ -118,18 +126,34 @@ export function useTrackReplay() {
       root: document,
       speed: 1,
       minStep: 400,
-      navigate: (fullPath: string) => router.push(fullPath),
+      navigate: async (fullPath: string) => {
+        // 返回 Promise，供回放器在 page_view 后 await 路由跳转完成、目标页 DOM 就绪后再回放后续操作
+        try {
+          await router.push(fullPath)
+        } catch {
+          /* 重复导航 / 导航被中断：忽略，继续后续事件 */
+        }
+      },
       onStep: (_ev: TrackEvent, i: number) => {
         replayIndex.value = i + 1
         persist()
       },
+      // 滑块验证或无法模拟的操作：提示「已执行该操作」，避免静默跳过造成遗漏
+      onHint: (_ev: TrackEvent, message: string) => {
+        showToast(message)
+      },
       onDone: () => {
         replaying.value = false
+        replayGate.setReplaying(false)
         persist()
         showToast('回放完成')
       },
     })
     replaying.value = true
+    // 回放请求网关：标记回放中 + 当前会话（回放触发的请求默认本地模拟）
+    replayGate.setReplaying(true)
+    replayGate.setSession(currentSessionId)
+    replayGate.setRealReplay(realReplay.value)
     // 从断点续播：刷新 / 跨页跳转恢复后 replayIndex 已定位到断点
     handle.play(replayIndex.value)
     persist()
@@ -138,10 +162,17 @@ export function useTrackReplay() {
   function stopReplay() {
     handle?.stop()
     replaying.value = false
+    replayGate.setReplaying(false)
     replayIndex.value = 0
     // 退出回放后保留已载入会话，浮动条回到「会话 + 播放」状态（不清空）
     listVisible.value = false
     persist()
+  }
+
+  /** 真实回放开关：开启后回放触发的请求放行到后端并附加 te 标记（默认关闭 = 本地模拟） */
+  function setRealReplay(v: boolean) {
+    realReplay.value = v
+    replayGate.setRealReplay(v)
   }
 
   // 打开列表：依据是否正在回放，决定默认展示会话列表或回放事件列表
@@ -158,10 +189,12 @@ export function useTrackReplay() {
     replaying,
     listVisible,
     popupView,
+    realReplay,
     loadSessions,
     loadReplay,
     playReplay,
     stopReplay,
+    setRealReplay,
     openList,
   }
 }

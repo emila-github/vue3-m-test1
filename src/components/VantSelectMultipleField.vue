@@ -2,7 +2,7 @@
 /**
  * VantSelectMultipleField —— 通用 Vant4 下拉多选组件
  *
- * 基于 van-field（只读触发）+ van-popup（底部弹出）+ van-checkbox-group（勾选列表）封装。
+ * 基于 van-field（只读触发）+ van-popup（底部弹出）+ van-cell 勾选列表（纯展示型勾选图标）封装。
  * 数据格式可配置（与 VantSelectField 一致）：
  *   1) 字符串 / 数字数组：['玻璃', '自燃'] / [1, 2]
  *   2) Vant 默认对象数组：[{ text: '玻璃', value: 'glass' }]
@@ -14,7 +14,12 @@
  *   <VantSelectMultipleField v-model="cats" :options="cats" value-key="id" label-key="name" />
  *   <VantSelectMultipleField v-model="x" :options="raw" :format="(o) => ({ text: o.label, value: o.code })" />
  */
-import { ref, computed } from 'vue'
+import { ref, computed, useAttrs } from 'vue'
+
+// 组件含 van-field + van-popup 两个根节点，属多根片段组件；
+// 关闭自动属性继承，把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 既消除「Extraneous non-props attributes」告警，又让录制锚点落到正确的业务元素上。
+defineOptions({ inheritAttrs: false })
 
 type OptionItem = string | number | Record<string, any>
 
@@ -73,6 +78,13 @@ const emit = defineEmits<{
   change: [value: Array<string | number>, options: NormalizedOption[]]
 }>()
 
+const attrs = useAttrs()
+// 业务锚点基名：优先取调用方传入的 data-track-anchor（如 extraCoverage），否则回退到 label；
+// 用于为弹层内每个选项生成「与选中态无关」的稳定唯一锚点，例如
+// [data-track-anchor="extraCoverage-opt-<value>"]，保证回放时可稳定定位，
+// 不再依赖脆弱的 vsm-check--on/off 状态类或 nth-child（否则状态不符即回放失败）。
+const anchorBase = computed(() => String(attrs['data-track-anchor'] ?? props.label ?? 'multi-select'))
+
 const show = ref(false)
 // 弹层内临时勾选结果，确认后再写回 modelValue
 const temp = ref<Array<string | number>>([])
@@ -120,13 +132,16 @@ function onClear() {
   emit('change', [], [])
 }
 
-// 勾选/取消时处理 max 限制
+// 勾选/取消时处理 max 限制；max<=0 表示不限制
+function isOptionDisabled(value: string | number) {
+  return props.max > 0 && !temp.value.includes(value) && reachedMax.value
+}
+
 function onToggle(value: string | number) {
-  if (props.max <= 0) return
   const idx = temp.value.indexOf(value)
   if (idx >= 0) {
     temp.value.splice(idx, 1)
-  } else if (!reachedMax.value) {
+  } else if (props.max <= 0 || !reachedMax.value) {
     temp.value.push(value)
   }
 }
@@ -134,6 +149,7 @@ function onToggle(value: string | number) {
 
 <template>
   <van-field
+    v-bind="$attrs"
     :model-value="displayText"
     :label="label"
     :label-align="labelAlign"
@@ -154,30 +170,38 @@ function onToggle(value: string | number) {
 
   <van-popup v-model:show="show" position="bottom" round class="vsm-popup">
     <div class="vsm-header">
-      <span class="vsm-cancel" @click="show = false">取消</span>
+      <span class="vsm-cancel" :data-track-anchor="`${anchorBase}-cancel`" @click="show = false">取消</span>
       <span class="vsm-title">{{ title }}</span>
-      <span class="vsm-confirm" @click="onConfirm">确定</span>
+      <span class="vsm-confirm" :data-track-anchor="`${anchorBase}-confirm`" @click="onConfirm">确定</span>
     </div>
 
     <div v-if="max > 0" class="vsm-counter">已选 {{ temp.length }} / {{ max }}</div>
 
-    <van-checkbox-group v-model="temp" class="vsm-list">
+    <div class="vsm-list">
       <van-cell
         v-for="opt in normalized"
         :key="opt.value"
         :title="opt.text"
+        :data-track-anchor="`${anchorBase}-opt-${opt.value}`"
         clickable
+        :class="{ 'vsm-option--disabled': isOptionDisabled(opt.value) }"
         @click="onToggle(opt.value)"
       >
         <template #right-icon>
-          <van-checkbox
-            :name="opt.value"
-            :disabled="max > 0 && !temp.includes(opt.value) && reachedMax"
-            @click.stop
+          <!-- 纯展示型勾选图标：不拦截点击事件，保证整行点击冒泡到 document 被录制器捕获。
+               同时把「与勾选态无关」的稳定锚点直接打在图标 <i> 上：录制时 buildSelector
+               会从被点的 <i> 立即以 data-track-anchor 收口，不再带上 vsm-check--on/off 这种
+               随勾选态变化的类；否则回放时该选项初始状态（off）与录制时（on）不符，
+               `> i.vsm-check--on` 永远匹配不上 → 走兜底。 -->
+          <van-icon
+            class="vsm-check"
+            :name="temp.includes(opt.value) ? 'checked' : 'circle'"
+            :class="temp.includes(opt.value) ? 'vsm-check--on' : 'vsm-check--off'"
+            :data-track-anchor="`${anchorBase}-opt-${opt.value}`"
           />
         </template>
       </van-cell>
-    </van-checkbox-group>
+    </div>
   </van-popup>
 </template>
 
@@ -219,6 +243,18 @@ function onToggle(value: string | number) {
 .vsm-list {
   flex: 1;
   overflow-y: auto;
+}
+.vsm-check {
+  font-size: 18px;
+}
+.vsm-check--on {
+  color: #1989fa;
+}
+.vsm-check--off {
+  color: var(--app-text-3);
+}
+.vsm-option--disabled {
+  opacity: 0.5;
 }
 
 /* ===== 清空图标：与右侧 is-link 箭头严格同一水平线、尺寸/颜色一致 ===== */

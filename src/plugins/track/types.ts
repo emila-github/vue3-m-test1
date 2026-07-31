@@ -8,6 +8,7 @@ export type TrackEventType =
   | 'change' // 值变更（select / checkbox 等）
   | 'submit' // 表单提交
   | 'scroll' // 页面/容器滚动
+  | 'drag' // 拖拽（滑块验证等：pointerdown→move→up 序列）
 
 /** 单条操作记录 */
 export interface TrackEvent {
@@ -34,6 +35,12 @@ export interface TrackEvent {
   /** 屏幕坐标 */
   x?: number
   y?: number
+  /** 拖拽起点坐标（drag 事件，clientX/Y） */
+  fromX?: number
+  fromY?: number
+  /** 拖拽终点坐标（drag 事件，clientX/Y） */
+  toX?: number
+  toY?: number
   /** 滚动位置（scroll 事件，仅记录节流后的关键帧） */
   scrollX?: number
   scrollY?: number

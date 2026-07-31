@@ -17,6 +17,11 @@
  */
 import { ref, computed } from 'vue'
 
+// 组件外层包了一层 <div class="vant-calendar"> 包装根；关闭自动属性继承，
+// 把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 让录制锚点落在真正可点击打开日历的字段元素上（而非外层包装 div）。
+defineOptions({ inheritAttrs: false })
+
 type DateStr = string
 type ModelValue = DateStr | DateStr[]
 
@@ -214,6 +219,7 @@ function onClear() {
 <template>
   <div class="vant-calendar">
     <van-field
+      v-bind="$attrs"
       :model-value="displayText"
       :label="label"
       :label-align="labelAlign"

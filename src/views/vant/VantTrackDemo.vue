@@ -13,6 +13,8 @@ import { showToast } from 'vant'
 import { useTrack } from '@/plugins/track'
 import type { TrackEvent, TrackEventType } from '@/plugins/track'
 import { useTrackReplay } from '@/composables/useTrackReplay'
+import VantSelectField from '@/components/VantSelectField.vue'
+import VantSliderVerify from '@/components/VantSliderVerify.vue'
 
 const track = useTrack()
 const router = useRouter()
@@ -21,6 +23,8 @@ const router = useRouter()
 const enabled = ref(track.isEnabled())
 // 输入值记录开关：默认开启（记录表单填写内容）；密码值需 recordPassword 单独开启
 const captureValues = ref(true)
+// 仅交互时上报后端：默认开启（只有点击/输入/变更/提交/拖拽等交互才上报，避免大量进入页记录）
+const uploadOnInteraction = ref(true)
 // 密码框明文值记录：默认关闭（密码默认只记行为，需手动开启）
 const recordPassword = ref(false)
 // 各事件类型是否记录（可在页面勾选配置，默认全开）
@@ -31,6 +35,7 @@ const allEventTypes: { type: TrackEventType; label: string }[] = [
   { type: 'change', label: '值变更' },
   { type: 'submit', label: '表单提交' },
   { type: 'scroll', label: '滚屏' },
+  { type: 'drag', label: '拖拽（滑块）' },
 ]
 const recordEvents = ref<TrackEventType[]>([
   'page_view',
@@ -39,6 +44,7 @@ const recordEvents = ref<TrackEventType[]>([
   'change',
   'submit',
   'scroll',
+  'drag',
 ])
 // 已在记录中：用 setOptions 实时更新配置，不重启会话、不触发上报
 function applyConfig() {
@@ -47,6 +53,7 @@ function applyConfig() {
     captureValues: captureValues.value,
     recordPassword: recordPassword.value,
     events: recordEvents.value,
+    uploadOnInteractionOnly: uploadOnInteraction.value,
   })
 }
 function toggleEnabled(v: boolean) {
@@ -55,10 +62,20 @@ function toggleEnabled(v: boolean) {
         captureValues: captureValues.value,
         recordPassword: recordPassword.value,
         events: recordEvents.value,
+        uploadOnInteractionOnly: uploadOnInteraction.value,
       })
     : track.disable()
   enabled.value = track.isEnabled()
   showToast(v ? '已开启无感知记录' : '已关闭并记录落盘')
+}
+function toggleUploadOnInteraction(v: boolean) {
+  uploadOnInteraction.value = v
+  if (enabled.value) {
+    applyConfig()
+    showToast(v ? '已开启「仅交互时上报」' : '已关闭：进入页也会上报')
+  } else {
+    showToast(v ? '已开启（启动后生效）' : '已关闭（启动后生效）')
+  }
 }
 // 关闭记录时也可预配置，启动后生效（enable 时带上最新配置）
 function toggleCapture(v: boolean) {
@@ -98,6 +115,8 @@ onMounted(() => {
     // 仅展示最近 50 条，避免 DOM 无限增长导致频繁重排
     liveEvents.value = events.slice(-50).reverse()
   })
+  // 进入页面直接拉取会话（静默，不开弹窗、不弹 toast），取消「手动点拉取列表」这一步
+  loadSessions(true)
 })
 onUnmounted(() => unsub?.())
 
@@ -108,10 +127,17 @@ const typeColor: Record<string, string> = {
   change: '#7232dd',
   submit: '#ee0a24',
   scroll: '#969799',
+  drag: '#00a1d6',
 }
 
 // ===== 沙箱表单（产生操作记录） =====
 const form = ref({ name: '', city: '', pwd: '', agree: false })
+const cityOptions = ['北京', '上海', '广州', '深圳', '成都', '杭州']
+const verifyPassed = ref(false)
+function onVerify(v: boolean) {
+  verifyPassed.value = v
+  if (v) showToast('滑块验证通过')
+}
 const clickCount = ref(0)
 function onClickDemo() {
   clickCount.value++
@@ -142,15 +168,25 @@ const {
   replaying,
   listVisible,
   popupView,
+  realReplay,
   loadSessions,
   loadReplay,
   playReplay,
   stopReplay,
+  setRealReplay,
   openList,
 } = useTrackReplay()
 
+// 回放前把沙箱复位到初始态：避免「已验证 / 已填写」被组件自身逻辑拦截
+// （如滑块验证 modelValue=true 时 onDown 直接 return，导致回放的拖拽不执行）
+function resetSandbox() {
+  form.value = { name: '', city: '', pwd: '', agree: false }
+  verifyPassed.value = false
+}
+
 // 播放 / 退出播放后同步「启用记录」开关显示（回放会自动关闭记录）
 function onPlay() {
+  resetSandbox()
   playReplay()
   enabled.value = track.isEnabled()
 }
@@ -197,6 +233,14 @@ function onStop() {
             <van-button v-else size="mini" type="danger" icon="stop" @click="onStop"
               >退出播放</van-button
             >
+            <!-- 播放右侧新增：启动 / 关闭操作记录 -->
+            <van-button
+              size="mini"
+              :type="enabled ? 'default' : 'primary'"
+              :icon="enabled ? 'pause' : 'records'"
+              @click="toggleEnabled(!enabled)"
+              >{{ enabled ? '关闭记录' : '启动记录' }}</van-button
+            >
           </div>
         </div>
       </template>
@@ -213,6 +257,19 @@ function onStop() {
       <div class="popup-body">
         <!-- 会话列表：可点选切换会话 -->
         <template v-if="popupView === 'sessions'">
+          <!-- 操作按钮置于列表上方 -->
+          <div class="popup-actions" data-track-ignore>
+            <van-button size="small" class="popup-refresh" @click="loadSessions"
+              >重新拉取</van-button
+            >
+            <van-button
+              v-if="replayEvents.length"
+              size="small"
+              class="popup-refresh"
+              @click="popupView = 'events'"
+              >查看回放事件</van-button
+            >
+          </div>
           <div
             v-for="s in sessions"
             :key="s.sessionId"
@@ -222,17 +279,6 @@ function onStop() {
             <div class="replay-session-time">{{ new Date(s.startedAt).toLocaleString() }}</div>
             <div class="replay-session-count">{{ s.eventCount }} 条操作</div>
           </div>
-          <van-button
-            v-if="replayEvents.length"
-            size="small"
-            block
-            class="popup-refresh"
-            @click="popupView = 'events'"
-            >查看回放事件</van-button
-          >
-          <van-button size="small" block class="popup-refresh" @click="loadSessions"
-            >重新拉取</van-button
-          >
         </template>
         <!-- 回放事件列表：查看当前回放内容 / 进度 -->
         <template v-else>
@@ -271,6 +317,17 @@ function onStop() {
           <van-switch :model-value="captureValues" @update:model-value="toggleCapture" />
         </template>
       </van-cell>
+      <van-cell
+        title="仅交互时上报"
+        label="默认开启：仅点击/输入/变更/提交/拖拽等交互才上报后端，避免大量进入页记录"
+      >
+        <template #value>
+          <van-switch
+            :model-value="uploadOnInteraction"
+            @update:model-value="toggleUploadOnInteraction"
+          />
+        </template>
+      </van-cell>
       <van-cell title="记录密码值" label="默认关闭，密码框仅记行为；手动开启才记录明文">
         <template #value>
           <van-switch
@@ -298,6 +355,15 @@ function onStop() {
           </van-checkbox-group>
         </template>
       </van-cell>
+      <van-cell
+        v-if="replayEvents.length"
+        title="真实回放"
+        label="默认关闭：回放触发的请求本地模拟，不打后端；开启后才发真实请求并加 te 标记"
+      >
+        <template #value>
+          <van-switch :model-value="realReplay" @update:model-value="setRealReplay" />
+        </template>
+      </van-cell>
       <van-cell v-if="!enabled" title="状态" value="未开启" />
       <van-cell
         v-else
@@ -310,7 +376,16 @@ function onStop() {
     <van-cell-group inset title="操作沙箱（在此操作会被记录）" class="block">
       <form id="track-form" class="sandbox" @submit.prevent="onSubmit">
         <van-field id="track-name" v-model="form.name" label="姓名" placeholder="输入触发 input" />
-        <van-field id="track-city" v-model="form.city" label="城市" placeholder="输入触发 input" />
+        <!-- 下拉控件：点击打开 picker 浮层 → 选中选项 → 确认；回放时按 text 兜底命中 -->
+        <VantSelectField
+          id="track-city"
+          v-model="form.city"
+          label="城市"
+          placeholder="点击选择触发下拉"
+          title="选择城市"
+          :options="cityOptions"
+          data-track-anchor="city-select"
+        />
         <van-field
           id="track-pwd"
           v-model="form.pwd"
@@ -321,6 +396,12 @@ function onStop() {
         <van-checkbox id="track-agree" v-model="form.agree" class="sandbox-check">
           同意条款（触发 change）
         </van-checkbox>
+        <!-- 滑动验证：拖拽滑块到最右通过；回放时重放 pointer 序列驱动 -->
+        <div class="sandbox-slider">
+          <div class="sandbox-label">滑动验证（拖拽）</div>
+          <VantSliderVerify :model-value="verifyPassed" @update:model-value="onVerify" />
+          <div class="sandbox-hint">验证状态：{{ verifyPassed ? '已通过' : '未通过' }}</div>
+        </div>
         <van-button
           id="track-btn"
           type="primary"
@@ -465,7 +546,7 @@ function onStop() {
   right: 12px;
   z-index: 100;
   width: auto;
-  max-width: min(70vw, 220px);
+  max-width: min(92vw, 320px);
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
@@ -489,11 +570,19 @@ function onStop() {
 }
 .replay-fab-title {
   font-size: 11px;
+  white-space: nowrap;
+  flex: none;
 }
 .replay-fab-actions {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-wrap: nowrap;
+}
+/* 按钮文字不换行，避免「启动记录」等被挤断行 */
+.replay-fab-actions .van-button {
+  white-space: nowrap;
+  flex: none;
 }
 /* ===== 全屏弹出层（会话列表 / 回放列表）===== 配色对齐「选择皮肤」弹窗（跟随皮肤变量） ===== */
 .popup-head {
@@ -526,6 +615,16 @@ function onStop() {
 }
 .popup-refresh {
   margin-top: 12px;
+}
+/* 弹出层列表上方的操作按钮行（重新拉取 / 查看回放事件） */
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.popup-actions .popup-refresh {
+  margin-top: 0;
+  flex: 1;
 }
 /* 弹出层内会话项：表面色白卡片 + 圆角 + 轻阴影 */
 .replay-session {

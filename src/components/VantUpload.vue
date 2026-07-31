@@ -67,6 +67,11 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { showToast, showImagePreview } from 'vant'
 
+// 组件根节点为 <div class="vant-upload-field">；关闭自动属性继承，
+// 把透传属性（如 id / data-track-anchor）显式绑到根元素上，
+// 既消除潜在的非 props 告警，又让录制锚点稳定落在上传组件容器上。
+defineOptions({ inheritAttrs: false })
+
 export type UploadType = 'image' | 'avatar' | 'idcard' | 'invoice' | 'document'
 export type IdCardVariant = 'front' | 'back'
 
@@ -619,7 +624,7 @@ function docIcon(it: UploadItem): string {
 </script>
 
 <template>
-  <div class="vant-upload-field">
+  <div class="vant-upload-field" v-bind="$attrs">
     <!-- 原始上传 UI 的标题：field 开启时 label 交由下方 van-field 渲染，此处不再重复显示 -->
     <div v-if="label && !field" class="vuf-label">
       <span v-if="required" class="vuf-req">*</span>{{ label }}

@@ -17,7 +17,12 @@
  *
  * 清空：字段右侧 clearable 图标一键清空；弹层内底部「清空」按钮重置当前勾选。
  */
-import { ref, computed } from 'vue'
+import { ref, computed, useAttrs } from 'vue'
+
+// 组件外层包了一层 <div class="vant-tree-tags"> 包装根；关闭自动属性继承，
+// 把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 让录制锚点落在真正可点击打开标签树的字段元素上（而非外层包装 div）。
+defineOptions({ inheritAttrs: false })
 
 type TreeNode = Record<string, any>
 
@@ -88,6 +93,14 @@ const emit = defineEmits<{
   /** 选中变化时回传：选中值数组 + 对应节点数组 */
   change: [value: Array<string | number>, nodes: TreeNode[]]
 }>()
+
+// 业务锚点基名：优先取调用方传入的 data-track-anchor（如 accidentType），否则回退到 label；
+// 用于为弹层内按钮与每个选项生成「与勾选态无关」的稳定唯一锚点，例如
+// [data-track-anchor="accidentType-confirm"] / [data-track-anchor="accidentType-opt-<value>"]，
+// 保证回放时可稳定定位，不再依赖 van- 类 + nth-child 的脆弱结构选择器
+// （否则事故类型弹层确认/取消/清空点击在回放时常整条走兜底、无法真实模拟）。
+const attrs = useAttrs()
+const anchorBase = computed(() => String(attrs['data-track-anchor'] ?? props.label ?? 'tree-tags'))
 
 const show = ref(false)
 // 弹层内临时勾选，确认后才写回
@@ -253,6 +266,7 @@ function clearTemp() {
 <template>
   <div class="vant-tree-tags">
     <van-field
+      v-bind="$attrs"
       :model-value="displayText"
       :label="label"
       :label-align="labelAlign"
@@ -299,6 +313,7 @@ function clearTemp() {
           class="tree-row"
           :class="{ 'is-disabled': isDisabled(row.node[valueKey], row.hasChildren) }"
           :style="{ paddingLeft: row.depth * 18 + 12 + 'px' }"
+          :data-track-anchor="`${anchorBase}-opt-${row.node[valueKey]}`"
           @click="onRowClick(row)"
         >
           <van-icon
@@ -324,11 +339,19 @@ function clearTemp() {
           {{ max > 0 ? `已选 ${tempSelected.length} / ${max}` : `已选 ${tempSelected.length} 项` }}
         </span>
         <div class="tree-footer__btns">
-          <van-button size="small" :disabled="tempSelected.length === 0" @click="clearTemp"
-            >清空</van-button
+          <van-button
+            size="small"
+            :disabled="tempSelected.length === 0"
+            @click="clearTemp"
           >
-          <van-button size="small" @click="cancel">取消</van-button>
-          <van-button size="small" type="primary" @click="confirm">确定</van-button>
+            <span :data-track-anchor="`${anchorBase}-clear`">清空</span>
+          </van-button>
+          <van-button size="small" @click="cancel">
+            <span :data-track-anchor="`${anchorBase}-cancel`">取消</span>
+          </van-button>
+          <van-button size="small" type="primary" @click="confirm">
+            <span :data-track-anchor="`${anchorBase}-confirm`">确定</span>
+          </van-button>
         </div>
       </div>
     </van-popup>

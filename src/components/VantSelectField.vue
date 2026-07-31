@@ -16,6 +16,11 @@
  */
 import { ref, computed } from 'vue'
 
+// 组件含 van-field + van-popup 两个根节点，属多根片段组件；
+// 关闭自动属性继承，改为把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 既消除「Extraneous non-props attributes」告警，又让 id / data-track-anchor 落到正确的业务锚点上。
+defineOptions({ inheritAttrs: false })
+
 type OptionItem = string | number | Record<string, any>
 
 export interface NormalizedOption {
@@ -121,6 +126,7 @@ function onClear() {
 
 <template>
   <van-field
+    v-bind="$attrs"
     :model-value="displayText"
     :label="label"
     :label-align="labelAlign"
