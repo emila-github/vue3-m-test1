@@ -165,6 +165,14 @@ const stages = ref([
     icon: '📡',
     color: '#07c160',
   },
+  {
+    id: 'record',
+    title: '屏幕录屏插件 ScreenRecord',
+    desc: '页面操作发起录屏（getDisplayMedia+MediaRecorder），停止后自动上传录屏到后端，便于事后回溯',
+    path: '/vant/vant-record-demo',
+    icon: '🎥',
+    color: '#ee0a24',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -205,7 +213,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 20 个）</h2>
+      <h2>组件演示（共 21 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

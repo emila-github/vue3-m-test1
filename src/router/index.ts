@@ -166,6 +166,12 @@ const manualRoutes = [
     component: () => import('../views/vant/VantTrackDemo.vue'),
     meta: { title: '操作记录' },
   },
+  {
+    path: '/vant/vant-record-demo',
+    name: 'vant-record-demo',
+    component: () => import('../views/vant/VantRecordDemo.vue'),
+    meta: { title: '屏幕录屏' },
+  },
 ]
 
 const router = createRouter({
