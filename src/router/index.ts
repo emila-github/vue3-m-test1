@@ -183,6 +183,11 @@ const manualRoutes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...manualRoutes, ...routes],
+  // 路由切换后滚动到顶部，避免新页面停留在上一页的滚动位置
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) return savedPosition
+    return { top: 0, left: 0 }
+  },
 })
 
 // 支持开发环境下的热更新（无需刷新页面即可更新路由）
