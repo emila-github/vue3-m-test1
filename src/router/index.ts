@@ -172,6 +172,12 @@ const manualRoutes = [
     component: () => import('../views/vant/VantRecordDemo.vue'),
     meta: { title: '屏幕录屏' },
   },
+  {
+    path: '/vant/vant-signature-demo',
+    name: 'vant-signature-demo',
+    component: () => import('../views/vant/VantSignatureDemo.vue'),
+    meta: { title: '电子签名' },
+  },
 ]
 
 const router = createRouter({
