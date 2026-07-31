@@ -278,9 +278,19 @@ function navigateTo(path: string) {
 }
 .subtitle code {
   background: #f0f0f0;
+  color: #1989fa;
   padding: 1px 6px;
   border-radius: 3px;
   font-size: 13px;
+  font-weight: 500;
+}
+
+/* 暗色皮肤（暗夜/黑金/深蓝）下：浅灰底在深画布上不可见，改为跟随主色的半透明底 + 主色字 */
+html.theme-dark .subtitle code,
+html.theme-luxury .subtitle code,
+html.theme-navy .subtitle code {
+  background: var(--van-primary-color-light, rgba(255, 255, 255, 0.12));
+  color: var(--van-primary-color);
 }
 
 .card {
