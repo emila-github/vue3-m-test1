@@ -13,6 +13,9 @@ import './styles/skins.css'
 // 确保任意页面的 toast 与二次确认弹窗都能正常显示。
 import 'vant/es/toast/style'
 import 'vant/es/dialog/style'
+// van-back-top 在 App.vue 全局使用，其按需样式与函数式组件同理需显式引入，
+// 否则按钮无 Vant 基础样式，PICC 皮肤的 --van-back-top-background 也无从挂载。
+import 'vant/es/back-top/style'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -46,11 +49,15 @@ app.directive('menu', menuDirective) // 菜单权限：拥有任意一个即可�
 app.directive('menu-all', menuAllDirective) // 菜单权限：必须拥有全部才可见 (hasMenuAll)
 
 initSkin('picc')
-// 页面操作记录插件：默认开启全站无感知记录（enabled: true），
-// 业务可随时调用 track.disable() / track.enable() 动态开关。
+// 页面操作记录插件：默认开启全站无感知记录，是否开启由环境变量 VITE_TRACK_ENABLED 控制。
+// 取值约定：'false' / '0' / 'no' 视为关闭；未配置（默认）或其余值视为开启。
+// 业务仍可在运行时调用 track.disable() / track.enable() 动态开关。
 // 默认记录表单输入值（captureValues: true）；密码框明文默认不记录，
 // 仅记行为，需手动 track.enable({ recordPassword: true }) 才记录密码值。
-app.use(createTrackPlugin({ enabled: true }))
+const trackEnabled = !['false', '0', 'no'].includes(
+  (import.meta.env.VITE_TRACK_ENABLED ?? '').toString().toLowerCase(),
+)
+app.use(createTrackPlugin({ enabled: trackEnabled }))
 // 屏幕录屏插件：默认开启「停止后自动上传」，但录屏本身需用户手势触发（浏览器安全限制），
 // 故插件安装后不会自动录制，业务在「页面操作发起」时手动 record.start()/recordOperation()。
 app.use(createScreenRecordPlugin({ autoUpload: true }))

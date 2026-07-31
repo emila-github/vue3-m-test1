@@ -173,6 +173,14 @@ const stages = ref([
     icon: '🎥',
     color: '#ee0a24',
   },
+  {
+    id: 'signature',
+    title: '电子签名组件 VantSignature',
+    desc: '表单内签字区域，点击横屏全屏手写，默认提示「书写正楷」，可传姓名作背景，确认后上传返回图片地址',
+    path: '/vant/vant-signature-demo',
+    icon: '✍️',
+    color: '#07c160',
+  },
 ])
 
 function navigateTo(path: string) {
@@ -270,9 +278,19 @@ function navigateTo(path: string) {
 }
 .subtitle code {
   background: #f0f0f0;
+  color: #1989fa;
   padding: 1px 6px;
   border-radius: 3px;
   font-size: 13px;
+  font-weight: 500;
+}
+
+/* 暗色皮肤（暗夜/黑金/深蓝）下：浅灰底在深画布上不可见，改为跟随主色的半透明底 + 主色字 */
+html.theme-dark .subtitle code,
+html.theme-luxury .subtitle code,
+html.theme-navy .subtitle code {
+  background: var(--van-primary-color-light, rgba(255, 255, 255, 0.12));
+  color: var(--van-primary-color);
 }
 
 .card {

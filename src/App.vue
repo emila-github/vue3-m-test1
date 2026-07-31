@@ -4,6 +4,8 @@ import { RouterView } from 'vue-router'
 
 <template>
   <RouterView />
+  <!-- 全局回顶按钮：右下角，滚动超过 200px 时出现，点击回到页面顶部 -->
+  <van-back-top right="16px" bottom="70px" />
 </template>
 
 <style scoped>

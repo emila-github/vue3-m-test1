@@ -11,6 +11,15 @@
  * 深色 OLED 主题护眼。所有交互过渡 150–300ms。
  * ==========================================================================*/
 
+/* ===================== 置顶按钮（van-back-top）跟随各主题主色 =====================
+ * Vant 自带 :root 把 --van-back-top-background 固定为 --van-blue，不随主色切换。
+ * 此处统一让所有 html.theme-* 主题的置顶按钮背景跟随 --van-primary-color，
+ * 文字保持白色，实现切肤同步换肤。PICC 皮肤在 vant-picc.css 中按同机制覆盖。 */
+html[class*='theme-'] {
+  --van-back-top-background: var(--van-primary-color);
+  --van-back-top-text-color: #ffffff;
+}
+
 /* ===================== Vant 默认蓝（轻量显式声明，便于切换与预览） ===================== */
 html.theme-vant {
   --van-primary-color: #1989fa;
@@ -300,6 +309,43 @@ html.theme-dark {
   --van-picker-title-text-color: #f8fafc;
   --van-picker-option-text-color: #f8fafc;
   --van-picker-cancel-action-color: #94a3b8;
+  /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
+  --van-picker-background: #1e293b;
+  --van-picker-confirm-action-color: #60a5fa;
+  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
+  --van-cascader-tab-color: #ffffff;
+  --van-cascader-unselected-tab-color: #ffffff;
+  --van-cascader-tab-disabled-color: #475569;
+  --van-cascader-active-color: #60a5fa;
+  --van-cascader-header-title-color: #f8fafc;
+  --van-cascader-close-icon-color: #cbd5e1;
+}
+/* 级联面板 option 列表项：未选中文字强制白色，避免与深底对比不足；disabled 用暗灰 */
+html.theme-dark .van-cascader__option {
+  color: #ffffff;
+}
+html.theme-dark .van-cascader__option--disabled {
+  color: #475569;
+}
+html.theme-dark .van-cascader__title {
+  color: #f8fafc;
+}
+
+/* 暗夜：日历控件（日一二三表头 + 未选中日期）整体文字与背景深色化 */
+html.theme-dark .van-calendar {
+  color: #f8fafc;
+  background: #1e293b;
+}
+html.theme-dark .van-calendar__weekday,
+html.theme-dark .van-calendar__day {
+  color: #f8fafc;
+}
+html.theme-dark .van-calendar__month-title,
+html.theme-dark .van-calendar__header-title,
+html.theme-dark .van-calendar__header-subtitle {
+  color: #f8fafc;
 }
 
 /* 暗夜：画布 / 外壳 / 中性布局类一并深色化 */
@@ -396,6 +442,43 @@ html.theme-luxury {
   --van-picker-title-text-color: #fafafa;
   --van-picker-option-text-color: #fafafa;
   --van-picker-cancel-action-color: #a3a3a3;
+  /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
+  --van-picker-background: #171717;
+  --van-picker-confirm-action-color: #eab308;
+  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
+  --van-cascader-tab-color: #ffffff;
+  --van-cascader-unselected-tab-color: #ffffff;
+  --van-cascader-tab-disabled-color: #404040;
+  --van-cascader-active-color: #eab308;
+  --van-cascader-header-title-color: #fafafa;
+  --van-cascader-close-icon-color: #e5e5e5;
+}
+/* 级联面板 option 列表项：未选中文字强制白色，避免与深底对比不足；disabled 用暗灰 */
+html.theme-luxury .van-cascader__option {
+  color: #ffffff;
+}
+html.theme-luxury .van-cascader__option--disabled {
+  color: #404040;
+}
+html.theme-luxury .van-cascader__title {
+  color: #fafafa;
+}
+
+/* 黑金：日历控件（日一二三表头 + 未选中日期）整体文字与背景深色化 */
+html.theme-luxury .van-calendar {
+  color: #fafafa;
+  background: #171717;
+}
+html.theme-luxury .van-calendar__weekday,
+html.theme-luxury .van-calendar__day {
+  color: #fafafa;
+}
+html.theme-luxury .van-calendar__month-title,
+html.theme-luxury .van-calendar__header-title,
+html.theme-luxury .van-calendar__header-subtitle {
+  color: #fafafa;
 }
 html.theme-luxury #app {
   background: #0a0a0a;
@@ -486,6 +569,43 @@ html.theme-navy {
   --van-picker-title-text-color: #f8fafc;
   --van-picker-option-text-color: #f8fafc;
   --van-picker-cancel-action-color: #94a3b8;
+  /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
+  --van-picker-background: #1e293b;
+  --van-picker-confirm-action-color: #60a5fa;
+  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
+  --van-cascader-tab-color: #ffffff;
+  --van-cascader-unselected-tab-color: #ffffff;
+  --van-cascader-tab-disabled-color: #2a4a73;
+  --van-cascader-active-color: #93c5fd;
+  --van-cascader-header-title-color: #f8fafc;
+  --van-cascader-close-icon-color: #cbd5e1;
+}
+/* 级联面板 option 列表项：未选中文字强制白色，避免与深底对比不足；disabled 用暗灰 */
+html.theme-navy .van-cascader__option {
+  color: #ffffff;
+}
+html.theme-navy .van-cascader__option--disabled {
+  color: #2a4a73;
+}
+html.theme-navy .van-cascader__title {
+  color: #f8fafc;
+}
+
+/* 深蓝：日历控件（日一二三表头 + 未选中日期）整体文字与背景深色化 */
+html.theme-navy .van-calendar {
+  color: #f8fafc;
+  background: #13233f;
+}
+html.theme-navy .van-calendar__weekday,
+html.theme-navy .van-calendar__day {
+  color: #f8fafc;
+}
+html.theme-navy .van-calendar__month-title,
+html.theme-navy .van-calendar__header-title,
+html.theme-navy .van-calendar__header-subtitle {
+  color: #f8fafc;
 }
 html.theme-navy #app {
   background: #0a1628;

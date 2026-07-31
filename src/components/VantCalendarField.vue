@@ -17,9 +17,12 @@
  */
 import { ref, computed } from 'vue'
 
-// 组件外层包了一层 <div class="vant-calendar"> 包装根；关闭自动属性继承，
-// 把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
-// 让录制锚点落在真正可点击打开日历的字段元素上（而非外层包装 div）。
+// 组件以 van-field 为根（与 VantTimePickerField 等其它自定义字段组件同构），
+// 关闭自动属性继承，把透传属性（如 id / data-track-anchor）显式绑到触发元素 van-field 上，
+// 让录制锚点落在真正可点击打开日历的字段元素上。
+// 注：早期版本外层包了一层 <div class="vant-calendar">，会导致 van-field 不再是
+// cell-group 的直接子元素，进而右侧清空按钮（x）的垂直对齐与其它字段组件不一致，
+// 因此改为以 van-field 为根、van-calendar 作为兄弟节点（teleport body）的结构。
 defineOptions({ inheritAttrs: false })
 
 type DateStr = string
@@ -217,83 +220,57 @@ function onClear() {
 </script>
 
 <template>
-  <div class="vant-calendar">
-    <van-field
-      v-bind="$attrs"
-      :model-value="displayText"
-      :label="label"
-      :label-align="labelAlign"
-      :input-align="inputAlign"
-      :placeholder="placeholder"
-      :left-icon="leftIcon"
-      :required="required"
-      :disabled="disabled"
-      :border="border"
-      is-link
-      readonly
-      class="vant-calendar__field"
-      @click="open"
-    >
-      <template v-if="showClear" #right-icon>
-        <van-icon
-          name="clear"
-          class="vant-field-clear-icon"
-          role="button"
-          aria-label="清空"
-          @click.stop="onClear"
-        />
-      </template>
-    </van-field>
+  <van-field
+    v-bind="$attrs"
+    :model-value="displayText"
+    :label="label"
+    :label-align="labelAlign"
+    :input-align="inputAlign"
+    :placeholder="placeholder"
+    :left-icon="leftIcon"
+    :required="required"
+    :disabled="disabled"
+    :border="border"
+    is-link
+    readonly
+    class="vant-calendar__field"
+    @click="open"
+  >
+    <template v-if="showClear" #right-icon>
+      <van-icon
+        name="clear"
+        class="vant-field-clear-icon"
+        role="button"
+        aria-label="清空"
+        @click.stop="onClear"
+      />
+    </template>
+  </van-field>
 
-    <van-calendar
-      v-model:show="show"
-      v-model="innerValue"
-      teleport="body"
-      :type="type"
-      :title="title"
-      :min-date="minDateVal"
-      :max-date="maxDateVal"
-      :default-date="defaultDateVal"
-      :min-days="minDays || undefined"
-      :max-days="maxDays || undefined"
-      :first-day-of-week="firstDayOfWeek"
-      :show-confirm="showConfirm"
-      :confirm-text="confirmText"
-      :allow-same-day="allowSameDay"
-      :round="true"
-      @confirm="onConfirm"
-    />
-  </div>
+  <van-calendar
+    v-model:show="show"
+    v-model="innerValue"
+    teleport="body"
+    :type="type"
+    :title="title"
+    :min-date="minDateVal"
+    :max-date="maxDateVal"
+    :default-date="defaultDateVal"
+    :min-days="minDays || undefined"
+    :max-days="maxDays || undefined"
+    :first-day-of-week="firstDayOfWeek"
+    :show-confirm="showConfirm"
+    :confirm-text="confirmText"
+    :allow-same-day="allowSameDay"
+    :round="true"
+    @confirm="onConfirm"
+  />
 </template>
 
 <style scoped>
-/* ===== 核心目标：label / 值文本 / x清空按钮 / 右箭头 四者严格同一水平线 ===== */
-
-/* 第1层：van-cell 主容器 —— 保证 title(label)、value(含body+x)、right-icon(箭头) 垂直居中 */
-.vant-calendar__field :deep(.van-cell) {
-  align-items: center;
-}
-
-/* 组件外裹了一层 div，导致内部 van-cell 成为该 div 的 :last-child，
-   Vant 的 `.van-cell:last-child:after{display:none}` 会据此隐藏底边线。
-   这里按 border 状态显式补回底边线，与 van-cell-group 内其余裸 van-field 保持一致；
-   当 border=false（内部 van-cell 带 van-cell--borderless 类）时不补，维持隐藏。 */
-.vant-calendar :deep(.van-cell:not(.van-cell--borderless))::after {
-  display: block;
-}
-
-/* 第2层：value 容器 —— 保证内部的 body 不把整列撑高 */
-.vant-calendar__field :deep(.van-cell__value) {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-/* 第3层：body —— input + right-icon(x) 的直接父级，必须 flex 居中 */
-.vant-calendar__field :deep(.van-field__body) {
-  display: flex;
-  align-items: center;
-}
+/* ===== 对齐目标：与 VantTimePickerField 等其它自定义字段组件完全同构 =====
+   van-field 为根，右图标（清空 x / is-link 箭头）容器统一 flex 居中，
+   保证「投保日期」的清空按钮与其他控件在水平 / 垂直方向严格对齐。 */
 
 /* 值输入框：占满中间、单行省略、line-height 锁死避免文字差异撑高 */
 .vant-calendar__field :deep(.van-field__control) {
@@ -312,6 +289,7 @@ function onClear() {
 .vant-calendar__field :deep(.van-cell__right-icon) {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .vant-calendar__field .vant-field-clear-icon {
   display: block;
