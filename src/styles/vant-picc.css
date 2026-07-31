@@ -546,7 +546,7 @@ html.picc-skin {
   --van-contact-card-add-icon-color: #d71920;
   --van-address-list-radio-color: #d71920;
   --van-contact-list-radio-color: #d71920;
-  --van-back-top-background: #d71920;
+  --van-back-top-background: var(--van-primary-color);
   --van-back-top-text-color: #ffffff;
   --van-cascader-active-color: #d71920;
   --van-cascader-tab-color: #d71920;

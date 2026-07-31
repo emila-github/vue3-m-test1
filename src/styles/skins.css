@@ -11,6 +11,15 @@
  * 深色 OLED 主题护眼。所有交互过渡 150–300ms。
  * ==========================================================================*/
 
+/* ===================== 置顶按钮（van-back-top）跟随各主题主色 =====================
+ * Vant 自带 :root 把 --van-back-top-background 固定为 --van-blue，不随主色切换。
+ * 此处统一让所有 html.theme-* 主题的置顶按钮背景跟随 --van-primary-color，
+ * 文字保持白色，实现切肤同步换肤。PICC 皮肤在 vant-picc.css 中按同机制覆盖。 */
+html[class*='theme-'] {
+  --van-back-top-background: var(--van-primary-color);
+  --van-back-top-text-color: #ffffff;
+}
+
 /* ===================== Vant 默认蓝（轻量显式声明，便于切换与预览） ===================== */
 html.theme-vant {
   --van-primary-color: #1989fa;

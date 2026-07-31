@@ -13,6 +13,9 @@ import './styles/skins.css'
 // 确保任意页面的 toast 与二次确认弹窗都能正常显示。
 import 'vant/es/toast/style'
 import 'vant/es/dialog/style'
+// van-back-top 在 App.vue 全局使用，其按需样式与函数式组件同理需显式引入，
+// 否则按钮无 Vant 基础样式，PICC 皮肤的 --van-back-top-background 也无从挂载。
+import 'vant/es/back-top/style'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
