@@ -12,6 +12,7 @@ import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant/es/
 import { showDialog } from 'vant/es/dialog'
 import { useScreenRecord } from '@/plugins/record'
 import { uploadFormRecord, blobToBase64 } from '@/api/modules/demo-record'
+import VantSignature from '@/components/VantSignature.vue'
 import type { RecordState } from '@/plugins/record'
 
 const record = useScreenRecord()
@@ -44,7 +45,11 @@ const form = reactive({
   accidentDate: '',
   accidentPlace: '',
   description: '',
+  signature: '',
 })
+
+/** 签名人姓名：优先展示报案人姓名，未填时为 '' */
+const signatureName = computed(() => form.reporterName || '')
 
 function resetForm() {
   form.reporterName = ''
@@ -53,6 +58,7 @@ function resetForm() {
   form.accidentDate = ''
   form.accidentPlace = ''
   form.description = ''
+  form.signature = ''
 }
 
 // ---------- 录屏生命周期 ----------
@@ -164,6 +170,10 @@ async function stopAndUpload() {
 function onFormSubmit() {
   if (!form.reporterName || !form.phone) {
     showToast('请填写报案人姓名和手机号')
+    return
+  }
+  if (!form.signature) {
+    showToast('请完成报案人电子签名')
     return
   }
   // 模拟校验通过
@@ -288,6 +298,21 @@ async function manualStop() {
           rows="3"
           autosize
           placeholder="请描述事故发生的经过"
+        />
+      </van-cell-group>
+
+      <!-- 电子签名 -->
+      <van-cell-group title="签名确认" inset>
+        <vant-signature
+          v-model="form.signature"
+          label="报案人签名"
+          name="signature"
+          required
+          :signature-name="signatureName"
+          title="电子签名"
+          placeholder="点击此处签名"
+          bake-watermark
+          watermark="书写正楷"
         />
       </van-cell-group>
 
