@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
 
 /** 进入页面弹出确认框，用户同意后自动开始录屏 */
 async function promptStartRecord() {
-  if (!supported.value || state.value !== 'idle') return
+  if (!canStart.value) return
   try {
     await nextTick()
     await showDialog({
