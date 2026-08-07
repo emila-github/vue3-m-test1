@@ -11,7 +11,7 @@ import { reactive, ref, onMounted, onBeforeUnmount, computed, nextTick } from 'v
 import { showToast, showLoadingToast, closeToast, showFailToast } from 'vant/es/toast'
 import { showDialog } from 'vant/es/dialog'
 import { useScreenRecord } from '@/plugins/record'
-import { uploadFormRecord } from '@/api/modules/demo-record'
+import { uploadFormRecord, blobToBase64 } from '@/api/modules/demo-record'
 import type { RecordState } from '@/plugins/record'
 
 const record = useScreenRecord()
@@ -138,13 +138,17 @@ async function stopAndUpload() {
   try {
     const result = await record.stop()
     if (!result) return null
-    // 表单提交成功后，上传录屏到 /demo/form-record/upload
+    // 将录制视频 blob 转为 base64，随表单数据一并上传
+    const base64 = await blobToBase64(result.blob)
     const up = await uploadFormRecord({
       title: '保险报案操作录屏',
       bizType: 'form-operation',
       formData: JSON.parse(JSON.stringify(form)) as Record<string, unknown>,
       sessionId: result.sessionId,
       durationMs: result.durationMs,
+      base64,
+      mimeType: result.mimeType,
+      fileName: `${result.sessionId}.webm`,
     })
     uploadedResult.value = up
     showToast('录屏已上传后端')

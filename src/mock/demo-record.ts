@@ -118,14 +118,34 @@ export const screenRecordMockRoutes: MockRoute[] = [
     url: '/demo/form-record/upload',
     response: async (req: any) => {
       const body = await parseBody(req)
+      ensureUploadDir()
       const timestamp = Date.now()
       const fileId = `FREC${timestamp}`
+
+      // 如果有 base64 数据，写入磁盘
+      let fileUrl = `/demo-upload/form-record-${timestamp}.webm`
+      let size = Number(body.size) || 0
+      let mimeType = body.mimeType || 'video/webm'
+      let fileName = `form-record-${timestamp}.webm`
+
+      if (body.base64) {
+        const { buffer, ext } = base64ToBuffer(body.base64)
+        const rawName = (body.fileName || `form-record-${timestamp}`).replace(/[^\w.\-]/g, '_')
+        fileName = `${path.parse(rawName).name}-${timestamp}${ext}`
+        const filePath = path.join(UPLOAD_DIR, fileName)
+        fs.writeFileSync(filePath, buffer)
+        fileUrl = `/demo-upload/${fileName}`
+        size = buffer.length
+        mimeType = body.mimeType || 'video/webm'
+        console.log('[mock] 表单录屏已保存:', filePath, `${(buffer.length / 1024).toFixed(1)}KB`)
+      }
+
       const item: StoredRecord = {
         fileId,
-        fileName: `form-record-${timestamp}.webm`,
-        url: `/demo-upload/form-record-${timestamp}.webm`,
-        size: Number(body.size) || 0,
-        mimeType: body.mimeType || 'video/webm',
+        fileName,
+        url: fileUrl,
+        size,
+        mimeType,
         durationMs: Number(body.durationMs) || 0,
         createdAt: timestamp,
         sessionId: body.sessionId || '',
@@ -135,10 +155,10 @@ export const screenRecordMockRoutes: MockRoute[] = [
       }
       Object.assign(item, body.formData ? { title: `${body.title || '表单录屏'}（${JSON.stringify(body.formData).slice(0, 40)}...）` } : {})
       records.unshift(item)
-      console.log('[mock] 表单录屏已记录:', fileId, JSON.stringify(body))
+      console.log('[mock] 表单录屏已记录:', fileId)
       return {
         code: 200,
-        data: { url: item.url, fileId: item.fileId, fileName: item.fileName, size: item.size },
+        data: { url: fileUrl, fileId: item.fileId, fileName, size },
         message: '表单录屏上传成功',
       }
     },

@@ -54,6 +54,12 @@ export interface UploadFormRecordPayload {
   /** 表单 meta 额外信息 */
   userId?: string
   bizId?: string
+  /** 视频 base64 data URI（完整录屏文件） */
+  base64?: string
+  /** 视频 MIME 类型 */
+  mimeType?: string
+  /** 文件名 */
+  fileName?: string
 }
 
 export interface UploadFormRecordResult {
