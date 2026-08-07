@@ -42,3 +42,28 @@ export function blobToBase64(blob: Blob): Promise<string> {
     reader.readAsDataURL(blob)
   })
 }
+
+// ---------- 表单操作录屏上传 ----------
+
+export interface UploadFormRecordPayload {
+  title: string
+  bizType: string
+  formData: Record<string, unknown>
+  sessionId: string
+  durationMs: number
+  /** 表单 meta 额外信息 */
+  userId?: string
+  bizId?: string
+}
+
+export interface UploadFormRecordResult {
+  url: string
+  fileId: string
+  fileName: string
+  size: number
+}
+
+/** 表单操作录屏上传（关联表单数据元信息到后端） */
+export async function uploadFormRecord(payload: UploadFormRecordPayload) {
+  return post<UploadFormRecordResult>('/demo/form-record/upload', payload)
+}

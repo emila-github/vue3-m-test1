@@ -39,7 +39,9 @@ function fmt(ms: number): string {
 }
 
 const elapsedText = computed(() => fmt(elapsedMs.value))
-const canStart = computed(() => supported.value && (state.value === 'idle' || state.value === 'stopped'))
+const canStart = computed(
+  () => supported.value && (state.value === 'idle' || state.value === 'stopped'),
+)
 const canStop = computed(() => state.value === 'recording' || state.value === 'paused')
 
 async function bindLivePreview() {
@@ -130,7 +132,6 @@ async function runBizOperation() {
       { meta: { bizType: 'insurance-claim', title: bizTitle.value || '投保单提交' } },
     )
     closeToast()
-    opToast && closeToast()
     showToast(`业务完成，保单号 ${(operation as any).policyNo}`)
   } catch (e: any) {
     closeToast()
@@ -206,12 +207,18 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="record-demo">
-    <van-nav-bar title="屏幕录屏插件 ScreenRecord" left-text="返回" left-arrow @click-left="$router.back()" />
+    <van-nav-bar
+      title="屏幕录屏插件 ScreenRecord"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.back()"
+    />
 
     <div class="wrap">
       <!-- 不支持提示 -->
       <van-notice-bar v-if="!supported" type="danger" :scrollable="false">
-        当前环境不支持屏幕录制：需通过 HTTPS 或 localhost 访问，且浏览器需实现 getDisplayMedia + MediaRecorder。
+        当前环境不支持屏幕录制：需通过 HTTPS 或 localhost 访问，且浏览器需实现 getDisplayMedia +
+        MediaRecorder。
       </van-notice-bar>
 
       <!-- 实时预览 / 录制结果预览 -->
@@ -225,13 +232,7 @@ onBeforeUnmount(() => {
             muted
             playsinline
           />
-          <video
-            v-if="result"
-            :src="result.url"
-            class="preview-video"
-            controls
-            playsinline
-          />
+          <video v-if="result" :src="result.url" class="preview-video" controls playsinline />
           <van-empty
             v-if="state !== 'recording' && state !== 'paused' && !result"
             description="尚未录制"
@@ -239,7 +240,9 @@ onBeforeUnmount(() => {
           />
         </div>
         <div class="status-row">
-          <van-tag :type="state === 'recording' ? 'success' : state === 'error' ? 'danger' : 'primary'">
+          <van-tag
+            :type="state === 'recording' ? 'success' : state === 'error' ? 'danger' : 'primary'"
+          >
             {{ state }}
           </van-tag>
           <span class="timer" :class="{ live: state === 'recording' }">⏱ {{ elapsedText }}</span>
@@ -262,19 +265,25 @@ onBeforeUnmount(() => {
         <van-field v-model="bizTitle" label="录屏标题" placeholder="如：投保单提交" />
         <van-cell center title="停止后自动上传后端">
           <template #right-icon>
-            <van-switch v-model="autoUpload" :disabled="state === 'recording' || state === 'paused'" size="20" />
+            <van-switch
+              v-model="autoUpload"
+              :disabled="state === 'recording' || state === 'paused'"
+              size="20"
+            />
           </template>
         </van-cell>
         <div class="btn-row">
-          <van-button type="primary" :disabled="!canStart" @click="startRecord">开始录屏</van-button>
+          <van-button type="primary" :disabled="!canStart" @click="startRecord"
+            >开始录屏</van-button
+          >
           <van-button type="success" :disabled="!canStop" @click="stopRecord">
             {{ state === 'paused' ? '停止录制' : '停止录制' }}
           </van-button>
         </div>
         <p class="tip">
           点击「开始录屏」后浏览器会弹出「选择共享内容」；录制中可随时「停止录制」。
-          若开启自动上传，停止后录屏 Blob 经内置上传器自动 POST 到 <code>/demo/screen-record/upload</code>；
-          关闭则停止后保留本地副本，可手动「上传到后端」。
+          若开启自动上传，停止后录屏 Blob 经内置上传器自动 POST 到
+          <code>/demo/screen-record/upload</code>； 关闭则停止后保留本地副本，可手动「上传到后端」。
         </p>
       </section>
 
@@ -308,10 +317,18 @@ onBeforeUnmount(() => {
           <van-cell v-if="uploadedTo" title="已上传后端" :label="uploadedTo.url" />
         </van-cell-group>
         <div class="btn-row">
-          <van-button size="small" type="primary" plain :disabled="uploading || !!uploadedTo" @click="reUpload">
+          <van-button
+            size="small"
+            type="primary"
+            plain
+            :disabled="uploading || !!uploadedTo"
+            @click="reUpload"
+          >
             {{ uploadedTo ? '已上传' : uploading ? '上传中…' : '重新上传' }}
           </van-button>
-          <van-button size="small" type="default" plain @click="downloadRecord">下载本地副本</van-button>
+          <van-button size="small" type="default" plain @click="downloadRecord"
+            >下载本地副本</van-button
+          >
         </div>
       </section>
 

@@ -48,13 +48,13 @@ export default defineConfig(({ mode, command }) => {
   // 两者在真实后端（zyn）同 host（40.33.32.20:8090），仅 /is ↔ /wx 前缀不同，
   // 故各自自动生成 /is、/wx 两条代理，无需手动再配置。
   const envBaseUrls: Record<string, string> = {
-    'VITE_API_BASE_URL': env.VITE_API_BASE_URL || '',
+    VITE_API_BASE_URL: env.VITE_API_BASE_URL || '',
     // ydl 站点（旧站 is 根路径：业务/登录/权限/验证码），独立 baseURL，dev 下覆盖为 /site-api 走 mock
-    'VITE_SITE_API_BASE_URL': env.VITE_SITE_API_BASE_URL || '',
+    VITE_SITE_API_BASE_URL: env.VITE_SITE_API_BASE_URL || '',
     // ydl 站点微信鉴权（/cp/...）走独立 wx 根路径（同 host，前缀 /wx）
-    'VITE_SITE_WX_API_BASE_URL': env.VITE_SITE_WX_API_BASE_URL || '',
+    VITE_SITE_WX_API_BASE_URL: env.VITE_SITE_WX_API_BASE_URL || '',
     // ydl 业务模块（续保/保险来源等，ydlClient，baseURL 默认 /ydl-api）
-    'VITE_YDL_API_BASE_URL': env.VITE_YDL_API_BASE_URL || '',
+    VITE_YDL_API_BASE_URL: env.VITE_YDL_API_BASE_URL || '',
   }
   const proxy: Record<string, any> = {}
 
@@ -71,14 +71,22 @@ export default defineConfig(({ mode, command }) => {
   if (mockCpOnly) {
     defineEnv['import.meta.env.VITE_SITE_WX_API_BASE_URL'] = JSON.stringify('/wx-api')
     defineEnv['import.meta.env.VITE_SITE_API_BASE_URL'] = JSON.stringify('/site-api')
-    console.log('[vite] mock-cp: override VITE_SITE_WX_API_BASE_URL → "/wx-api" (only /cp uses mock)')
-    console.log('[vite] mock-cp: override VITE_SITE_API_BASE_URL → "/site-api" (site auth chain uses mock)')
+    console.log(
+      '[vite] mock-cp: override VITE_SITE_WX_API_BASE_URL → "/wx-api" (only /cp uses mock)',
+    )
+    console.log(
+      '[vite] mock-cp: override VITE_SITE_API_BASE_URL → "/site-api" (site auth chain uses mock)',
+    )
   }
 
   // 真实后端代理：解析各 baseURL，dev 下把绝对地址覆盖为相对前缀走同源代理，解决跨域。
   // 仅 /cp 走 mock 时跳过站点两条（已改走 mock 前缀，不应再生成 /wx、/site-api 代理）。
   Object.entries(envBaseUrls).forEach(([envKey, baseURL]) => {
-    if (mockCpOnly && (envKey === 'VITE_SITE_WX_API_BASE_URL' || envKey === 'VITE_SITE_API_BASE_URL')) return
+    if (
+      mockCpOnly &&
+      (envKey === 'VITE_SITE_WX_API_BASE_URL' || envKey === 'VITE_SITE_API_BASE_URL')
+    )
+      return
     const pc = parseProxyFromBaseURL(baseURL)
     if (!pc) return
     proxy[pc.prefix] = {
@@ -102,9 +110,7 @@ export default defineConfig(({ mode, command }) => {
     // 让 Axios 请求走 Vite 代理（同源），解决跨域。
     if (isDev && baseURL.match(/^(https?:)?\/\//)) {
       defineEnv[`import.meta.env.${envKey}`] = JSON.stringify(pc.prefix)
-      console.log(
-        `[vite] dev: override ${envKey} → "${pc.prefix}" (relative, uses proxy)`,
-      )
+      console.log(`[vite] dev: override ${envKey} → "${pc.prefix}" (relative, uses proxy)`)
     }
   })
 
@@ -144,6 +150,7 @@ export default defineConfig(({ mode, command }) => {
     define: defineEnv,
     // 有后端时启用
     server: {
+      port: 5179,
       host: '0.0.0.0', // 允许通过本机 IP 访问
       // 允许通过内网穿透（cpolar 等）域名访问 dev server；
       // true = 放行所有 host（仅开发期使用，生产勿开）

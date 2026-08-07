@@ -65,7 +65,8 @@
  *   oversize(file)                              — 文件超过 maxSize 限制且未压缩 / 压缩后仍超限时触发（beforeRead 内）
  */
 import { ref, computed, watch, nextTick } from 'vue'
-import { showToast, showImagePreview } from 'vant'
+import { showToast } from 'vant/es/toast'
+import { showImagePreview } from 'vant/es/image-preview'
 
 // 组件根节点为 <div class="vant-upload-field">；关闭自动属性继承，
 // 把透传属性（如 id / data-track-anchor）显式绑到根元素上，

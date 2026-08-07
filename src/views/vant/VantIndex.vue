@@ -174,6 +174,14 @@ const stages = ref([
     color: '#ee0a24',
   },
   {
+    id: 'record-form',
+    title: '表单操作录屏',
+    desc: '进入页面弹出录屏确认框，填写报案表单提交成功后自动停止录屏并上传至后端',
+    path: '/vant/vant-record2-demo',
+    icon: '📝',
+    color: '#ee0a24',
+  },
+  {
     id: 'signature',
     title: '电子签名组件 VantSignature',
     desc: '表单内签字区域，点击横屏全屏手写，默认提示「书写正楷」，可传姓名作背景，确认后上传返回图片地址',
@@ -221,7 +229,7 @@ function navigateTo(path: string) {
 
     <!-- 学习阶段 -->
     <section class="stages">
-      <h2>组件演示（共 21 个）</h2>
+      <h2>组件演示（共 22 个）</h2>
       <div class="stage-grid">
         <div
           v-for="s in stages"

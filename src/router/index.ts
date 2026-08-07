@@ -313,6 +313,12 @@ const manualRoutes = [
     meta: { title: '屏幕录屏' },
   },
   {
+    path: '/vant/vant-record2-demo',
+    name: 'vant-record2-demo',
+    component: () => import('../views/vant/VantRecord2Demo.vue'),
+    meta: { title: '表单操作录屏' },
+  },
+  {
     path: '/vant/vant-signature-demo',
     name: 'vant-signature-demo',
     component: () => import('../views/vant/VantSignatureDemo.vue'),

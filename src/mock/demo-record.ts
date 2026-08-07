@@ -112,4 +112,35 @@ export const screenRecordMockRoutes: MockRoute[] = [
       return { code: 200, data: { list }, message: 'ok' }
     },
   },
+  // 表单操作录屏上传（关联表单数据，meta 记录）
+  {
+    method: 'POST',
+    url: '/demo/form-record/upload',
+    response: async (req: any) => {
+      const body = await parseBody(req)
+      const timestamp = Date.now()
+      const fileId = `FREC${timestamp}`
+      const item: StoredRecord = {
+        fileId,
+        fileName: `form-record-${timestamp}.webm`,
+        url: `/demo-upload/form-record-${timestamp}.webm`,
+        size: Number(body.size) || 0,
+        mimeType: body.mimeType || 'video/webm',
+        durationMs: Number(body.durationMs) || 0,
+        createdAt: timestamp,
+        sessionId: body.sessionId || '',
+        title: body.title || '表单操作录屏',
+        bizType: body.bizType || 'form-operation',
+        userId: body.userId || '',
+      }
+      Object.assign(item, body.formData ? { title: `${body.title || '表单录屏'}（${JSON.stringify(body.formData).slice(0, 40)}...）` } : {})
+      records.unshift(item)
+      console.log('[mock] 表单录屏已记录:', fileId, JSON.stringify(body))
+      return {
+        code: 200,
+        data: { url: item.url, fileId: item.fileId, fileName: item.fileName, size: item.size },
+        message: '表单录屏上传成功',
+      }
+    },
+  },
 ]
