@@ -160,6 +160,30 @@ const manualRoutes = [
     component: () => import('../views/vant/VantSliderVerifyDemo.vue'),
     meta: { title: 'VantSliderVerify 滑块验证' },
   },
+  {
+    path: '/vant/vant-track-demo',
+    name: 'vant-track-demo',
+    component: () => import('../views/vant/VantTrackDemo.vue'),
+    meta: { title: '操作记录' },
+  },
+  {
+    path: '/vant/vant-record-demo',
+    name: 'vant-record-demo',
+    component: () => import('../views/vant/VantRecordDemo.vue'),
+    meta: { title: '屏幕录屏' },
+  },
+  {
+    path: '/vant/vant-record2-demo',
+    name: 'vant-record2-demo',
+    component: () => import('../views/vant/VantRecord2Demo.vue'),
+    meta: { title: '表单操作录屏' },
+  },
+  {
+    path: '/vant/vant-signature-demo',
+    name: 'vant-signature-demo',
+    component: () => import('../views/vant/VantSignatureDemo.vue'),
+    meta: { title: '电子签名' },
+  },
   // ============================================================
   // ====== ydl 模块（福建源动力平台） ======
   // ============================================================
@@ -299,30 +323,6 @@ const manualRoutes = [
     name: 'ydl-lhzj',
     component: () => import('../views/ydl/LhzjView.vue'),
     meta: { title: '我的领航' },
-  },
-  {
-    path: '/vant/vant-track-demo',
-    name: 'vant-track-demo',
-    component: () => import('../views/vant/VantTrackDemo.vue'),
-    meta: { title: '操作记录' },
-  },
-  {
-    path: '/vant/vant-record-demo',
-    name: 'vant-record-demo',
-    component: () => import('../views/vant/VantRecordDemo.vue'),
-    meta: { title: '屏幕录屏' },
-  },
-  {
-    path: '/vant/vant-record2-demo',
-    name: 'vant-record2-demo',
-    component: () => import('../views/vant/VantRecord2Demo.vue'),
-    meta: { title: '表单操作录屏' },
-  },
-  {
-    path: '/vant/vant-signature-demo',
-    name: 'vant-signature-demo',
-    component: () => import('../views/vant/VantSignatureDemo.vue'),
-    meta: { title: '电子签名' },
   },
 ]
 
