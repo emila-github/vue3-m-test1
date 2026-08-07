@@ -308,7 +308,7 @@ async function manualStop() {
 
     <!-- 使用说明 -->
     <div class="usage-section">
-      <div class="section-title">使用说明</div>
+      <div class="section-title">页面示例说明</div>
       <div class="usage-card">
         <p>
           本页面演示「表单操作 → 录屏 → 上传」的完整闭环：<br />
@@ -316,6 +316,115 @@ async function manualStop() {
           2. 填写报案表单并提交。<br />
           3. 表单提交成功后自动停止录屏，并上传到 <code>/demo/form-record/upload</code>（mock）。
         </p>
+      </div>
+
+      <div class="section-title">@/plugins/record 插件使用说明</div>
+      <div class="usage-card">
+        <h4>1. 插件安装（main.ts）</h4>
+        <pre><code>import { createScreenRecordPlugin } from '@/plugins/record'
+app.use(createScreenRecordPlugin({ autoUpload: true }))</code></pre>
+        <ul>
+          <li><code>autoUpload</code>：停止录制后是否自动上传后端，默认 <code>true</code></li>
+          <li><code>uploader</code>：自定义上传函数，默认内置 demo 上传器（base64 + JSON）</li>
+          <li><code>defaultMeta</code>：默认附带的业务元数据（如统一 userId）</li>
+        </ul>
+        <p class="note">插件内部维护模块级单例，<code>useScreenRecord()</code> 在任意组件中拿到的都是同一实例。</p>
+
+        <h4>2. 在组件中使用</h4>
+        <pre><code>import { useScreenRecord } from '@/plugins/record'
+const record = useScreenRecord()</code></pre>
+
+        <h4>3. 核心 API</h4>
+        <div class="api-table">
+          <table>
+            <thead><tr><th>方法</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><code>record.start(opts?)</code></td><td>发起录屏（弹出浏览器屏幕选择框）。opts 可配置分辨率、音频、时长限制、业务元数据等</td></tr>
+              <tr><td><code>record.stop()</code></td><td>停止录制，返回 <code>ScreenRecordResult</code>（含 blob、objectURL、时长等）</td></tr>
+              <tr><td><code>record.pause()</code></td><td>暂停录制（MediaRecorder.pause），时序计时器停止</td></tr>
+              <tr><td><code>record.resume()</code></td><td>恢复录制（MediaRecorder.resume），时序计时器恢复</td></tr>
+              <tr><td><code>record.upload(uploader?)</code></td><td>手动上传最后一次录制产物。可传入自定义 uploader</td></tr>
+              <tr><td><code>record.recordOperation(op, opts?)</code></td><td>包裹一次业务操作：自动开始录屏→执行业务→停止→上传。业务成败均上传</td></tr>
+              <tr><td><code>record.on(callback)</code></td><td>订阅录制事件，返回取消订阅函数</td></tr>
+              <tr><td><code>record.isSupported()</code></td><td>当前环境是否支持屏幕录制（需 HTTPS/localhost + getDisplayMedia）</td></tr>
+              <tr><td><code>record.recorder</code></td><td>底层 <code>ScreenRecorder</code> 实例，可访问 state、stream、lastResult 等</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>4. start() 参数 ScreenRecordOptions</h4>
+        <div class="api-table">
+          <table>
+            <thead><tr><th>参数</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><code>videoConstraints</code></td><td>Object</td><td>1280x720@15fps</td><td>视频清晰度/帧率约束</td></tr>
+              <tr><td><code>audio</code></td><td>boolean</td><td>false</td><td>是否录制系统/麦克风音频</td></tr>
+              <tr><td><code>mimeType</code></td><td>string</td><td>自动协商</td><td>期望编码格式（优先级 vp9→vp8→webm→mp4）</td></tr>
+              <tr><td><code>maxDurationMs</code></td><td>number</td><td>0（不限）</td><td>单次最长录制时长(ms)，超时自动停止</td></tr>
+              <tr><td><code>timesliceMs</code></td><td>number</td><td>1000</td><td>MediaRecorder 数据切片间隔(ms)</td></tr>
+              <tr><td><code>autoUpload</code></td><td>boolean</td><td>插件配置</td><td>停止后是否自动上传（可覆盖插件级配置）</td></tr>
+              <tr><td><code>uploader</code></td><td>function</td><td>插件默认</td><td>自定义上传函数</td></tr>
+              <tr><td><code>meta</code></td><td>ScreenRecordMeta</td><td>{}</td><td>业务元数据：bizType、bizId、title、userId 等</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>5. 录制生命周期状态 RecordState</h4>
+        <div class="api-table">
+          <table>
+            <thead><tr><th>状态</th><th>含义</th><th>可执行操作</th></tr></thead>
+            <tbody>
+              <tr><td><code>idle</code></td><td>空闲态，插件初始化完成但尚未开始任何录制。此时可调用 <code>start()</code> 发起录屏</td><td>→ start()</td></tr>
+              <tr><td><code>recording</code></td><td>正在录制中。MediaRecorder 处于 recording 状态，每 <code>timesliceMs</code> 产生数据分片，计时器定时派发 tick 事件。此时可进行暂停 or 停止操作</td><td>→ pause() / stop()</td></tr>
+              <tr><td><code>paused</code></td><td>录制已暂停。MediaRecorder 暂停，tick 计时器停止，但媒体流保持连接。用户可恢复继续录制，或停止结束录制</td><td>→ resume() / stop()</td></tr>
+              <tr><td><code>stopped</code></td><td>录制已停止（正常结束 or 超时自动停止）。Blob 已产出，objectURL 已创建，<code>lastResult</code> 可用。可重新 <code>start()</code> 开始新一轮录制</td><td>→ start() / upload()</td></tr>
+              <tr><td><code>error</code></td><td>录制过程中发生异常（如 MediaRecorder error 事件、用户关闭共享标签页导致轨道结束）。需重新 <code>start()</code> 来开启新的录制会话</td><td>→ start()</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="state-diagram">
+          <b>状态流转：</b> <code>idle</code> → (start) → <code>recording</code> ⇄ (pause/resume) ⇄ <code>paused</code> → (stop) → <code>stopped</code> → (start) → <code>recording</code> …
+          <br /><code>recording</code> / <code>paused</code> → (异常) → <code>error</code> → (start) → <code>recording</code> …
+        </p>
+
+        <h4>6. 事件类型 ScreenRecordEvent</h4>
+        <div class="api-table">
+          <table>
+            <thead><tr><th>事件</th><th>字段</th><th>触发时机</th></tr></thead>
+            <tbody>
+              <tr><td><code>statechange</code></td><td>state, prev</td><td>状态发生变化时（含新旧状态对比）</td></tr>
+              <tr><td><code>tick</code></td><td>elapsedMs</td><td>录制中每 200ms 触发，携带已录制毫秒数</td></tr>
+              <tr><td><code>complete</code></td><td>result</td><td>录制停止且 Blob 产出完毕（<code>recorder.onstop</code> 回调）</td></tr>
+              <tr><td><code>uploading</code></td><td>—</td><td>开始上传录制文件到后端</td></tr>
+              <tr><td><code>uploaded</code></td><td>result</td><td>上传成功，携带后端返回的 fileId、url 等</td></tr>
+              <tr><td><code>error</code></td><td>error</td><td>录制或上传过程中发生异常</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>7. 停止录制产物 ScreenRecordResult</h4>
+        <div class="api-table">
+          <table>
+            <thead><tr><th>字段</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><code>sessionId</code></td><td>录制会话 ID（自动生成 or meta 传入）</td></tr>
+              <tr><td><code>blob</code></td><td>录制视频 Blob 对象，可进一步上传或下载</td></tr>
+              <tr><td><code>url</code></td><td>本地预览用的 object URL（页面卸载前有效）</td></tr>
+              <tr><td><code>mimeType</code></td><td>视频编码类型（如 <code>video/webm;codecs=vp9</code>）</td></tr>
+              <tr><td><code>size</code></td><td>文件大小（字节）</td></tr>
+              <tr><td><code>durationMs</code></td><td>实际录制时长（毫秒）</td></tr>
+              <tr><td><code>startedAt / endedAt</code></td><td>录制起止时间戳</td></tr>
+              <tr><td><code>uploaded</code></td><td>上传后回填的后端结果（fileId、url、fileName、size）</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>8. 两种典型集成模式</h4>
+        <ul>
+          <li><b>手动控制（本页面模式）：</b>页面自行调用 <code>start()</code>→<code>stop()</code>→<code>upload()</code>，灵活控制每个步骤的时机和 UI 反馈</li>
+          <li><b>自动包裹：</b>使用 <code>recordOperation(async () => submitForm(), opts)</code>，自动完成录制→业务执行→停止→上传全流程</li>
+        </ul>
+        <p class="note">注意：本页面将 <code>autoUpload</code> 设为 <code>false</code>，在表单提交成功后手动调用 <code>stopAndUpload()</code> 转换 blob 为 base64 并上传到自定义接口，以实现「表单数据 + 录屏文件」联合提交。</p>
       </div>
     </div>
   </div>
@@ -437,5 +546,77 @@ async function manualStop() {
   padding: 1px 6px;
   border-radius: 4px;
   word-break: break-all;
+}
+.usage-card h4 {
+  font-size: 14px;
+  color: var(--app-text, #323233);
+  margin: 16px 0 6px;
+  border-bottom: 1px solid #ebedf0;
+  padding-bottom: 4px;
+}
+.usage-card h4:first-child {
+  margin-top: 0;
+}
+.usage-card pre {
+  background: #f7f8fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+.usage-card pre code {
+  background: none;
+  color: #007acc;
+  padding: 0;
+}
+.usage-card ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+.usage-card li {
+  margin-bottom: 2px;
+}
+.usage-card .note {
+  color: #c1c1c1;
+  font-size: 12px;
+  margin: 4px 0;
+}
+.usage-card .state-diagram {
+  background: #f9fdf6;
+  border: 1px dashed #d3e8c4;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+.usage-card .state-diagram code {
+  color: #ee0a24;
+  background: none;
+}
+.api-table {
+  overflow-x: auto;
+  margin: 6px 0 12px;
+}
+.api-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.api-table th,
+.api-table td {
+  border: 1px solid #ebedf0;
+  padding: 4px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+.api-table th {
+  background: #f7f8fa;
+  font-weight: 600;
+  color: var(--app-text, #323233);
+  white-space: nowrap;
+}
+.api-table td code {
+  font-size: 11px;
 }
 </style>
