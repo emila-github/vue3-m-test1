@@ -757,9 +757,9 @@ defineExpose({
       </van-list>
     </van-pull-refresh>
 
-    <!-- 悬浮新增按钮 -->
+    <!-- 悬浮新增按钮：更多查询面板展开时隐藏，避免遮挡面板内容 -->
     <van-button
-      v-if="showAdd && api.create"
+      v-if="showAdd && api.create && !showMoreFilter"
       v-permission="permCodes.create"
       class="vl-fab"
       type="primary"
