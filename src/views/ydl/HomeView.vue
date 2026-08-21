@@ -198,7 +198,7 @@ function go(it: MenuConf) {
 <template>
   <div class="picc-page ydl-home">
     <header class="picc-header-gradient ydl-header">
-      <div class="ydl-brand">人保财险</div>
+      <div class="ydl-brand">保保财险</div>
       <div class="ydl-title">福建源平台</div>
       <div class="ydl-sub">数据驱动 · 保源续保一体化</div>
     </header>

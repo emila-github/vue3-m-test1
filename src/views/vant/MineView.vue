@@ -46,7 +46,7 @@ const cells = ref([
   { icon: 'contact', title: '个人资料', to: '' },
   { icon: 'manager', title: '权限与角色', to: '' },
   { icon: 'setting', title: '设置', to: '' },
-  { icon: 'info', title: '关于中国人保', to: '' },
+  { icon: 'info', title: '关于中国保保', to: '' },
 ])
 
 /** 未登录时点头像区 → 去登录 */

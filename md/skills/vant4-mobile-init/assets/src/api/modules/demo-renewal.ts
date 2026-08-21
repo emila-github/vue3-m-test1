@@ -78,7 +78,7 @@ export interface DemoRenewalForm {
 
 /** 承保公司可选项（同时供 VantSearchField / VantSearch 联想） */
 export const DEMO_INSURERS = [
-  '人保财险',
+  '保保财险',
   '平安产险',
   '太平洋产险',
   '国寿财险',

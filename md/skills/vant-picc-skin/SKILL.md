@@ -1,7 +1,7 @@
 ---
 name: vant-picc-skin
 description: >
-  PICC 人保财险（中国人民财产保险）移动端 Vant4 设计系统皮肤。
+  PICC 保保财险（中国人民财产保险）移动端 Vant4 设计系统皮肤。
   将 Vant4 的全部组件重构为 PICC 品牌风格（品牌红 #D71920、浅灰画布 + 白卡、
   PILL 全圆角主按钮 / 12px 卡片、选中态红、NavBar 红色渐变变体、页面级辅助类），
   并以全局 CSS 变量皮肤形式落地，可在任意用到 Vant4 的页面一键套用、快速撤销。
@@ -11,15 +11,16 @@ license: MIT
 metadata:
   author: 'PICC Design System'
   category: 'Design System / Vant4'
-  tags: ['Vant4', 'PICC', '人保财险', '设计系统', '皮肤', '主题']
+  tags: ['Vant4', 'PICC', '保保财险', '设计系统', '皮肤', '主题']
 ---
 
-# PICC 人保财险 · Vant4 全局皮肤技能
+# PICC 保保财险 · Vant4 全局皮肤技能
 
-本技能提供一套 **PICC 人保财险品牌风格的 Vant4 组件皮肤**，以全局 CSS 变量形式实现，
+本技能提供一套 **PICC 保保财险品牌风格的 Vant4 组件皮肤**，以全局 CSS 变量形式实现，
 可在项目中一键套用、快速撤销，并把散落在各页面的 Vant4 覆写收敛为单一皮肤。
 
 > **v2.0 关键变更（基于 PICC 官方 APP 截图 `md/picc/app-ui/` 重新校准）：**
+>
 > - 主 CTA 按钮改为 **PILL 全圆角**（`9999px` 药丸形，参考截图「立即报价 / 确定 / 签到 / 邀请好友」等均为药丸形）
 > - 主按钮 **height 提升至 48px**，并带 **红色投影** 增强立体感与触控反馈
 > - 新增 **NavBar 红色渐变变体** `.van-nav-bar--picc-primary`（首页风格红底白字）
@@ -38,6 +39,7 @@ node <技能目录>/assets/setup.mjs
 ```
 
 脚本会自动完成「接入 PICC 皮肤」的全部工作（幂等，可重复运行）：
+
 1. 复制 `assets/vant-picc.css` → `src/styles/vant-picc.css`
 2. 复制 `assets/usePiccSkin.ts` → `src/composables/usePiccSkin.ts`
 3. 在 `src/main.ts` 注入皮肤引入（`import './styles/vant-picc.css'`）与启动调用 `initSkin(true)`
@@ -53,21 +55,23 @@ node <技能目录>/assets/setup.mjs
 > 把整个技能目录复制到任意 Vant4 项目后，运行 `assets/setup.mjs` 即可一键接入（见 §0）。
 
 ### 项目落地文件（由 `setup.mjs` 自动生成）
-| 文件 | 作用 |
-|------|------|
-| `src/styles/vant-picc.css` | 全局皮肤（v2.0）：Vant4 全部组件 CSS 变量 + 关键 class + 页面级辅助类，作用域 `.picc-skin` |
+
+| 文件                             | 作用                                                                                                |
+| -------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/styles/vant-picc.css`       | 全局皮肤（v2.0）：Vant4 全部组件 CSS 变量 + 关键 class + 页面级辅助类，作用域 `.picc-skin`          |
 | `src/composables/usePiccSkin.ts` | 皮肤开关：在 `<html>` 上增删 `picc-skin` class，持久化到 localStorage；自带开发环境悬浮开关自动注入 |
-| `src/main.ts` | 由 `setup.mjs` 自动注入 `import './styles/vant-picc.css'` 与 `initSkin(true)` |
-| `src/App.vue` | 本项目自带悬浮开关；新项目由 `usePiccSkin` 自动注入开关，**无需改动 App.vue** |
-| `md/picc/DESIGN-VANT.md` | 本皮肤的完整设计规格（Token → Vant4 组件映射、可做/不可做） |
+| `src/main.ts`                    | 由 `setup.mjs` 自动注入 `import './styles/vant-picc.css'` 与 `initSkin(true)`                       |
+| `src/App.vue`                    | 本项目自带悬浮开关；新项目由 `usePiccSkin` 自动注入开关，**无需改动 App.vue**                       |
+| `md/picc/DESIGN-VANT.md`         | 本皮肤的完整设计规格（Token → Vant4 组件映射、可做/不可做）                                         |
 
 ### 技能自带资产（`assets/`，随技能分发）
-| 文件 | 作用 |
-|------|------|
-| `assets/vant-picc.css` | 皮肤实现权威副本，`setup.mjs` 会复制到 `src/styles/` |
+
+| 文件                    | 作用                                                      |
+| ----------------------- | --------------------------------------------------------- |
+| `assets/vant-picc.css`  | 皮肤实现权威副本，`setup.mjs` 会复制到 `src/styles/`      |
 | `assets/usePiccSkin.ts` | 皮肤开关权威副本，`setup.mjs` 会复制到 `src/composables/` |
-| `assets/DESIGN-VANT.md` | 设计规格文档副本 |
-| `assets/setup.mjs` | 一键初始化脚本：复制上述文件并注入 `main.ts`（幂等） |
+| `assets/DESIGN-VANT.md` | 设计规格文档副本                                          |
+| `assets/setup.mjs`      | 一键初始化脚本：复制上述文件并注入 `main.ts`（幂等）      |
 
 ---
 
@@ -90,19 +94,24 @@ node <技能目录>/assets/setup.mjs
 ## 工作流（Workflow）
 
 ### 1. 套用皮肤（全局，默认开启）
+
 - `main.ts` 已引入皮肤 CSS；`App.vue` 启动时 `initSkin(true)` 自动为 `<html>` 加 `picc-skin` class。
 - **无需**在每个页面重复 `:deep()` 覆写 Vant4——皮肤已全局生效。
 
 ### 2. 快速撤销 / 恢复（核心诉求）
+
 皮肤作用域是 `<html class="picc-skin">`，撤销 = 移除该 class，所有 Vant4 组件即时回退默认主题，**无需重新构建**。
 三种方式：
+
 1. 开发环境：左下角悬浮开关「PICC 皮肤 · 开/关」点击切换。
 2. 浏览器控制台：`window.__piccSkin.toggle()` / `.enable()` / `.disable()`。
 3. 代码内：`const { disable } = usePiccSkin(); disable()`。
-选择会持久化（`localStorage: picc-skin-enabled`），下次启动自动恢复。
+   选择会持久化（`localStorage: picc-skin-enabled`），下次启动自动恢复。
 
 ### 3. 重构一个用到 Vant4 的页面（重置样式 → 统一皮肤）
+
 把页面里**针对 Vant4 组件**的硬核样式收敛掉，交给全局皮肤：
+
 1. 删除页面 `<style>` 中的 `:deep(.van-xxx)` 覆写块（若有）。
 2. 移除硬编码品牌色 `#1989fa`（Vant 蓝）、`#ee0a24`（Vant 红），改为引用皮肤：
    - 直接删除这些内联值，让组件回落到 `--van-*` 变量（已为 PICC 红）。
@@ -116,24 +125,27 @@ node <技能目录>/assets/setup.mjs
 5. 需要品牌氛围时，直接在模板使用页面级辅助类（见 §5）。
 
 ### 4. 扩展皮肤（新增组件 / 调色）
+
 - 统一在 `src/styles/vant-picc.css` 内、对应组件的注释段下追加变量；**必须**包在 `html.picc-skin` 作用域，保证可撤销。
 - 需要覆盖 inline 注入的变量时，用 `html.picc-skin .van-xxx { --van-xxx: <值> !important; }`。
 - 改完跑 `read_lints` 与 `pnpm dev` 目测。
 
 ### 5. 页面级辅助类（直接用于模板）
+
 v2.0 新增，便于快速构建 PICC 品牌页面，全部作用域在 `html.picc-skin` 内：
 
-| 类 | 用途 |
-|----|------|
-| `.picc-page` | 通用页面容器（浅灰画布、min-height 100vh） |
-| `.picc-card` | 白卡容器（白底、12px 圆角、轻投影、内边距 16px） |
+| 类                      | 用途                                                  |
+| ----------------------- | ----------------------------------------------------- |
+| `.picc-page`            | 通用页面容器（浅灰画布、min-height 100vh）            |
+| `.picc-card`            | 白卡容器（白底、12px 圆角、轻投影、内边距 16px）      |
 | `.picc-header-gradient` | 红色渐变头部区域（首页 / 签到页风格，下缘 20px 圆角） |
-| `.picc-price` | 价格文字（品牌红 + DIN 系数字体） |
-| `.picc-number-display` | 大数字展示体（保费 / 保额，DIN 系字体） |
-| `.picc-notice-warm` | 暖色提示条（浅橙底、深橙字，用于实名/合规提示） |
-| `.picc-section-title` | 分组标题（17px、600、墨黑） |
+| `.picc-price`           | 价格文字（品牌红 + DIN 系数字体）                     |
+| `.picc-number-display`  | 大数字展示体（保费 / 保额，DIN 系字体）               |
+| `.picc-notice-warm`     | 暖色提示条（浅橙底、深橙字，用于实名/合规提示）       |
+| `.picc-section-title`   | 分组标题（17px、600、墨黑）                           |
 
 ### 6. NavBar 红色渐变变体
+
 首页等需要品牌氛围时，给 `van-nav-bar` 加 class `van-nav-bar--picc-primary` 即可获得红底白字渐变导航栏（默认 NavBar 仍为白底黑字）。
 
 ---
@@ -141,6 +153,7 @@ v2.0 新增，便于快速构建 PICC 品牌页面，全部作用域在 `html.pi
 ## 可做 / 不可做（Do & Don't）
 
 ### 可做
+
 - 品牌红严格收束于主 CTA、选中态、保障语义、角标与错误提示。
 - **主 CTA 按钮使用 PILL 全圆角 (`9999px`)**，高度 48px，带红色投影（v2.0 核心特征）。
 - 卡片 12px；输入框 8px；小尺寸（small/mini）按钮保持适度圆角，不用 full pill。
@@ -150,6 +163,7 @@ v2.0 新增，便于快速构建 PICC 品牌页面，全部作用域在 `html.pi
 - 用 `usePiccSkin` 开关管理皮肤，状态持久化。
 
 ### 不可做
+
 - 不要在页面里再用 `:deep()` 逐组件覆写 Vant4（应进全局皮肤）。
 - 不要把 `#1989fa` / `#ee0a24` 等 Vant 默认色硬编码进新代码。
 - 不要把品牌红铺成大面纯色背景（渐变装饰区除外，如 `.picc-header-gradient`）。
@@ -159,6 +173,7 @@ v2.0 新增，便于快速构建 PICC 品牌页面，全部作用域在 `html.pi
 ---
 
 ## 参考
+
 - `md/picc/DESIGN-VANT.md`（或 `assets/DESIGN-VANT.md`）：完整设计规格
 - `references/tokens.md`：Vant4 CSS 变量 → PICC 取值 全量表
 - `src/styles/vant-picc.css`（权威副本见 `assets/vant-picc.css`）：皮肤实现

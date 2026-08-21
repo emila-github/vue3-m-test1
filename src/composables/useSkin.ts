@@ -25,7 +25,7 @@ export interface SkinMeta {
 
 /** 全套皮肤。顺序即选择面板展示顺序。 */
 export const SKINS: SkinMeta[] = [
-  { id: 'picc', name: 'PICC 品牌红', desc: '人保财险官方品牌', color: '#d71920', deep: '#a91218' },
+  { id: 'picc', name: 'PICC 品牌红', desc: '保保财险官方品牌', color: '#d71920', deep: '#a91218' },
   { id: 'vant', name: 'Vant 默认蓝', desc: '清爽蓝调', color: '#1989fa', deep: '#1565c0' },
   { id: 'emerald', name: '翡翠绿', desc: '清新自然', color: '#059669', deep: '#047857' },
   { id: 'amber', name: '琥珀橙', desc: '温暖活力', color: '#f59e0b', deep: '#d97706' },

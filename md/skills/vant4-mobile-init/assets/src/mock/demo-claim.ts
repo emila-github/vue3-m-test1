@@ -89,7 +89,7 @@ function seedClaim(): Claim {
     idCard: '110101199003071234',
     relationship: 'self',
     policyNo: 'PICC2026-000123',
-    insurer: '中国人保财险',
+    insurer: '中国保保财险',
     insuranceType: 'auto',
     extraCoverage: ['glass', 'nolicense'],
     effectiveDate: '2026-01-01',

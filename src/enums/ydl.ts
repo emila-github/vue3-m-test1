@@ -80,7 +80,7 @@ export const YDL_SALES_RESULT: Record<string, string> = {
 /** 业务去向主体 BUSSINESS_BELONG_TYPE：0~9（id=name，文档口径） */
 export const YDL_BUSSINESS_BELONG: Record<number, string> = {
   0: '平安',
-  1: '人保',
+  1: '保保',
   2: '国寿',
   3: '太保',
   4: '新华',

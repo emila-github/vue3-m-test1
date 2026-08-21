@@ -207,7 +207,7 @@ onMounted(() => {
             icon-size="14px"
           />
           <span
-            >已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span
+            >已阅读并同意<a href="#">《中国保保服务协议》</a>和<a href="#">《隐私政策》</a></span
           >
         </label>
       </van-form>
@@ -258,7 +258,7 @@ onMounted(() => {
             icon-size="14px"
           />
           <span
-            >已阅读并同意<a href="#">《中国人保服务协议》</a>和<a href="#">《隐私政策》</a></span
+            >已阅读并同意<a href="#">《中国保保服务协议》</a>和<a href="#">《隐私政策》</a></span
           >
         </label>
       </van-form>

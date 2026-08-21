@@ -198,7 +198,7 @@ const accidentTree = [
   { text: '自然灾害', value: 'nature', children: [{ text: '暴雨', value: 'rain' }] },
   { text: '意外', value: 'accident', children: [{ text: '滑倒', value: 'slip' }] },
 ]
-const insurerOptions = ['中国人保财险', '中国平安财险', '太平洋财险', '中国人寿财险', '大地财险']
+const insurerOptions = ['中国保保财险', '中国平安财险', '太平洋财险', '中国人寿财险', '大地财险']
 const hospitalOptions = [
   '北京协和医院',
   '四川大学华西医院',

@@ -190,7 +190,7 @@ async function uploadRenewalFile(file: File): Promise<Record<string, any>> {
         <div class="f-label">承保公司联想（VantSearch）</div>
         <VantSearch
           :fetch="searchInsurer"
-          placeholder="输入公司名联想，如「人保」"
+          placeholder="输入公司名联想，如「保保」"
           @select="(v: string | number) => (query.insurer = String(v))"
         />
       </div>

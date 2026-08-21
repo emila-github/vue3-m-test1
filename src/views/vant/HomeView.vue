@@ -95,7 +95,7 @@ function go(it: MenuItem) {
       <!-- 顶栏：品牌名 + 城市选择 + 右侧操作 -->
       <div class="header-bar">
         <div class="brand-area">
-          <span class="brand-name">中国人保</span>
+          <span class="brand-name">中国保保</span>
           <span class="brand-sub">官方自营平台</span>
         </div>
         <div class="header-right">

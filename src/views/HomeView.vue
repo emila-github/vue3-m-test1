@@ -52,7 +52,7 @@ function open(m: ModuleItem) {
     <!-- ==================== 头部 ==================== -->
     <header class="mod-header">
       <div class="mod-header-top">
-        <div class="mod-brand">中国人保</div>
+        <div class="mod-brand">中国保保</div>
         <div v-if="envTitle" class="mod-env">{{ envTitle }}</div>
       </div>
       <div class="mod-title">请选择业务模块</div>

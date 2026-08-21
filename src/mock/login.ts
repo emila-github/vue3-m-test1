@@ -27,7 +27,7 @@ import path from 'node:path'
 const loginConfig = {
   enabledMethods: ['sms', 'password', 'wechat', 'wecom'],
   defaultMethod: 'wecom' as const,
-  title: '中国人保财险',
+  title: '中国保保财险',
   subtitle: 'PICC 移动展业平台',
 }
 

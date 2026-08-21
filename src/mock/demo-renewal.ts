@@ -34,7 +34,7 @@ interface Renewal {
 }
 
 // ==================== 领域常量 ====================
-const INSURERS = ['人保财险', '平安产险', '太平洋产险', '国寿财险', '中华联合', '大地保险']
+const INSURERS = ['保保财险', '平安产险', '太平洋产险', '国寿财险', '中华联合', '大地保险']
 const CHANNELS = ['电销', '直销', '4S 店', '代理', '网销']
 const STATUSES = ['待跟进', '已联系', '已续保', '已流失']
 
@@ -52,7 +52,7 @@ function buildRecord(i: number): Renewal {
     policyNo: `PICC${2026}${String(100000 + i)}`,
     applicant: `客户${String(i + 1).padStart(3, '0')}`,
     plateNo: `浙A·${String(10000 + i * 7).slice(-5)}`,
-    insurer: INSURERS[i % INSURERS.length] ?? '人保财险',
+    insurer: INSURERS[i % INSURERS.length] ?? '保保财险',
     region: REGIONS[i % REGIONS.length] ?? 'zj-hz',
     channel: CHANNELS[i % CHANNELS.length] ?? '电销',
     insuranceTypes: i % 2 === 0 ? ['交强险', '车损险', '三者险'] : ['交强险', '三者险'],
