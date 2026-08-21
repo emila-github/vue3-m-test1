@@ -115,9 +115,9 @@ onMounted(async () => {
     <div class="login-header">
       <div class="login-brand">
         <span class="brand-mark">源</span>
-        <span class="brand-text">源动力平台</span>
+        <span class="brand-text">源平台</span>
       </div>
-      <h1 class="login-title">福建源动力平台</h1>
+      <h1 class="login-title">福建源平台</h1>
       <p class="login-subtitle">站点登录</p>
     </div>
 

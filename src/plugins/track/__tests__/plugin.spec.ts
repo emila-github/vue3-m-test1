@@ -6,7 +6,7 @@ vi.mock('@/api/request', () => ({
   post: vi.fn().mockResolvedValue(undefined),
 }))
 vi.mock('@/api/core/token', () => ({
-  getUserInfo: vi.fn(() => ({ userId: 'U10086', name: '源动力管理员' })),
+  getUserInfo: vi.fn(() => ({ userId: 'U10086', name: '源管理员' })),
 }))
 
 import { createTrackPlugin, useTrack } from '../index'

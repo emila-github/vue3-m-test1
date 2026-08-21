@@ -1,0 +1,41 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    // 1. 开启保存时自动格式化
+    "editor.formatOnSave": true,
+
+    // 2. 指定 Prettier 为当前项目的默认格式化器
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    // 3. 针对具体语言显式指定 Prettier，防止其他插件（如 ESLint）抢权
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+
+    // 4. 【性能优化】强制延迟加载 Prettier 和 ESLint，解决启动慢的问题
+    "extensions.experimental.affinity": {
+      "esbenp.prettier-vscode": 2,
+      "dbaeumer.vscode-eslint": 2,
+      "Tencent-Cloud.coding-copilot": 2,
+      "MarsCode.marscode-extension": 2,
+    },
+
+    // 5. 【性能优化】禁止 VS Code 监听 node_modules，防止后台扫描卡顿
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/build/**": true,
+      "**/.git/**": true,
+    },
+  },
+}

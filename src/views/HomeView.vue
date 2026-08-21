@@ -34,8 +34,8 @@ const modules: ModuleItem[] = [
   },
   {
     key: 'ydl',
-    title: '福建源动力平台',
-    desc: '源动力业务平台（子目录模块首页）',
+    title: '福建源平台',
+    desc: '源业务平台（子目录模块首页）',
     to: '/ydl',
     icon: '源',
     color: 'var(--van-primary-color)',

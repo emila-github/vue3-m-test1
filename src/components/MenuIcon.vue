@@ -8,9 +8,9 @@
  *     白色圆角方块容器 + 品牌红/彩色线性图标，用于红底区域中的高亮菜单项。
  *     参考截图中「查保单 / 车险续保 / 百万医疗」等顶部图标区。
  *
- *   default（福建源动力平台风格 / 默认）：
+ *   default（福建源平台风格 / 默认）：
  *     红色圆形徽章背景 + 白色线性图标，用于白底卡片区域的常规菜单项。
- *     参考截图中「车险算费 / 办理赔 / 保单变更 / 福建源动力平台」等底部图标区。
+ *     参考截图中「车险算费 / 办理赔 / 保单变更 / 福建源平台」等底部图标区。
  */
 import { computed } from 'vue'
 
@@ -20,7 +20,7 @@ const props = withDefaults(
   defineProps<{
     /** 菜单唯一 key，对应 HomeView 中的 menu key */
     name: string
-    /** 图标风格：highlight=车险算费(突出), default=福建源动力平台(默认) */
+    /** 图标风格：highlight=车险算费(突出), default=福建源平台(默认) */
     style?: IconStyle
     /** 容器尺寸（px），highlight 方块边长 / default 圆形直径 */
     size?: number
@@ -102,7 +102,10 @@ const ICONS: Record<string, { c: string; p: string }> = {
   },
 
   // 兜底
-  _default: { c: 'var(--van-primary-color)', p: `<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 17v.02"/>` },
+  _default: {
+    c: 'var(--van-primary-color)',
+    p: `<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 17v.02"/>`,
+  },
 }
 
 const meta = computed(() => ICONS[props.name] ?? ICONS._default)
@@ -131,7 +134,7 @@ const isHighlight = computed(() => props.style === 'highlight')
     <span v-if="badge" class="icon-badge">{{ badge }}</span>
   </span>
 
-  <!-- ====== default：红色圆形徽章 + 白色图标（福建源动力平台风格）====== -->
+  <!-- ====== default：红色圆形徽章 + 白色图标（福建源平台风格）====== -->
   <span
     v-else
     class="menu-icon menu-icon--df"
@@ -168,7 +171,7 @@ const isHighlight = computed(() => props.style === 'highlight')
   filter: drop-shadow(0 0.5px 0.5px rgba(0, 0, 0, 0.06));
 }
 
-/* ====== default（福建源动力平台风格）：红色圆形徽章 ====== */
+/* ====== default（福建源平台风格）：红色圆形徽章 ====== */
 .menu-icon--df {
   display: inline-flex;
   align-items: center;

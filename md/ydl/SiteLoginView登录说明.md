@@ -10,10 +10,10 @@
 
 站点登录页是 ydl 子系统的统一入口，提供**两种登录方式**：
 
-| 位置 | 方式 | 说明 |
-| --- | --- | --- |
-| 左侧 Tab「企业微信登录」 | 企业微信 OAuth 授权 | 整页跳转企业微信授权页，回跳带 `code` 后换 token |
-| 右侧 Tab「密码登录」 | 账号 + 图形验证码 + md5 密码 | 普通站点账号密码登录（旧站约定密码需 md5） |
+| 位置                     | 方式                         | 说明                                             |
+| ------------------------ | ---------------------------- | ------------------------------------------------ |
+| 左侧 Tab「企业微信登录」 | 企业微信 OAuth 授权          | 整页跳转企业微信授权页，回跳带 `code` 后换 token |
+| 右侧 Tab「密码登录」     | 账号 + 图形验证码 + md5 密码 | 普通站点账号密码登录（旧站约定密码需 md5）       |
 
 登录成功后跳转到 `redirect`（默认 `/ydl`）。两种方式最终都通过 `setToken` + `loadPermissionsByToken` 完成“拿 token→拉权限”的本地态初始化。
 
@@ -51,12 +51,12 @@ site-login
 
 ### 3.1 顶部标题区（login-header）
 
-| 元素 | 内容 |
-| --- | --- |
-| `.brand-mark` | 红色圆角方块，文字「源」 |
-| `.brand-text` | 「源动力平台」（品牌红 `#d71920`） |
-| `.login-title` | 「福建源动力平台」 |
-| `.login-subtitle` | 「站点登录」 |
+| 元素              | 内容                           |
+| ----------------- | ------------------------------ |
+| `.brand-mark`     | 红色圆角方块，文字「源」       |
+| `.brand-text`     | 「源平台」（品牌红 `#d71920`） |
+| `.login-title`    | 「福建源平台」                 |
+| `.login-subtitle` | 「站点登录」                   |
 
 ### 3.2 胶囊 Tab 切换器（card-tabs）
 
@@ -74,11 +74,11 @@ site-login
 
 三条自定义输入行（`.card-field` + 图标 + `<input>`，无边框、底部细线）：
 
-| 字段 | 图标 | v-model | 类型 |
-| --- | --- | --- | --- |
-| 账号 | `contact` | `username` | text |
-| 密码 | `lock` | `password` | password |
-| 图形验证码 | `shield-o` | `captcha` | text(maxlength=4) |
+| 字段       | 图标       | v-model    | 类型              |
+| ---------- | ---------- | ---------- | ----------------- |
+| 账号       | `contact`  | `username` | text              |
+| 密码       | `lock`     | `password` | password          |
+| 图形验证码 | `shield-o` | `captcha`  | text(maxlength=4) |
 
 验证码输入行右侧是 `.captcha-img` 点击刷新区：有图显示 `<img :src="captchaSrc">`，无图显示「加载中」。
 
@@ -92,31 +92,36 @@ site-login
 
 ### 4.1 状态变量
 
-| 变量 | 类型 | 说明 |
-| --- | --- | --- |
-| `activeTab` | `ref<'wecom' \| 'password'>` | 当前激活 Tab，默认 `'wecom'` |
-| `username` / `password` / `captcha` | `ref<string>` | 密码表单三字段 |
-| `socialId` | `ref<string>` | 企业微信未绑定时回传，普通登录时带上去绑定 |
-| `redirect` | `computed(string)` | `route.query.redirect \|\| '/ydl'` |
+| 变量                                | 类型                         | 说明                                       |
+| ----------------------------------- | ---------------------------- | ------------------------------------------ |
+| `activeTab`                         | `ref<'wecom' \| 'password'>` | 当前激活 Tab，默认 `'wecom'`               |
+| `username` / `password` / `captcha` | `ref<string>`                | 密码表单三字段                             |
+| `socialId`                          | `ref<string>`                | 企业微信未绑定时回传，普通登录时带上去绑定 |
+| `redirect`                          | `computed(string)`           | `route.query.redirect \|\| '/ydl'`         |
 
 ### 4.2 composable 引用
 
 ```ts
 const wecom = useSiteWecomLogin()
-const { captchaImg, loading: pwdLoading, refreshCaptcha, submit: submitPwd } = useSitePasswordLogin()
+const {
+  captchaImg,
+  loading: pwdLoading,
+  refreshCaptcha,
+  submit: submitPwd,
+} = useSitePasswordLogin()
 ```
 
 ### 4.3 验证码图片源（captchaSrc）
 
 后端 / mock 返回的是**不含 `data:` 前缀的 base64 字符串**，需要前端拼 `data:<mime>;base64,` 才能被 `<img>` 渲染。`captchaSrc` 通过 base64 头部前 8 个字符推断 MIME，避免写死导致 SVG/PNG 渲染失败：
 
-| 头部特征 | 推断 MIME |
-| --- | --- |
-| `iVBOR` | `image/png` |
-| `/9j/` | `image/jpeg` |
-| `R0lGOD` | `image/gif` |
-| `PHN2` 或 `PD94` | `image/svg+xml` |
-| 其它 | 兜底 `image/gif` |
+| 头部特征         | 推断 MIME        |
+| ---------------- | ---------------- |
+| `iVBOR`          | `image/png`      |
+| `/9j/`           | `image/jpeg`     |
+| `R0lGOD`         | `image/gif`      |
+| `PHN2` 或 `PD94` | `image/svg+xml`  |
+| 其它             | 兜底 `image/gif` |
 
 > mock 返回的是 base64 SVG，头部为 `PHN2`（`<svg`）或 `PD94`（含 `<?xml` 声明），会命中 SVG 分支正确渲染。
 
@@ -178,9 +183,9 @@ onMounted()
 
 ### 5.2 关键配置（环境相关）
 
-| 配置项 | 用途 | 回退 |
-| --- | --- | --- |
-| `VITE_SITE_WX_APP_ID` | 企业微信 AppId | 空串 |
+| 配置项                          | 用途                             | 回退                                                |
+| ------------------------------- | -------------------------------- | --------------------------------------------------- |
+| `VITE_SITE_WX_APP_ID`           | 企业微信 AppId                   | 空串                                                |
 | `VITE_SITE_OAUTH_REDIRECT_BASE` | 回调可信固定域名（真实联调必填） | `VITE_OAUTH_REDIRECT_BASE` → 当前 `location.origin` |
 
 > 企业微信要求 `redirect_uri` 必须是后台登记的**可信固定域名**，不能用含动态 query/hash 的 `location.href`（dev 的 localhost 也无法登记）。真实联调务必配置 `VITE_SITE_OAUTH_REDIRECT_BASE`。
@@ -221,14 +226,14 @@ authUrl      = getAuthUrl({ wxAppId, redirect })
 
 所有请求经 `siteClient`（baseURL = `VITE_SITE_API_BASE_URL`，缺省 `/site-api`）与 `siteWxClient`（baseURL = `VITE_SITE_WX_API_BASE_URL`，缺省 `/wx-api`）。
 
-| 功能 | 函数 | 方法 | 路径 | 响应业务码 |
-| --- | --- | --- | --- | --- |
-| 企业微信授权地址 | `getAuthUrl` | GET | `/cp/wxAuth/getAuthUrl` | 鉴权类 `code:0` |
-| 企业微信 code 换 token | `getWxUserInfo` | POST | `/cp/wxAuth/getWxUserInfo` | 内层 `result.code`：`'00'`/`'01'`/`'02'` |
-| 图形验证码 | `getCaptchaImg` | GET | `/sys/captchaImage` | 业务 `code:200` |
-| 账号密码登录 | `userLogin` | POST | `/sys/social/wxLogin` | 业务 `code:200` |
-| 登录后拉权限 | `getUserPermissionByToken` | GET | `/sys/permission/getUserPermissionByToken` | 业务 `code:200` |
-| 登出 | `siteLogout` | POST | `/sys/logout` | 业务 `code:200`（带 `__skipAuthFail`） |
+| 功能                   | 函数                       | 方法 | 路径                                       | 响应业务码                               |
+| ---------------------- | -------------------------- | ---- | ------------------------------------------ | ---------------------------------------- |
+| 企业微信授权地址       | `getAuthUrl`               | GET  | `/cp/wxAuth/getAuthUrl`                    | 鉴权类 `code:0`                          |
+| 企业微信 code 换 token | `getWxUserInfo`            | POST | `/cp/wxAuth/getWxUserInfo`                 | 内层 `result.code`：`'00'`/`'01'`/`'02'` |
+| 图形验证码             | `getCaptchaImg`            | GET  | `/sys/captchaImage`                        | 业务 `code:200`                          |
+| 账号密码登录           | `userLogin`                | POST | `/sys/social/wxLogin`                      | 业务 `code:200`                          |
+| 登录后拉权限           | `getUserPermissionByToken` | GET  | `/sys/permission/getUserPermissionByToken` | 业务 `code:200`                          |
+| 登出                   | `siteLogout`               | POST | `/sys/logout`                              | 业务 `code:200`（带 `__skipAuthFail`）   |
 
 响应包络由 `ydlFormat` 适配器统一处理，兼容双语义：
 
@@ -243,14 +248,14 @@ authUrl      = getAuthUrl({ wxAppId, redirect })
 
 `src/mock/ydl-site-auth.ts` 由 mock 中间件挂载在 `/site-api`、`/wx-api` 前缀下拦截。
 
-| 接口 | Mock 行为 |
-| --- | --- |
-| `/sys/captchaImage` | 生成 **4 位 base64 SVG 验证码图**（字符来自 `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`），返回 `{ img, captchaKey }` |
-| `/sys/social/wxLogin` | 任意账号密码；**校验验证码大小写不敏感**；错误返回 `code:500 验证码错误` |
-| `/cp/wxAuth/getAuthUrl` | 演示：在传入 `redirect` 后拼 `code=MOCK_WX_CODE` 直接回跳 |
-| `/cp/wxAuth/getWxUserInfo` | 演示：内层 `code:'00'`，返回 mock token |
-| `/sys/permission/getUserPermissionByToken` | 返回样例权限 JSON（`ydl-site-perm.json` 的 `result`） |
-| `/sys/logout` | 返回成功 |
+| 接口                                       | Mock 行为                                                                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `/sys/captchaImage`                        | 生成 **4 位 base64 SVG 验证码图**（字符来自 `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`），返回 `{ img, captchaKey }` |
+| `/sys/social/wxLogin`                      | 任意账号密码；**校验验证码大小写不敏感**；错误返回 `code:500 验证码错误`                                     |
+| `/cp/wxAuth/getAuthUrl`                    | 演示：在传入 `redirect` 后拼 `code=MOCK_WX_CODE` 直接回跳                                                    |
+| `/cp/wxAuth/getWxUserInfo`                 | 演示：内层 `code:'00'`，返回 mock token                                                                      |
+| `/sys/permission/getUserPermissionByToken` | 返回样例权限 JSON（`ydl-site-perm.json` 的 `result`）                                                        |
+| `/sys/logout`                              | 返回成功                                                                                                     |
 
 > 验证码校验比对的是 mock 生成的 `currentCaptcha`，与 SVG 图上文字一致；mock 下直接在图上读取 4 位字符即可通过。
 
@@ -260,36 +265,36 @@ authUrl      = getAuthUrl({ wxAppId, redirect })
 
 所有样式 `scoped`，不污染全局。核心视觉令牌：
 
-| 令牌 | 值 | 用途 |
-| --- | --- | --- |
-| 品牌红 | `#d71920` | 文字 / 图标 / 渐变 |
-| 渐变激活 | `linear-gradient(135deg,#e88a91,#d71920)` | Tab 激活态 / 主色 |
-| 页面背景 | `linear-gradient(180deg,#fff1f2,#fce7ec 40%,#f5e8ec)` | 根容器 |
-| 卡片 | 白底 / `border-radius:16px` / 柔和红阴影 | 登录卡 |
-| 药丸按钮 | `border-radius:25px` / `rgba(215,25,32,0.08)` 浅红填充 / 红字 | 两个登录按钮共用 |
+| 令牌     | 值                                                            | 用途               |
+| -------- | ------------------------------------------------------------- | ------------------ |
+| 品牌红   | `#d71920`                                                     | 文字 / 图标 / 渐变 |
+| 渐变激活 | `linear-gradient(135deg,#e88a91,#d71920)`                     | Tab 激活态 / 主色  |
+| 页面背景 | `linear-gradient(180deg,#fff1f2,#fce7ec 40%,#f5e8ec)`         | 根容器             |
+| 卡片     | 白底 / `border-radius:16px` / 柔和红阴影                      | 登录卡             |
+| 药丸按钮 | `border-radius:25px` / `rgba(215,25,32,0.08)` 浅红填充 / 红字 | 两个登录按钮共用   |
 
 主要类清单：
 
-| 类 | 作用 |
-| --- | --- |
-| `.site-login` | 根容器（居中，最大 480px） |
-| `.login-header` / `.brand-mark` / `.brand-text` / `.login-title` / `.login-subtitle` | 顶部标题区 |
-| `.login-card` | 白卡 |
-| `.card-tabs` / `.card-tab` / `.card-tab--active` | 胶囊 Tab 切换器 |
-| `.card-form` / `.tab-body` | 表单容器 / 企业微信面板居中 |
-| `.card-field` / `.field-icon` / `.field-input` | 自定义输入行 |
-| `.captcha-img` / `.captcha-svg-img` / `.captcha-loading` | 图形验证码 |
-| `.submit-btn` / `.submit-btn.loading` | 登录按钮 + loading 态 |
-| `.tip` / `.bind-tip` | 提示文案 / 绑定提示 |
+| 类                                                                                   | 作用                        |
+| ------------------------------------------------------------------------------------ | --------------------------- |
+| `.site-login`                                                                        | 根容器（居中，最大 480px）  |
+| `.login-header` / `.brand-mark` / `.brand-text` / `.login-title` / `.login-subtitle` | 顶部标题区                  |
+| `.login-card`                                                                        | 白卡                        |
+| `.card-tabs` / `.card-tab` / `.card-tab--active`                                     | 胶囊 Tab 切换器             |
+| `.card-form` / `.tab-body`                                                           | 表单容器 / 企业微信面板居中 |
+| `.card-field` / `.field-icon` / `.field-input`                                       | 自定义输入行                |
+| `.captcha-img` / `.captcha-svg-img` / `.captcha-loading`                             | 图形验证码                  |
+| `.submit-btn` / `.submit-btn.loading`                                                | 登录按钮 + loading 态       |
+| `.tip` / `.bind-tip`                                                                 | 提示文案 / 绑定提示         |
 
 ---
 
 ## 10. 路由与跳转
 
-| 场景 | 跳转目标 |
-| --- | --- |
-| 登录成功 | `router.replace(redirect)`（`route.query.redirect \|\| '/ydl'`） |
-| 企业微信未绑定 | 切到 password Tab，保留 `socialId` 用于绑定；不跳页 |
+| 场景           | 跳转目标                                                               |
+| -------------- | ---------------------------------------------------------------------- |
+| 登录成功       | `router.replace(redirect)`（`route.query.redirect \|\| '/ydl'`）       |
+| 企业微信未绑定 | 切到 password Tab，保留 `socialId` 用于绑定；不跳页                    |
 | 401 / 510 失效 | `site-client` 自动 `clearAuth()` + 跳 `/ydl/login?redirect=<当前路径>` |
 
 登录页路由路径约定为 `/ydl/login`（见 `onAuthFail`）。
@@ -335,30 +340,30 @@ VITE_SITE_WX_API_BASE_URL=https://真实后端
 
 ## 12. 常见问题 / 排错
 
-| 现象 | 可能原因 | 处理 |
-| --- | --- | --- |
-| 验证码区域空白 | 模板只渲染 `captchaImg`；若后端返回字符（`img` 为空）则无图 | 确认后端返回 `img`（base64 图）；或补 `captchaItems` 渲染 |
-| 验证码图不显示 / 破图 | `captchaSrc` 的 MIME 推断未命中 | 检查 base64 头部，补 MIME 分支 |
-| 企业微信点击无反应（dev） | 未配 `VITE_SITE_OAUTH_REDIRECT_BASE`，用 `location.origin` 跳转但无可信域名 | 真实联调配域名；演示依赖 mock `getAuthUrl` 直接回跳 |
-| 登录后权限为空 | `loadPermissionsByToken` 失败或 token 无效 | 看 Network 中 `/sys/permission/getUserPermissionByToken` 返回 |
-| 401 后反复跳登录 | `onAuthFail` 触发；可能 token 过期或接口需鉴权 | 检查请求是否错误携带过期 token |
-| 构建报 `MISSING_EXPORT` | `src/api/index.ts` 未导出 `ydl-ins-source` 等模块 | 确认 `export * from './modules/ydl/ydl-ins-source'` 存在 |
+| 现象                      | 可能原因                                                                    | 处理                                                          |
+| ------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| 验证码区域空白            | 模板只渲染 `captchaImg`；若后端返回字符（`img` 为空）则无图                 | 确认后端返回 `img`（base64 图）；或补 `captchaItems` 渲染     |
+| 验证码图不显示 / 破图     | `captchaSrc` 的 MIME 推断未命中                                             | 检查 base64 头部，补 MIME 分支                                |
+| 企业微信点击无反应（dev） | 未配 `VITE_SITE_OAUTH_REDIRECT_BASE`，用 `location.origin` 跳转但无可信域名 | 真实联调配域名；演示依赖 mock `getAuthUrl` 直接回跳           |
+| 登录后权限为空            | `loadPermissionsByToken` 失败或 token 无效                                  | 看 Network 中 `/sys/permission/getUserPermissionByToken` 返回 |
+| 401 后反复跳登录          | `onAuthFail` 触发；可能 token 过期或接口需鉴权                              | 检查请求是否错误携带过期 token                                |
+| 构建报 `MISSING_EXPORT`   | `src/api/index.ts` 未导出 `ydl-ins-source` 等模块                           | 确认 `export * from './modules/ydl/ydl-ins-source'` 存在      |
 
 ---
 
 ## 13. 关键代码位置速查
 
-| 内容 | 位置 |
-| --- | --- |
-| 胶囊 Tab 模板 | `SiteLoginView.vue` 模板 `.card-tabs` 段 |
-| 验证码 base64→dataURL | `SiteLoginView.vue` `captchaSrc` computed |
-| 密码提交 | `SiteLoginView.vue` `onSubmitPassword` |
-| 企业微信启动 | `SiteLoginView.vue` `onWecomClick` + `onMounted` + `finishWecom`（结果统一处理） |
-| 企业微信逻辑 | `composables/ydl/useSiteWecomLogin.ts` `start()` |
-| 密码 / 验证码逻辑 | `composables/ydl/useSitePasswordLogin.ts` `refreshCaptcha` / `submit` |
-| 接口定义 | `api/modules/ydl/site-auth.ts` |
-| HTTP 客户端 / 401 跳登录 | `api/modules/ydl/site-client.ts` |
-| Mock | `mock/ydl-site-auth.ts` |
+| 内容                     | 位置                                                                             |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| 胶囊 Tab 模板            | `SiteLoginView.vue` 模板 `.card-tabs` 段                                         |
+| 验证码 base64→dataURL    | `SiteLoginView.vue` `captchaSrc` computed                                        |
+| 密码提交                 | `SiteLoginView.vue` `onSubmitPassword`                                           |
+| 企业微信启动             | `SiteLoginView.vue` `onWecomClick` + `onMounted` + `finishWecom`（结果统一处理） |
+| 企业微信逻辑             | `composables/ydl/useSiteWecomLogin.ts` `start()`                                 |
+| 密码 / 验证码逻辑        | `composables/ydl/useSitePasswordLogin.ts` `refreshCaptcha` / `submit`            |
+| 接口定义                 | `api/modules/ydl/site-auth.ts`                                                   |
+| HTTP 客户端 / 401 跳登录 | `api/modules/ydl/site-client.ts`                                                 |
+| Mock                     | `mock/ydl-site-auth.ts`                                                          |
 
 ---
 
@@ -368,12 +373,12 @@ VITE_SITE_WX_API_BASE_URL=https://真实后端
 
 ### 14.1 可配置项（环境变量）
 
-| 变量 | 默认 | 作用 |
-| --- | --- | --- |
-| `VITE_TOKEN_HEADER` | `X-Access-Token` | 请求头携带 token 的字段名（响应拦截器经 `TOKEN_HEADER` 注入） |
-| `VITE_TOKEN_STORAGE_KEY` | `app_token` | 本地存储 token 的 key |
-| `VITE_DEV_TOKEN` | 空 | 开发期预置 token：强制 token，跳过登录联调真实后端 |
-| `VITE_MOCK_CP` | 未设 | 仅把"站点鉴权链路"（/cp 与 /sys）强制走本地 mock |
+| 变量                     | 默认             | 作用                                                          |
+| ------------------------ | ---------------- | ------------------------------------------------------------- |
+| `VITE_TOKEN_HEADER`      | `X-Access-Token` | 请求头携带 token 的字段名（响应拦截器经 `TOKEN_HEADER` 注入） |
+| `VITE_TOKEN_STORAGE_KEY` | `app_token`      | 本地存储 token 的 key                                         |
+| `VITE_DEV_TOKEN`         | 空               | 开发期预置 token：强制 token，跳过登录联调真实后端            |
+| `VITE_MOCK_CP`           | 未设             | 仅把"站点鉴权链路"（/cp 与 /sys）强制走本地 mock              |
 
 ### 14.2 VITE_DEV_TOKEN 免登录
 
