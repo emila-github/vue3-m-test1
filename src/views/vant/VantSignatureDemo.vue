@@ -106,9 +106,10 @@ function onSubmit() {
       <van-cell>
         <template #value>
           <span>
-            浏览器端无法独立完成手写文字识别，需由<strong>后端手写识别 / OCR 服务</strong>把签名图识别为文字后，
-            再与传入姓名比对（防止签错名字）。组件已预留可插拔钩子
-            <code>verifySignature</code>，后端接口就绪后接入即可自动拦截不一致签名；本 demo 不涉及伪造的前端识别。
+            浏览器端无法独立完成手写文字识别，需由<strong>后端手写识别 / OCR 服务</strong
+            >把签名图识别为文字后， 再与传入姓名比对（防止签错名字）。组件已预留可插拔钩子
+            <code>verifySignature</code>，后端接口就绪后接入即可自动拦截不一致签名；本 demo
+            不涉及伪造的前端识别。
           </span>
         </template>
       </van-cell>

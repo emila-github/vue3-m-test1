@@ -79,7 +79,7 @@ html.theme-rose {
 
 /* 靛蓝（科技靛蓝 / Micro SaaS） */
 html.theme-indigo {
-  --van-primary-color: #6366F1;
+  --van-primary-color: #6366f1;
   --van-primary-color-light: #e0e7ff;
   --van-primary-color-light-2: #c7d2fe;
   --app-primary-deep: #4f46e5;
@@ -90,7 +90,7 @@ html.theme-indigo {
 
 /* 天蓝（清亮天蓝 / Service Landing） */
 html.theme-sky {
-  --van-primary-color: #0EA5E9;
+  --van-primary-color: #0ea5e9;
   --van-primary-color-light: #e0f2fe;
   --van-primary-color-light-2: #bae6fd;
   --app-primary-deep: #0284c7;
@@ -101,7 +101,7 @@ html.theme-sky {
 
 /* 湖青（医疗湖青 / Healthcare） */
 html.theme-cyan {
-  --van-primary-color: #0891B2;
+  --van-primary-color: #0891b2;
   --van-primary-color-light: #cffafe;
   --van-primary-color-light-2: #a5f3fc;
   --app-primary-deep: #0e7490;
@@ -112,7 +112,7 @@ html.theme-cyan {
 
 /* 保险蓝（守护保险蓝 / Insurance Platform） */
 html.theme-insurance {
-  --van-primary-color: #0369A1;
+  --van-primary-color: #0369a1;
   --van-primary-color-light: #e0f2fe;
   --van-primary-color-light-2: #bae6fd;
   --app-primary-deep: #075985;
@@ -123,7 +123,7 @@ html.theme-insurance {
 
 /* 薰衣草（柔紫疗愈 / Mental Health） */
 html.theme-lavender {
-  --van-primary-color: #8B5CF6;
+  --van-primary-color: #8b5cf6;
   --van-primary-color-light: #ede9fe;
   --van-primary-color-light-2: #ddd6fe;
   --app-primary-deep: #7c3aed;
@@ -134,7 +134,7 @@ html.theme-lavender {
 
 /* 樱粉（活泼樱粉 / Creative Agency） */
 html.theme-pink {
-  --van-primary-color: #EC4899;
+  --van-primary-color: #ec4899;
   --van-primary-color-light: #fce7f3;
   --van-primary-color-light-2: #fbcfe8;
   --app-primary-deep: #db2777;
@@ -145,7 +145,7 @@ html.theme-pink {
 
 /* 森林绿（稳重森林绿 / Agriculture） */
 html.theme-forest {
-  --van-primary-color: #15803D;
+  --van-primary-color: #15803d;
   --van-primary-color-light: #dcfce7;
   --van-primary-color-light-2: #bbf7d0;
   --app-primary-deep: #166534;
@@ -156,7 +156,7 @@ html.theme-forest {
 
 /* 暖咖（温馨暖咖 / Coffee Shop） */
 html.theme-coffee {
-  --van-primary-color: #78350F;
+  --van-primary-color: #78350f;
   --van-primary-color-light: #fdecd8;
   --van-primary-color-light-2: #f8d9a8;
   --app-primary-deep: #92400e;
@@ -167,7 +167,7 @@ html.theme-coffee {
 
 /* 石墨灰（工业极简 / Construction） */
 html.theme-graphite {
-  --van-primary-color: #64748B;
+  --van-primary-color: #64748b;
   --van-primary-color-light: #f1f5f9;
   --van-primary-color-light-2: #e2e8f0;
   --app-primary-deep: #475569;
@@ -199,35 +199,35 @@ html.theme-rose .picc-header-gradient {
   color: #ffffff;
 }
 html.theme-indigo .picc-header-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #6366F1 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
   color: #ffffff;
 }
 html.theme-sky .picc-header-gradient {
-  background: linear-gradient(135deg, #0284c7 0%, #0EA5E9 100%);
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
   color: #ffffff;
 }
 html.theme-cyan .picc-header-gradient {
-  background: linear-gradient(135deg, #0e7490 0%, #0891B2 100%);
+  background: linear-gradient(135deg, #0e7490 0%, #0891b2 100%);
   color: #ffffff;
 }
 html.theme-insurance .picc-header-gradient {
-  background: linear-gradient(135deg, #075985 0%, #0369A1 100%);
+  background: linear-gradient(135deg, #075985 0%, #0369a1 100%);
   color: #ffffff;
 }
 html.theme-lavender .picc-header-gradient {
-  background: linear-gradient(135deg, #7c3aed 0%, #8B5CF6 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
   color: #ffffff;
 }
 html.theme-pink .picc-header-gradient {
-  background: linear-gradient(135deg, #db2777 0%, #EC4899 100%);
+  background: linear-gradient(135deg, #db2777 0%, #ec4899 100%);
   color: #ffffff;
 }
 html.theme-forest .picc-header-gradient {
-  background: linear-gradient(135deg, #166534 0%, #15803D 100%);
+  background: linear-gradient(135deg, #166534 0%, #15803d 100%);
   color: #ffffff;
 }
 html.theme-coffee .picc-header-gradient {
-  background: linear-gradient(135deg, #78350F 0%, #92400e 100%);
+  background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
   color: #ffffff;
 }
 html.theme-graphite .picc-header-gradient {
@@ -312,8 +312,10 @@ html.theme-dark {
   /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
   --van-picker-background: #1e293b;
   --van-picker-confirm-action-color: #60a5fa;
-  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
-  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  --van-picker-mask-color:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, 0.6);
   /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
   --van-cascader-tab-color: #ffffff;
   --van-cascader-unselected-tab-color: #ffffff;
@@ -445,8 +447,10 @@ html.theme-luxury {
   /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
   --van-picker-background: #171717;
   --van-picker-confirm-action-color: #eab308;
-  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
-  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  --van-picker-mask-color:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, 0.6);
   /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
   --van-cascader-tab-color: #ffffff;
   --van-cascader-unselected-tab-color: #ffffff;
@@ -572,8 +576,10 @@ html.theme-navy {
   /* Picker 弹窗层暗色优化：遮罩/加载层用深色渐变，消除上下白雾 */
   --van-picker-background: #1e293b;
   --van-picker-confirm-action-color: #60a5fa;
-  --van-picker-mask-color: linear-gradient(180deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1)), linear-gradient(0deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .1));
-  --van-picker-loading-mask-color: rgba(0, 0, 0, .6);
+  --van-picker-mask-color:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
+  --van-picker-loading-mask-color: rgba(0, 0, 0, 0.6);
   /* 级联选择器：未选中项文字统一白色，选中项跟随主色 */
   --van-cascader-tab-color: #ffffff;
   --van-cascader-unselected-tab-color: #ffffff;

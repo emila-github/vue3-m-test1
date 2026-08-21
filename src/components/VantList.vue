@@ -616,7 +616,11 @@ defineExpose({
               style="margin-left: 6px"
             />
           </span>
-          <van-icon :name="showMoreFilter ? 'arrow-up' : 'arrow-down'" size="14" color="var(--app-text-3)" />
+          <van-icon
+            :name="showMoreFilter ? 'arrow-up' : 'arrow-down'"
+            size="14"
+            color="var(--app-text-3)"
+          />
         </div>
 
         <div v-show="showMoreFilter" class="vl-more-body">

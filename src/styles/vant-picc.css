@@ -24,7 +24,12 @@ html.picc-skin {
   --app-primary-deep: #a91218;
   --app-primary-light: #fcebec;
   --app-primary-rgb: 215, 25, 32; /* PICC 红 RGB：半透明主色（阴影 / 浅底按钮） */
-  --app-login-gradient: linear-gradient(180deg, #fff1f2 0%, #fce7ec 40%, #f5e8ec 100%); /* 登录页品牌红粉渐变 */
+  --app-login-gradient: linear-gradient(
+    180deg,
+    #fff1f2 0%,
+    #fce7ec 40%,
+    #f5e8ec 100%
+  ); /* 登录页品牌红粉渐变 */
   --picc-info: #1a6fe8;
   --picc-info-deep: #1455b8;
   --picc-gold: #c9a063;

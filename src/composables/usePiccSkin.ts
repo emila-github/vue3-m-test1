@@ -19,8 +19,7 @@ export function usePiccSkin() {
     active,
     enable: () => skin.setSkin('picc'),
     disable: () => skin.setSkin('vant'),
-    toggle: () =>
-      skin.setSkin(skin.active.value === 'picc' ? 'vant' : 'picc'),
+    toggle: () => skin.setSkin(skin.active.value === 'picc' ? 'vant' : 'picc'),
     /** 启动时恢复：优先读旧 key（picc-skin-enabled），保证既有用户选择不被覆盖 */
     init: (defaultEnabled = true) => {
       let stored: string | null = null
@@ -30,13 +29,7 @@ export function usePiccSkin() {
         /* ignore */
       }
       const id =
-        stored === '1'
-          ? 'picc'
-          : stored === '0'
-            ? 'vant'
-            : defaultEnabled
-              ? 'picc'
-              : 'vant'
+        stored === '1' ? 'picc' : stored === '0' ? 'vant' : defaultEnabled ? 'picc' : 'vant'
       skin.setSkin(id)
     },
   }

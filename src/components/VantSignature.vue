@@ -307,7 +307,10 @@ async function confirm() {
       const verify = await props.verifySignature(blob, props.signatureName)
       if (!verify.match) {
         const recognized = verify.recognized ? `（识别为「${verify.recognized}」）` : ''
-        showToast(verify.message || `签名与姓名「${props.signatureName}」不一致${recognized}，请检查后重新签名`)
+        showToast(
+          verify.message ||
+            `签名与姓名「${props.signatureName}」不一致${recognized}，请检查后重新签名`,
+        )
         return
       }
     }
@@ -494,7 +497,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "KaiTi", "STKaiti", "SimSun", serif;
+  font-family: 'KaiTi', 'STKaiti', 'SimSun', serif;
   font-size: 18vw;
   line-height: 1;
   color: rgba(0, 0, 0, 0.08);

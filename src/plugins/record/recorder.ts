@@ -61,7 +61,11 @@ export interface ScreenRecorderDeps {
 }
 
 /** 默认视频约束：1280x720 @ 15fps */
-const DEFAULT_VIDEO: DisplayMediaStreamOptions['video'] = { width: 1280, height: 720, frameRate: 15 }
+const DEFAULT_VIDEO: DisplayMediaStreamOptions['video'] = {
+  width: 1280,
+  height: 720,
+  frameRate: 15,
+}
 
 /**
  * 编码优先级列表
@@ -160,8 +164,10 @@ export class ScreenRecorder {
    */
   constructor(deps: ScreenRecorderDeps = {}) {
     const native =
-      typeof navigator !== 'undefined' && typeof navigator.mediaDevices?.getDisplayMedia === 'function'
-        ? (c?: DisplayMediaStreamOptions) => navigator.mediaDevices!.getDisplayMedia(c ?? { video: true })
+      typeof navigator !== 'undefined' &&
+      typeof navigator.mediaDevices?.getDisplayMedia === 'function'
+        ? (c?: DisplayMediaStreamOptions) =>
+            navigator.mediaDevices!.getDisplayMedia(c ?? { video: true })
         : undefined
     this._getDisplayMedia = deps.getDisplayMedia ?? native
     this._MediaRecorder =

@@ -182,9 +182,12 @@ describe('业务操作包裹 recordOperation', () => {
   it('业务抛错仍会停止并尝试上传，并向上抛出业务错误', async () => {
     const r = makeRecorder()
     await expect(
-      r.recordOperation(async () => {
-        throw new Error('业务失败')
-      }, { uploader: fakeUploader }),
+      r.recordOperation(
+        async () => {
+          throw new Error('业务失败')
+        },
+        { uploader: fakeUploader },
+      ),
     ).rejects.toThrow('业务失败')
     expect(r.lastResult).not.toBeNull()
   })

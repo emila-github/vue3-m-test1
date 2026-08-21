@@ -153,7 +153,14 @@ export const screenRecordMockRoutes: MockRoute[] = [
         bizType: body.bizType || 'form-operation',
         userId: body.userId || '',
       }
-      Object.assign(item, body.formData ? { title: `${body.title || '表单录屏'}（${JSON.stringify(body.formData).slice(0, 40)}...）` } : {})
+      Object.assign(
+        item,
+        body.formData
+          ? {
+              title: `${body.title || '表单录屏'}（${JSON.stringify(body.formData).slice(0, 40)}...）`,
+            }
+          : {},
+      )
       records.unshift(item)
       console.log('[mock] 表单录屏已记录:', fileId)
       return {
